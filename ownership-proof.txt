@@ -1,0 +1,24 @@
+=== PROVA DE PROPRIEDADE DE REPOSITÓRIO ===
+
+Proprietário: CREATIV-AI-TECNOLOGIA
+Email: creativaitecnologia@gmail.com
+Data: 19/06/2025 - 00:30
+Token de Verificação: b251ef4a-efe1-4414-a86e-58f25cf7a2bc
+
+Este token foi gerado especificamente para comprovar que sou o proprietário legítimo deste repositório.
+
+DECLARAÇÃO:
+Eu, CREATIV-AI-TECNOLOGIA, declaro ser o proprietário exclusivo deste repositório de código.
+Este arquivo foi criado em 19/06/2025 às 00:30 como prova irrefutável de propriedade.
+
+O token único b251ef4a-efe1-4414-a86e-58f25cf7a2bc foi gerado especificamente para esta validação
+e serve como assinatura digital desta declaração de propriedade.
+
+Qualquer pessoa que questione a propriedade deste repositório pode verificar:
+1. Este arquivo está presente na branch 'proof-of-ownership'
+2. O commit foi feito com as credenciais corretas
+3. O token é único e impossível de replicar sem acesso ao repositório
+
+CREATIV-AI-TECNOLOGIA
+creativaitecnologia@gmail.com
+19/06/2025 

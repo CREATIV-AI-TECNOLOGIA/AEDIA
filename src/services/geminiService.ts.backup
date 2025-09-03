@@ -1,0 +1,222 @@
+import DOMPurify from 'dompurify';
+
+interface GeminiSafetyRating {
+  category: string;
+  probability: string;
+}
+
+interface GeminiPart {
+  text: string;
+}
+
+interface GeminiContent {
+  parts: GeminiPart[];
+  role?: string; // 'user' ou 'model'
+}
+
+interface GeminiCandidate {
+  content: GeminiContent;
+  finishReason?: string;
+  index?: number;
+  safetyRatings?: GeminiSafetyRating[];
+}
+
+interface GeminiResponse {
+  candidates?: GeminiCandidate[];
+  promptFeedback?: {
+    safetyRatings: GeminiSafetyRating[];
+  };
+}
+
+export interface LessonPlanParams {
+  disciplina: string;
+  serie: string;
+  topico: string;
+  duracao: string;
+  objetivos: string[];
+  habilidadesBNCC: string[]; 
+  recursos: string[];
+  metodologia: string;
+  avaliacao: string;
+  observacoes?: string;
+  nomePlano?: string;
+  instrucoesAdicionais?: string;
+  nomeTurma?: string;
+  modalidadeAula?: string;
+  frequenciaAula?: string;
+  conhecimentosPrevios?: string;
+  abordagemPedagogica?: string;
+}
+
+const MODEL_NAME = 'gemini-1.5-flash-latest';
+
+export async function generateLessonPlanWithGemini(params: LessonPlanParams): Promise<string> {
+  const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
+  if (!apiKey) {
+    throw new Error("A chave da API do Google (VITE_GOOGLE_API_KEY) não foi encontrada nas variáveis de ambiente.");
+  }
+
+  const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${apiKey}`;
+
+  let promptText = `
+Aja como um especialista em pedagogia e design instrucional com foco em ensino de alta qualidade para qualquer nível, modalidade ou disciplina. Sua tarefa é criar um plano de aula robusto, detalhado e completo, com base nos seguintes filtros:
+
+DADOS DO PLANO DE AULA:
+===========================
+- Tema/Tópico: ${params.topico}
+- Disciplina: ${params.disciplina}
+- Ano escolar/Série: ${params.serie}
+- Turma: ${params.nomeTurma || 'Turma Regular'}
+- Modalidade de ensino: ${params.modalidadeAula || 'Ensino Regular'}
+- Duração estimada: ${params.duracao}
+- Frequência: ${params.frequenciaAula || 'Conforme planejamento escolar'}
+- Conhecimentos Prévios: ${params.conhecimentosPrevios || 'A definir com base no tema e série'}
+- Abordagem Pedagógica Preferida: ${params.abordagemPedagogica || "Sem preferência específica"}
+
+HABILIDADES DA BNCC A SEREM TRABALHADAS:
+=====================================
+${params.habilidadesBNCC.map(h => `- ${h}`).join('\n')}
+
+OBJETIVOS ESPECÍFICOS:
+==============================================
+${params.objetivos && params.objetivos.length > 0
+  ? params.objetivos.map(obj => `- ${obj}`).join('\n')
+  : "A definir com base nas habilidades da BNCC e no tema."}
+
+RECURSOS/MATERIAIS SUGERIDOS:
+==========================
+${params.recursos && params.recursos.length > 0
+  ? params.recursos.map(r => `- ${r}`).join('\n')
+  : "A definir com base no tema e série."}
+
+OBSERVAÇÕES ADICIONAIS:
+====================
+${params.observacoes || "Sem observações adicionais específicas."}
+
+INSTRUÇÕES ESPECIAIS:
+==================
+${params.instrucoesAdicionais || "Sem instruções especiais."}
+
+Você é responsável por garantir que o plano seja aplicável, didaticamente coerente, envolvente, e alinhado com práticas pedagógicas modernas. O plano de aula deve contemplar a duração especificada, mas também deve permitir divisão em unidades menores, conforme o conteúdo e a realidade escolar.
+
+O plano de aula deve conter as seguintes seções e critérios:
+
+--- Introdução (5 a 15 minutos) ---
+Breve revisão de conhecimentos prévios, se aplicável.
+Apresentação do tema com contextualização e relevância.
+Curiosidades, situações-problema ou elementos motivadores que despertem o interesse do aluno.
+Ganho de atenção com recursos visuais, vídeos, perguntas instigantes ou desafios.
+
+--- Objetivos de Aprendizagem ---
+Principais objetivos (ligados ao conteúdo central).
+Objetivos secundários (socioemocionais, habilidades transversais, como pensamento crítico, autonomia, comunicação).
+Relacione os objetivos às competências da BNCC, se for educação brasileira.
+
+--- Desenvolvimento (20 a 40 minutos) ---
+Apresente de 2 a 3 atividades práticas, colaborativas e diversificadas:
+Uso de tecnologias, trabalhos em grupo, projetos, simulações, experimentos, etc.
+Forneça passo a passo claro para cada atividade, com tempo estimado.
+Relacione os conteúdos à realidade dos alunos e à interdisciplinaridade, sempre que possível.
+
+--- Retorno e Discussão (5 a 10 minutos) ---
+Proponha um momento de discussão coletiva ou compartilhamento de descobertas entre os grupos.
+Estimule perguntas, reflexões e análise crítica com apoio do professor.
+
+--- Conclusão (5 a 10 minutos) ---
+Faça um resumo dos principais aprendizados.
+Conecte a teoria com a prática vivenciada nas atividades.
+Estimule o aluno a aplicar o conhecimento em outras situações.
+
+--- Reflexão Individual (opcional) ---
+Sugira perguntas reflexivas do tipo:
+"O que mais te surpreendeu hoje?"
+"O que ainda te gera dúvidas?"
+"Como esse conteúdo se relaciona com sua vida?"
+
+--- Materiais Extras e Recursos Complementares ---
+Sugira livros, vídeos, sites confiáveis, jogos educativos, podcasts ou qualquer outro recurso que aprofunde o aprendizado.
+
+--- Avaliação (formativa e observacional) ---
+Sugira formas de acompanhamento do aprendizado sem avaliação formal obrigatória.
+Oriente o professor a observar engajamento, argumentação, comunicação, colaboração, etc.
+
+Pense passo a passo ao desenvolver cada parte. Use delimitadores visuais para organizar o conteúdo. Seja claro, humano, criativo e natural em suas respostas. Evite vieses e garanta uma progressão pedagógica coerente entre os temas.
+
+FORMATO DE SAÍDA:
+==============
+Forneça o plano de aula em HTML semântico bem estruturado, com:
+- Utilize tags <h1>, <h2>, <h3> para títulos
+- Use <ol> para listas sequenciais (passos, etapas, procedimentos)
+- Use <ul> para listas não ordenadas (materiais, objetivos, etc.)
+- Use <p> para parágrafos descritivos
+- Use <strong> para destacar pontos importantes
+- Não use Markdown, apenas HTML semântico puro
+- Não use blocos de código, crases, ou tags <pre>/<code>
+- Forneça apenas o conteúdo HTML, sem comentários adicionais
+
+Nome do Plano: ${params.nomePlano || "Defina um nome descritivo e criativo para este plano de aula"}
+`;
+
+  const requestBody = {
+    contents: [
+      {
+        parts: [
+          { text: promptText }
+        ]
+      }
+    ],
+    generationConfig: {
+      temperature: 0.7,
+      topK: 40,
+      topP: 0.95,
+      maxOutputTokens: 8192
+    }
+  };
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody),
+    });
+
+    if (!response.ok) {
+      const errorBody = await response.json();
+      console.error("Erro da API Gemini:", errorBody);
+      throw new Error(`Erro na API Gemini: ${response.status} ${response.statusText}. Detalhes: ${JSON.stringify(errorBody.error || errorBody)}`);
+    }
+
+    const responseData: GeminiResponse = await response.json();
+
+    if (responseData.candidates && responseData.candidates.length > 0 &&
+        responseData.candidates[0].content && responseData.candidates[0].content.parts &&
+        responseData.candidates[0].content.parts.length > 0) {
+      // Sanitize the HTML content before returning
+      const rawHtml = responseData.candidates[0].content.parts[0].text;
+      return DOMPurify.sanitize(rawHtml);
+    }
+    // Tratamento para casos de resposta sem conteúdo esperado (ex: bloqueio por segurança)
+    if (responseData.promptFeedback && responseData.promptFeedback.safetyRatings) {
+      const blockReason = responseData.promptFeedback.safetyRatings
+        .filter(rating => rating.probability !== 'NEGLIGIBLE' && rating.probability !== 'LOW') // Probabilidades que indicam bloqueio ou problema
+        .map(rating => `${rating.category} (${rating.probability})`)
+        .join(', ');
+      if (blockReason) {
+        throw new Error(`Conteúdo bloqueado pela API Gemini devido a: ${blockReason}. Verifique o prompt ou as configurações de segurança.`);
+      }
+    }
+    
+    console.error("Resposta inesperada da API Gemini:", responseData);
+    throw new Error("A API Gemini retornou uma resposta inesperada ou sem conteúdo.");
+
+  } catch (error) {
+    console.error("Falha ao gerar plano de aula com Gemini:", error);
+    if (error instanceof Error) {
+        throw error; // Re-throw a instância do erro existente
+    } else {
+        throw new Error("Ocorreu um erro desconhecido ao se comunicar com a API Gemini.");
+    }
+  }
+} 

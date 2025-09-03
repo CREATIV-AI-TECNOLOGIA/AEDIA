@@ -1,0 +1,360 @@
+/* ===== LISTA DE CONVERSAS - DESIGN MODERNO E LIMPO ===== */
+
+.container {
+    background: #ffffff; 
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-right: 1px solid #f0f0f0;
+}
+
+/* Header da lista */
+.title {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    padding: 16px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.title.empty {
+    color: #999;
+    font-weight: 500;
+}
+
+.listHeader {
+    display: flex;
+    align-items: center;
+    height: 60px; /* Altura fixa para alinhamento preciso */
+    padding: 0 12px; 
+    background-color: #f0f2f5; 
+    border-bottom: 1px solid #e0e0e0;
+    box-sizing: border-box; /* Garante que o padding não afete a altura */
+}
+
+/* Container de busca */
+.searchContainer {
+    padding: 0;
+    margin-top: 0;
+    position: relative;
+    border-bottom: none;
+    background-color: transparent;
+    width: 100%;
+}
+
+.searchInput {
+    border-radius: 8px; /* Cantos levemente arredondados */
+    border: 1px solid #c8cdd0; /* Borda mais visível */
+    padding: 8px 16px 8px 40px;
+    font-size: 14px;
+    background: #f0f2f5; /* Fundo cinza claro para o input */
+    outline: none;
+    width: 100%;
+    color: #333;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.searchInput:focus {
+    background-color: #ffffff;
+    border-color: #4285f4;
+}
+
+.searchInput::placeholder {
+    color: #667781;
+    font-size: 13px;
+}
+
+.searchIcon {
+    position: absolute;
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #667781;
+    pointer-events: none;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.searchInput:focus + .searchIcon {
+    color: #4285f4;
+}
+
+/* Resultados de busca */
+.searchResults {
+    position: absolute;
+    top: calc(100% - 4px);
+    left: 12px;
+    right: 12px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #e0e0e0;
+}
+
+.searchItem {
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    cursor: pointer;
+    border-bottom: 1px solid #f5f5f5;
+}
+
+.searchItem:last-child {
+    border-bottom: none;
+}
+
+.searchItem:hover {
+    background: #f8f9fa;
+}
+
+.searchItemInfo {
+    margin-left: 12px;
+    flex: 1;
+}
+
+.searchItemInfo .nome {
+    font-weight: 500;
+    color: #333;
+    margin-bottom: 2px;
+    font-size: 15px;
+}
+
+.role {
+    font-size: 12px;
+    color: #666;
+    background: #f0f0f0;
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+/* Lista de conversas */
+.lista {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    flex: 1;
+    overflow-y: auto;
+}
+
+.lista::-webkit-scrollbar {
+    width: 6px;
+}
+
+.lista::-webkit-scrollbar-track {
+    background: #f5f5f5;
+}
+
+.lista::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 3px;
+}
+
+.lista::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
+
+/* Item de conversa */
+.conversaItem {
+    display: flex;
+    align-items: center;
+    padding: 12px 12px;
+    margin: 0;
+    cursor: pointer;
+    background: transparent;
+    border: 1px solid transparent;
+    border-bottom: 1px solid #f0f0f0;
+    transition: background-color 0.2s;
+}
+
+.conversaItem:hover {
+    background: #f8f9fa;
+}
+
+/* Avatar */
+.avatarContainer {
+    position: relative;
+    margin-right: 15px;
+}
+
+.statusIndicator {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #ffffff;
+}
+
+.online {
+    background: #4caf50;
+}
+
+.offline {
+    background: #ccc;
+}
+
+/* Informações da conversa */
+.conversaInfo {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+
+.conversaClickableArea {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+}
+
+.nome {
+    font-weight: 500;
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 3px;
+}
+
+.lastMessage {
+    font-size: 14px;
+    color: #666;
+    line-height: 1.4;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Ações da conversa */
+.actionsContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 12px;
+}
+
+.unreadBadge {
+    background: #25d366; /* Cor verde do WhatsApp */
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+    border-radius: 10px;
+    padding: 2px 6px;
+    min-width: 18px;
+    text-align: center;
+}
+
+.deleteButton {
+    background: none;
+    border: none;
+    color: #999;
+    font-size: 14px;
+    cursor: pointer;
+    opacity: 0; /* Começa invisível */
+    padding: 6px;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+}
+
+.conversaItem:hover .deleteButton {
+    opacity: 0.7; /* Aparece no hover */
+}
+
+.deleteButton:hover {
+    color: #333;
+    background-color: #f0f0f0;
+}
+
+/* Estados vazios */
+.noConversas {
+    color: #777;
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    font-size: 14px;
+}
+
+.loading {
+    color: #777;
+    text-align: center;
+    margin-top: 40px;
+    padding: 20px;
+    font-size: 14px;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+    .title {
+        padding: 16px;
+        font-size: 16px;
+    }
+    
+    .searchContainer {
+        padding: 12px 16px 16px 16px;
+    }
+    
+    .searchInput {
+        padding: 10px 14px 10px 36px;
+        font-size: 14px;
+    }
+    
+    .searchIcon {
+        left: 28px;
+    }
+    
+    .conversaItem {
+        padding: 10px 16px;
+        margin: 2px 6px 4px 6px;
+    }
+    
+    .avatarContainer {
+        margin-right: 10px;
+    }
+    
+    .lastMessage {
+        max-width: 150px;
+        font-size: 12px;
+    }
+    
+    .searchResults {
+        left: 16px;
+        right: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .conversaItem {
+        padding: 8px 12px;
+    }
+    
+    .lastMessage {
+        max-width: 120px;
+    }
+    
+    .nome {
+        font-size: 13px;
+    }
+    
+    .unreadBadge {
+        font-size: 10px;
+        padding: 1px 4px;
+    }
+}
+
+/* Focus states */
+.conversaItem:focus,
+.searchItem:focus {
+    outline: 2px solid #4285f4;
+    outline-offset: 2px;
+}
+
+input:focus {
+    outline: none;
+} 

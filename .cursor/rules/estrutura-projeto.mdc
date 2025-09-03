@@ -1,0 +1,31 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Estrutura do Projeto
+
+A estrutura de diretórios do projeto segue um padrão organizado para facilitar a manutenção e escalabilidade:
+
+```
+src/
+├── assets/         # Imagens, ícones e arquivos estáticos
+├── components/     # Componentes reutilizáveis
+├── context/       # Contextos para gerenciamento de estado
+├── features/      # Componentes específicos de funcionalidades
+├── hooks/         # Hooks personalizados
+├── layouts/       # Estruturas de layout reutilizáveis
+├── pages/         # Componentes de páginas/rotas
+├── services/      # Serviços para APIs
+├── styles/        # Estilos globais
+└── utils/         # Funções utilitárias
+```
+
+## Regras Principais:
+- Cada componente deve ter seu próprio diretório com arquivos relacionados
+- Mantenha a estrutura de pastas consistente
+- Use nomes descritivos em PascalCase para componentes
+- Separe código por responsabilidade
+
+O ponto de entrada da aplicação é [main.tsx](mdc:src/main.tsx)
+

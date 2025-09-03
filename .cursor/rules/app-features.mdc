@@ -1,0 +1,125 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Funcionalidades do App
+
+## Gestão de Turmas
+
+### Listagem de Turmas
+- Visualização de todas as turmas do professor
+- Filtros por ano e período
+- Cards com informações resumidas
+- Ações rápidas (editar, ver detalhes)
+
+### Criação de Turma
+- Formulário de nova turma
+- Campos: nome, ano, período
+- Validação de dados
+- Feedback visual de sucesso/erro
+
+### Detalhes da Turma
+- Informações completas da turma
+- Lista de alunos matriculados
+- Importação de alunos via CSV
+- Gestão individual de alunos
+
+## Planos de Aula
+
+### Listagem de Planos
+- Visualização de todos os planos
+- Organização por data/disciplina
+- Status do plano (rascunho/finalizado)
+- Ações de edição/exclusão
+
+### Criação de Plano
+- Seleção de modalidade
+- Editor de conteúdo
+- Objetivos e metodologia
+- Salvamento automático
+
+## Calendário Escolar
+
+### Gestão de Trimestres
+- Definição de datas início/fim
+- Visualização por trimestre
+- Eventos e feriados
+- Períodos letivos
+
+### Funcionalidades
+- Salvamento local
+- Sincronização com servidor
+- Visualização por período
+- Exportação de dados
+
+## Proposta Curricular
+
+### Importação
+- Upload de arquivo
+- Processamento de dados
+- Armazenamento local
+- Validação de formato
+
+### Consulta
+- Busca por conteúdo
+- Filtros por ano/série
+- Visualização estruturada
+- Exportação de dados
+
+## Autenticação
+
+### Login/Registro
+- Autenticação via Supabase
+- Persistência de sessão
+- Recuperação de senha
+- Perfil do usuário
+
+### Segurança
+- Tokens JWT
+- Refresh tokens
+- Proteção de rotas
+- Validação de permissões
+
+## Integração de Dados
+
+### Sincronização
+- Dados offline-first
+- Sincronização automática
+- Resolução de conflitos
+- Backup de dados
+
+### Importação/Exportação
+- Suporte a CSV
+- Validação de dados
+- Feedback de progresso
+- Tratamento de erros
+
+## Interface do Usuário
+
+### Componentes
+- Headers responsivos
+- Cards informativos
+- Formulários otimizados
+- Modais e overlays
+
+### Feedback
+- Loading states
+- Mensagens de erro
+- Toasts de sucesso
+- Confirmações de ação
+
+## Otimizações
+
+### Performance
+- Carregamento sob demanda
+- Caching de dados
+- Compressão de assets
+- Code splitting
+
+### Responsividade
+- Layout adaptativo
+- Mobile-first design
+- Touch-friendly
+- Breakpoints customizados
+

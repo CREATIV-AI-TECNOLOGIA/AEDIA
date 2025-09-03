@@ -1,0 +1,197 @@
+/* ===== CHAT INTERNO - DESIGN MINIMALISTA ===== */
+
+/* Container principal */
+.chat-container {
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 80px);
+  background: #fafafa;
+  overflow: hidden;
+  opacity: 1;
+  transition: opacity 0.15s ease-in-out;
+}
+
+/* Evitar flash durante carregamento */
+.chat-container.loading {
+  opacity: 0.7;
+}
+
+/* Conteúdo principal */
+.chat-main-content {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+}
+
+/* Sidebar */
+.chat-sidebar {
+  width: 320px;
+  background: #ffffff;
+  border-right: 1px solid #e5e5e5;
+  transition: width 0.2s ease-in-out, transform 0.2s ease-in-out;
+  will-change: transform, width;
+}
+
+.chat-sidebar.collapsed {
+  width: 0;
+  min-width: 0;
+  overflow: hidden;
+  transform: translateX(-100%);
+}
+
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  opacity: 0;
+  animation: fadeIn 0.2s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Área principal do chat */
+.chat-main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #fafafa;
+  transition: all 0.2s ease-in-out;
+  will-change: transform;
+}
+
+/* Tela de boas-vindas */
+.chat-welcome {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  opacity: 1;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.welcome-content {
+  text-align: center;
+  max-width: 400px;
+  padding: 48px 24px;
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.welcome-content h2 {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.welcome-content p {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.5;
+}
+
+/* Otimizações de performance */
+.chat-container *,
+.chat-container *::before,
+.chat-container *::after {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+
+/* Prevenção de layout shift */
+.chat-container {
+  contain: layout style paint;
+}
+
+.chat-sidebar,
+.chat-main-area {
+  contain: layout style;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .chat-container.mobile .chat-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    max-width: 320px;
+    z-index: 20;
+    transform: translateX(-100%);
+    transition: transform 0.25s ease-in-out;
+  }
+  
+  .chat-container.mobile .chat-sidebar:not(.collapsed) {
+    transform: translateX(0);
+  }
+  
+  .welcome-content {
+    padding: 32px 16px;
+  }
+  
+  .welcome-content h2 {
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .welcome-content {
+    padding: 24px 12px;
+  }
+}
+
+/* Estados de foco simples */
+button:focus {
+  outline: 2px solid #4285f4;
+  outline-offset: 2px;
+}
+
+/* Preload para evitar flash */
+.chat-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #fafafa;
+  z-index: -1;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Smooth scrolling para toda a aplicação */
+* {
+  scroll-behavior: smooth;
+}
+
+/* Reduzir motion para usuários que preferem */
+@media (prefers-reduced-motion: reduce) {
+  .chat-container,
+  .chat-sidebar,
+  .chat-main-area,
+  .welcome-content,
+  .sidebar-overlay {
+    transition: none !important;
+    animation: none !important;
+  }
+} 

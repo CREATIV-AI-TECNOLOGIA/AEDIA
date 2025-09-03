@@ -1,0 +1,1 @@
+Use  sempre  o mcp do supabase do projeto exprofesor

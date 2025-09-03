@@ -1,0 +1,57 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Regras para Tailwind CSS
+
+## Organização de Classes
+Mantenha a seguinte ordem de classes:
+1. Layout (display, position)
+2. Box model (width, height, margin, padding)
+3. Tipografia (font, text)
+4. Visual (color, background, border)
+5. Outros (transform, animation)
+
+## Boas Práticas
+- Use classes utilitárias diretamente nos componentes
+- Aproveite variantes responsivas
+- Crie componentes reutilizáveis
+- Use o modo JIT
+- Evite classes contraditórias
+- Utilize shorthand quando possível
+
+## Exemplo de Organização de Classes:
+```jsx
+<div className={`
+  // Layout
+  flex items-center justify-between
+  // Box Model
+  w-full p-4 m-2
+  // Tipografia
+  text-lg font-medium
+  // Visual
+  bg-white rounded-lg shadow-md
+  // Outros
+  hover:scale-105 transition-transform
+`}>
+  {children}
+</div>
+```
+
+## Configuração Base
+```js
+// tailwind.config.js
+module.exports = {
+  theme: {
+    extend: {
+      colors: {
+        'primary': '#1E40AF',
+        'secondary': '#1F2937',
+      },
+    },
+  },
+  variants: {},
+  plugins: [],
+};
+

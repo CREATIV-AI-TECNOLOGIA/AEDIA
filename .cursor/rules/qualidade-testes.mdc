@@ -1,0 +1,50 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Regras de Qualidade e Testes
+
+## Testes
+- Teste componentes isoladamente
+- Escreva testes para comportamentos
+- Mantenha arquivos de teste junto aos componentes
+- Teste casos de erro e edge cases
+- Use mocks para serviços externos
+
+## Acessibilidade
+- Use elementos semânticos HTML5
+- Forneça textos alternativos para imagens
+- Garanta contraste adequado
+- Implemente navegação por teclado
+- Teste com leitores de tela
+
+## Versionamento
+- Faça commits pequenos e frequentes
+- Use mensagens descritivas
+- Crie branches para novas features
+- Realize code reviews
+- Mantenha dependências atualizadas
+
+## Exemplo de Estrutura de Teste:
+```jsx
+// Button.test.js
+import { render, fireEvent } from '@testing-library/react';
+import Button from './Button';
+
+describe('Button', () => {
+  it('deve renderizar corretamente', () => {
+    const { getByText } = render(<Button>Teste</Button>);
+    expect(getByText('Teste')).toBeInTheDocument();
+  });
+
+  it('deve chamar onClick quando clicado', () => {
+    const onClick = jest.fn();
+    const { getByText } = render(
+      <Button onClick={onClick}>Teste</Button>
+    );
+    fireEvent.click(getByText('Teste'));
+    expect(onClick).toHaveBeenCalled();
+  });
+});
+

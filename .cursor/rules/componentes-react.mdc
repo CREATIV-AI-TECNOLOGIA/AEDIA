@@ -1,0 +1,51 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Regras para Componentes React
+
+## Estrutura de Componentes
+- Use componentes funcionais
+- Um componente por arquivo
+- Mantenha componentes pequenos e focados
+- Separe lógica de estado da renderização
+
+## Hooks
+- Use `useEffect` apenas quando necessário
+- Utilize `useMemo` para otimização
+- Mantenha dependências atualizadas
+- Crie hooks personalizados para lógica reutilizável
+
+## Estado e Props
+- Prefira estado local quando possível
+- Use Context API para estado global
+- Evite prop drilling
+- Desestruture props para melhor legibilidade
+
+## Performance
+- Use `React.memo` para otimização
+- Implemente `lazy loading`
+- Otimize renderizações com `useMemo` e `useCallback`
+- Use keys adequadas em listas
+
+## Exemplo de Estrutura de Componente:
+```jsx
+const Button = ({ children, variant = 'primary', onClick }) => {
+  const styles = {
+    primary: 'bg-primary text-white',
+    secondary: 'bg-secondary text-gray-100',
+    outline: 'border border-primary text-primary',
+  };
+  
+  return (
+    <button 
+      className={`px-4 py-2 rounded ${styles[variant]}`}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+};
+```
+
