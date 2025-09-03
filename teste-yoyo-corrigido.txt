@@ -1,0 +1,11 @@
+Este é um arquivo de teste para verificar se o YOYO está funcionando corretamente após as correções.
+
+Data: 2025-01-09
+Hora: Teste de funcionamento
+
+Se você conseguir ver este arquivo no painel do YOYO, significa que a extensão está funcionando corretamente.
+
+Agora você pode:
+1. Pressionar Ctrl+Alt+S para salvar uma nova versão
+2. Fazer alterações neste arquivo
+3. Salvar novamente para testar a detecção de mudanças
