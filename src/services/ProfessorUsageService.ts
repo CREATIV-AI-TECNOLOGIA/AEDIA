@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabase';
 import { 
   ProfessorUsageConfig, 
   ProfessorUsageStats, 
@@ -368,4 +368,4 @@ export class ProfessorUsageService {
       percentual: stats.percentual_gasto.toFixed(1) + '%'
     });
   }
-} 
+}

@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabase';
 
 // Interfaces para tipar o retorno da query
 interface DisciplinaInfo {
@@ -123,4 +123,4 @@ export const getAnoDisciplinaParaModalidade = async (
     console.error(`Exceção ao tentar buscar ano/disciplina para modalidade (prof ID: ${professorId}, mod ID: ${modalidadeId}):`, e);
     return null;
   }
-}; 
+};

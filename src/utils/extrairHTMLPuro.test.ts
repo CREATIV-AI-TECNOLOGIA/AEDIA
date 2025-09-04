@@ -5,28 +5,7 @@
  * no navegador dos usuários dentro do componente PlanoAulaFullView.tsx
  */
 
-// Função extrairHTMLPuro (copiada do componente para teste isolado)
-function extrairHTMLPuro(texto: string | null | undefined): string {
-  if (!texto) return '';
-  
-  let newTexto = texto;
-  
-  // Remove blocos de código markdown (```html ... ```)
-  newTexto = newTexto.replace(/```html\s*([\s\S]*?)\s*```/g, '$1');
-  newTexto = newTexto.replace(/```\s*([\s\S]*?)\s*```/g, '$1');
-  
-  // Remove tags <pre> e <code>
-  newTexto = newTexto.replace(/<pre>([\s\S]*?)<\/pre>/g, '$1');
-  newTexto = newTexto.replace(/<code>([\s\S]*?)<\/code>/g, '$1');
-  
-  // Remove aspas duplas ou simples do início/fim
-  newTexto = newTexto.trim().replace(/^['\"]+|['\"]+$/g, '');
-  
-  // Remove crases do início/fim
-  newTexto = newTexto.replace(/^`+|`+$/g, '');
-  
-  return newTexto.trim();
-}
+import { extrairHTMLPuro } from './textUtils';
 
 // Função de teste simples (sem framework de teste)
 function runTests() {
@@ -140,4 +119,4 @@ if (typeof process !== 'undefined' && process.env.NODE_ENV === 'development') {
 if (typeof window !== 'undefined') {
   (window as any).testExtrairHTMLPuro = runTests;
   console.log('💡 Para executar os testes manualmente, digite: testExtrairHTMLPuro()');
-} 
+}

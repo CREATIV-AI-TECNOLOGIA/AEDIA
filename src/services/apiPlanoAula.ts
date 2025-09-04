@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabaseClient'; // Importando o cliente Supabase configurado
+import { supabase } from '../lib/supabase'; // Importando o cliente Supabase configurado
 
 /**
  * Busca o ID de uma disciplina pelo nome no Supabase.
@@ -140,4 +140,4 @@ export const fetchCamposCurricularesTrimestre = async (
     console.error(`[API Service] Exceção ao buscar Gêneros/Objetos para o trimestre:`, err);
     return { generosTextuais: [], objetosConhecimento: [] };
   }
-}; 
+};

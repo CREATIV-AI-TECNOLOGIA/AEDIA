@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabase';
 import { Professor } from '../types';
 
 export interface TurmaContext {
@@ -638,4 +638,4 @@ Responda sempre considerando este contexto específico do Professor ${context.pr
   }
 }
 
-export const aiContextService = AIContextService.getInstance(); 
+export const aiContextService = AIContextService.getInstance();

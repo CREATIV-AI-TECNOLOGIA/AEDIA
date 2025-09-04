@@ -36,6 +36,18 @@ function htmlToText(html: string): string {
   return div.textContent || div.innerText || '';
 }
 
+// Função utilitária para processar tags HTML
+function processHTMLTag(tagName: string, content: string): { type: 'heading' | 'paragraph' | 'list', level?: number } {
+  if (tagName.startsWith('h')) {
+    return { type: 'heading', level: parseInt(tagName.charAt(1)) };
+  } else if (tagName === 'p') {
+    return { type: 'paragraph' };
+  } else if (tagName === 'ul' || tagName === 'ol' || tagName === 'li') {
+    return { type: 'list' };
+  }
+  return { type: 'paragraph' };
+}
+
 // Função para extrair seções do HTML
 function parseHTMLSections(html: string): Array<{ type: 'heading' | 'paragraph' | 'list', content: string, level?: number }> {
   const div = document.createElement('div');
@@ -50,14 +62,8 @@ function parseHTMLSections(html: string): Array<{ type: 'heading' | 'paragraph' 
     const content = element.textContent || '';
     
     if (content.trim()) {
-      if (tagName.startsWith('h')) {
-        const level = parseInt(tagName.charAt(1));
-        sections.push({ type: 'heading', content, level });
-      } else if (tagName === 'p') {
-        sections.push({ type: 'paragraph', content });
-      } else if (tagName === 'ul' || tagName === 'ol' || tagName === 'li') {
-        sections.push({ type: 'list', content });
-      }
+      const { type, level } = processHTMLTag(tagName, content);
+      sections.push({ type, content, level });
     }
   });
   
@@ -175,7 +181,58 @@ export async function exportToPDF(planoData: PlanoAulaData): Promise<void> {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = planoData.conteudoHTML;
     
-    // Função recursiva para processar elementos HTML
+    // Função utilitária para adicionar texto baseado em tag
+function addTextByTag(tagName: string, textContent: string, addText: Function) {
+  let fontSize = 11;
+  let isBold = false;
+  let marginBottom = 6;
+  
+  switch (tagName) {
+    case 'h1':
+      fontSize = 14;
+      isBold = true;
+      marginBottom = 8;
+      break;
+    case 'h2':
+      fontSize = 13;
+      isBold = true;
+      marginBottom = 7;
+      break;
+    case 'h3':
+    case 'h4':
+    case 'h5':
+    case 'h6':
+      fontSize = 12;
+      isBold = true;
+      marginBottom = 6;
+      break;
+    case 'p':
+      marginBottom = 6;
+      break;
+    case 'li':
+      textContent = `• ${textContent}`;
+      marginBottom = 4;
+      break;
+    case 'strong':
+    case 'b':
+      isBold = true;
+      marginBottom = 4;
+      break;
+    case 'em':
+    case 'i':
+      marginBottom = 4;
+      break;
+    default:
+      if (textContent && !['script', 'style', 'meta', 'head'].includes(tagName)) {
+        marginBottom = 6;
+      } else {
+        return;
+      }
+  }
+  addText(textContent, fontSize, isBold, 'left', marginBottom);
+}
+
+// Função recursiva para processar elementos HTML
     const processElement = (element: Element): void => {
       const tagName = element.tagName?.toLowerCase() || '';
       
@@ -202,46 +259,7 @@ export async function exportToPDF(planoData: PlanoAulaData): Promise<void> {
       
       if (!textContent) return;
 
-      // Para itens de lista, adicionar marcador
-      if (tagName === 'li') {
-        textContent = `• ${textContent}`;
-      }
-
-      // Aplicar formatação baseada no tipo de elemento
-      switch (tagName) {
-        case 'h1':
-          addText(textContent, 14, true, 'left', 8);
-          break;
-        case 'h2':
-          addText(textContent, 13, true, 'left', 7);
-          break;
-        case 'h3':
-        case 'h4':
-        case 'h5':
-        case 'h6':
-          addText(textContent, 12, true, 'left', 6);
-          break;
-        case 'p':
-          addText(textContent, 11, false, 'left', 6);
-          break;
-        case 'li':
-          addText(textContent, 11, false, 'left', 4);
-          break;
-        case 'strong':
-        case 'b':
-          addText(textContent, 11, true, 'left', 4);
-          break;
-        case 'em':
-        case 'i':
-          addText(textContent, 11, false, 'left', 4);
-          break;
-        default:
-          // Para outros elementos com texto, tratar como parágrafo
-          if (textContent && !['script', 'style', 'meta', 'head'].includes(tagName)) {
-            addText(textContent, 11, false, 'left', 6);
-          }
-          break;
-      }
+      addTextByTag(tagName, textContent, addText);
     };
 
     // Processar conteúdo HTML
@@ -991,4 +1009,4 @@ export async function exportAvaliacaoToPDF(avaliacaoData: AvaliacaoData): Promis
     console.error('Erro ao exportar PDF da avaliação:', error);
     throw new Error('Falha ao exportar avaliação como PDF');
   }
-} 
+}

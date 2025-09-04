@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '../../lib/supabase';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { CheckCircle, Clock, AlertCircle, Calendar, Book, Users, ChevronDown, Search, Filter } from 'lucide-react';
@@ -349,4 +349,4 @@ const TarefasPlanoAula: React.FC = () => {
   );
 };
 
-export default TarefasPlanoAula; 
+export default TarefasPlanoAula;

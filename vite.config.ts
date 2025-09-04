@@ -27,10 +27,11 @@ export default defineConfig(({ mode }) => {
   base: './',
   // publicDir: 'public', // REMOVIDO (usa o padrão)
   server: {
-    host: true, // Escuta em todas as interfaces de rede
+    host: 'localhost', // Força uso de localhost para resolver problemas de IPv6
     port: 5173, // Porta padrão do Vite
     // https: {}, // TEMPORARIAMENTE DESABILITADO para teste
     hmr: {
+      host: 'localhost',
       timeout: 120000,
       overlay: false,
       clientPort: 5173,

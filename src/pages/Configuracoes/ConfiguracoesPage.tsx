@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PageContainer from '../../components/layout/PageContainer';
 import { User, Lock, Palette, Bell, Settings, Briefcase, BookOpen, Clock, Building, Camera, Upload } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
 import { 
   getProfessorComModalidades, 
@@ -401,4 +401,4 @@ const ConfiguracoesPage: React.FC = () => {
   );
 };
 
-export default ConfiguracoesPage; 
+export default ConfiguracoesPage;

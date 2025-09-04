@@ -8,7 +8,7 @@ import SeletorHabilidades, { Habilidade } from '../components/PlanoAula/SeletorH
 import { getAnoDisciplinaParaModalidade, ProfessorContexto } from '../services/ProfessorContextoService'; // Descomentado
 import { getTrimestreAtualNome } from '../services/PeriodoLetivoService'; // Descomentado
 import { getHabilidadesFormatadas } from '../services/MatrizCurricularService'; // Descomentado
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabase';
 import { ProfessorPreferenciasService } from '../services/ProfessorPreferenciasService';
 // import type { ProfessorComModalidades, Modalidade } from '../services/ProfessorService'; // Removido pois está descomentado acima
 
@@ -569,4 +569,4 @@ const CriarPlanoAula: React.FC = memo(() => {
 
 CriarPlanoAula.displayName = 'CriarPlanoAula';
 
-export default CriarPlanoAula; 
+export default CriarPlanoAula;

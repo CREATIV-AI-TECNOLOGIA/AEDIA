@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { X, Save, Bold, Italic, Underline, Strikethrough, List, ListOrdered, Quote, Heading1, Heading2, AlignLeft, AlignCenter, AlignRight, Undo2, Redo2, Highlighter, Palette } from 'lucide-react';
 import type { PlanoAulaSupabase } from '../../pages/PlanosAula';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '../../lib/supabase';
 import { EditorContent, useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 // import Image from '@tiptap/extension-image';
@@ -13,24 +13,7 @@ import UnderlineExtension from '@tiptap/extension-underline';
 import Placeholder from '@tiptap/extension-placeholder';
 import ExportMenu from './ExportMenu';
 import { useLayout } from '../../context/LayoutContext';
-
-// Função para limpar blocos de código, <pre>, <code>, crases e aspas
-function extrairHTMLPuro(texto: string | null | undefined): string {
-  if (texto === null || texto === undefined) {
-    return "";
-  }
-  // Remove blocos de código markdown
-  let newTexto = texto.replace(/```[a-zA-Z]*\n([\s\S]*?)```/g, '$1');
-  // Remove tags <pre> e <code>
-  newTexto = newTexto.replace(/<pre><code>([\s\S]*?)<\/code><\/pre>/g, '$1');
-  newTexto = newTexto.replace(/<pre>([\s\S]*?)<\/pre>/g, '$1');
-  newTexto = newTexto.replace(/<code>([\s\S]*?)<\/code>/g, '$1');
-  // Remove aspas duplas ou simples do início/fim
-  newTexto = newTexto.trim().replace(/^['\"]+|['\"]+$/g, '');
-  // Remove crases do início/fim
-  newTexto = newTexto.replace(/^`+|`+$/g, '');
-  return newTexto.trim();
-}
+import { extrairHTMLPuro } from '../../utils/textUtils';
 
 interface PlanoAulaFullViewProps {
   plano: PlanoAulaSupabase;
@@ -572,4 +555,4 @@ export default memo(PlanoAulaFullView, (prevProps, nextProps) => {
   });
   
   return shouldNotRerender;
-}); 
+});

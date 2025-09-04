@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, useCallback, useMemo, useRef } from 'react'
-import { supabase } from '../lib/supabaseClient'
+import { supabase } from '../lib/supabase';
 import { User, Session } from '@supabase/supabase-js'
 import { Professor, Aluno } from '../types'
 import { logSupabaseError } from '../utils/supabaseErrorHandler'
@@ -165,7 +165,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [user, userProfile])
 
-  const fetchUserProfile = async (authUser: User) => {
+  const fetchUserProfile = useCallback(async (authUser: User) => {
     // Evitar chamadas duplicadas usando flag específica e verificação de usuário
     const currentUserId = authUser.id;
     const now = Date.now();
@@ -266,7 +266,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false)
       setFetchingProfile(false)
     }
-  }
+  }, []);
 
   const value = useMemo(() => ({
     user,
@@ -300,4 +300,4 @@ export function useAuth() {
     throw new Error('useAuth deve ser usado dentro de um AuthProvider')
   }
   return context
-} 
+}

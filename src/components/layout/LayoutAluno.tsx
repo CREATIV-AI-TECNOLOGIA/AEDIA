@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import SidebarAluno from './SidebarAluno';
 
 interface LayoutAlunoProps {
@@ -10,6 +11,7 @@ const LayoutAluno: React.FC<LayoutAlunoProps> = ({ children }) => {
   const [isMobile, setIsMobile] = useState(false);
   const [showMobileSidebar, setShowMobileSidebar] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const location = useLocation();
 
   // Efeito para verificar o tamanho da tela no carregamento e em resize
   useEffect(() => {
@@ -30,6 +32,13 @@ const LayoutAluno: React.FC<LayoutAlunoProps> = ({ children }) => {
       window.removeEventListener('resize', checkMobile);
     };
   }, []);
+
+  // Fechar drawer mobile automaticamente quando a rota mudar
+  useEffect(() => {
+    if (showMobileSidebar) {
+      setShowMobileSidebar(false);
+    }
+  }, [location.pathname]);
 
   const handleToggleSidebar = () => {
     if (isMobile) {
@@ -108,4 +117,4 @@ const LayoutAluno: React.FC<LayoutAlunoProps> = ({ children }) => {
   );
 };
 
-export default LayoutAluno; 
+export default LayoutAluno;

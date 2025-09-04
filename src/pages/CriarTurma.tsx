@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabase';
 
 const CriarTurma: React.FC = () => {
   const navigate = useNavigate();
@@ -127,4 +127,4 @@ const CriarTurma: React.FC = () => {
   );
 };
 
-export default CriarTurma; 
+export default CriarTurma;

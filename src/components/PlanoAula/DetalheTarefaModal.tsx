@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '../../lib/supabase';
 import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { X, Calendar, Book, Users, CheckCircle, Clock, AlertCircle } from 'lucide-react';
@@ -150,4 +150,4 @@ const DetalheTarefaModal: React.FC<DetalheTarefaModalProps> = ({
   );
 };
 
-export default DetalheTarefaModal; 
+export default DetalheTarefaModal;

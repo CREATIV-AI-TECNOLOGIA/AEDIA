@@ -1,25 +1,28 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Button } from "../ui";
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { getTurmasDoProfessorDetalhado, TurmaDetalhadaProfessor } from '../../services/ProfessorService';
-import { 
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { clsx } from 'clsx';
+import {
   Home,
-  BookOpen,
-  FileText,
   Users,
-  BarChart3,
   Calendar,
+  BookOpen,
   Settings,
   LogOut,
-  Bell,
-  HelpCircle,
-  PanelLeftClose,
   PanelLeft,
-  ChevronDown
+  PanelLeftClose,
+  ClipboardList,
+  Bell,
+  LifeBuoy,
+  GraduationCap,
 } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
-import clsx from 'clsx';
+import Button from '../ui/Button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '../ui/Tooltip';
+import { useAuth } from '../../context/AuthContext';
 
 interface SidebarProps {
   className?: string;
@@ -27,284 +30,218 @@ interface SidebarProps {
   onToggleCollapse?: () => void;
 }
 
-const allMenuItems = [
-  { id: 'home', label: 'Home', path: '/', icon: Home, roles: ['professor', 'diretora'] },
-  { id: 'gestao', label: 'Gestão', path: '/gestao', icon: BarChart3, roles: ['diretora'] },
-  { id: 'planos-aula', label: 'Planos de Aula', path: '/planos-aula', icon: BookOpen, roles: ['professor'] },
-  { id: 'calendario', label: 'Calendário', path: '/calendario-escolar', icon: Calendar, roles: ['professor'] },
-  { id: 'turmas', label: 'Turmas', path: '/turmas', icon: Users, roles: ['professor', 'diretora'] },
-  { id: 'avaliacoes', label: 'Avaliações', path: '/avaliacoes', icon: FileText, roles: ['professor'] },
-  { id: 'notificacoes', label: 'Notificações', path: '/chat-interno', icon: Bell, roles: ['professor', 'diretora'] },
-  { id: 'configuracoes', label: 'Configurações', path: '/configuracoes', icon: Settings, roles: ['professor', 'diretora'] },
-  { id: 'suporte', label: 'Suporte', path: '/chat', icon: HelpCircle, roles: ['professor', 'diretora'] }
-];
-
-const Sidebar: React.FC<SidebarProps> = ({ className = '', isCollapsed: initialIsCollapsed = false, onToggleCollapse }) => {
-  const [collapsed, setCollapsed] = useState(initialIsCollapsed);
-  const [showLogoutModal, setShowLogoutModal] = useState(false);
-  const [turmas, setTurmas] = useState<TurmaDetalhadaProfessor[]>([]);
-  const [isTurmasOpen, setTurmasOpen] = useState(false);
-  const [turmasLoading, setTurmasLoading] = useState(false);
-  const [turmasError, setTurmasError] = useState<string | null>(null);
-  
+const Sidebar: React.FC<SidebarProps> = ({ className, isCollapsed = false, onToggleCollapse }) => {
+  const { signOut, user } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const { user, signOut, professor } = useAuth();
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
-  useEffect(() => {
-    const fetchTurmas = async () => {
-      if (user?.user_metadata?.role === 'professor' && professor?.id) {
-        setTurmasLoading(true);
-        setTurmasError(null);
-        try {
-          const turmasData = await getTurmasDoProfessorDetalhado(professor.id);
-          setTurmas(turmasData);
-        } catch (error) {
-          console.error("Erro ao buscar turmas:", error);
-          setTurmasError("Não foi possível carregar as turmas.");
-        }
-        setTurmasLoading(false);
-      }
-    };
-    fetchTurmas();
-  }, [user, professor]);
-
-  const handleToggleSidebar = () => {
-    setCollapsed(!collapsed);
-    onToggleCollapse?.();
-  };
-
-  const [isNavigating, setIsNavigating] = useState(false);
-
-  const handleItemClick = async (path: string) => {
-    if (isNavigating || location.pathname === path) {
-      return;
-    }
-    
-    setIsNavigating(true);
-    try {
-      navigate(path);
-      // Pequeno delay para evitar cliques duplos
-      await new Promise(resolve => setTimeout(resolve, 300));
-    } finally {
-      setIsNavigating(false);
-    }
-  };
+  const menuItems = [
+    { id: 'home', label: 'Home', icon: Home, path: '/' },
+    { id: 'planos', label: 'Planos de Aula', icon: BookOpen, path: '/planos-aula' },
+    { id: 'calendario', label: 'Calendário', icon: Calendar, path: '/calendario-escolar' },
+    { id: 'avaliacoes', label: 'Avaliações', icon: ClipboardList, path: '/avaliacoes' },
+    { id: 'notificacoes', label: 'Notificações', icon: Bell, path: '/chat-interno' },
+    { id: 'turmas', label: 'Turmas', icon: Users, path: '/turmas' },
+    { id: 'configuracoes', label: 'Configurações', icon: Settings, path: '/configuracoes' },
+    { id: 'suporte', label: 'Assistente', icon: LifeBuoy, path: '/chat' },
+  ];
 
   const handleLogout = async () => {
-    await signOut();
-    setShowLogoutModal(false);
+    try {
+      await signOut();
+      setShowLogoutModal(false);
+      navigate('/login');
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
   };
 
-  const menuItems = useMemo(() => {
-    const userRole = user?.user_metadata?.role;
-    if (!userRole) return [];
-    return allMenuItems.filter(item => item.roles.includes(userRole));
-  }, [user]);
-
-  const getActiveItem = () => {
-    const currentPath = location.pathname;
-    if (currentPath === '/') return 'home';
-
-    if (currentPath.startsWith('/turmas/')) return 'turmas';
-
-    const foundItem = menuItems.find(item => 
-      item.path !== '/' && currentPath.startsWith(item.path)
+  const getNavLinkClass = ({ isActive }: { isActive: boolean }) => {
+    return clsx(
+      'group block w-full transition-all duration-300 ease-in-out text-sm font-medium rounded-lg mx-2 mb-1',
+      'hover:shadow-sm transform relative z-10',
+      isActive
+        ? '!bg-black text-white shadow-lg'
+        : 'text-gray-900 hover:bg-gray-100 hover:text-gray-900 border border-transparent hover:border-gray-300'
     );
-    
-    return foundItem?.id || 'home';
   };
-
-  const activeItem = getActiveItem();
-
-  // Define o path de Turmas baseado no papel do usuário e turmas carregadas
-  const turmasPath = useMemo(() => {
-    if (user?.user_metadata?.role === 'professor' && turmas.length > 0) {
-      return `/turmas/${turmas[0].id}`;
-    }
-    return '/turmas';
-  }, [turmas, user]);
-
-  useEffect(() => {
-    setCollapsed(initialIsCollapsed);
-  }, [initialIsCollapsed]);
-
-  useEffect(() => {
-    if (activeItem === 'turmas') {
-      setTurmasOpen(true);
-    } else if (!location.pathname.startsWith('/turmas')) {
-      setTurmasOpen(false);
-    }
-  }, [activeItem, location.pathname]);
 
   return (
     <>
-      <aside 
+      <aside
         className={clsx(
-          'relative bg-white h-full shadow-md transition-all duration-300 flex flex-col',
-          collapsed ? 'w-14' : 'w-56',
+          'fixed left-0 top-0 z-30 h-screen bg-white sidebar transition-all duration-300 ease-in-out shadow-lg overflow-hidden',
+          isCollapsed ? 'w-20' : 'w-72',
           className
-        )}
-      >
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 h-24 relative z-30">
-          {!collapsed && (
-            <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-blue-500 rounded-full"></div>
-              <span className="text-lg font-bold">ABC Solutions</span>
-            </div>
-          )}
-          <div className={clsx(
-            'absolute top-1/2 transform -translate-y-1/2',
-            collapsed ? 'left-1/2 -translate-x-1/2' : 'right-2'
-          )}>
+        )}>
+        <div className="flex flex-col h-full">
+          {/* Header */}
+          <div
+            className={clsx(
+              'flex items-center px-4 h-[64px] border-b border-gray-200',
+              isCollapsed ? 'justify-center' : 'justify-between'
+            )}
+          >
+            {!isCollapsed && (
+              <div className="flex items-center space-x-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
+                  <GraduationCap className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h2 className="font-bold text-lg text-gray-900">Escola Digital</h2>
+                  <p className="text-xs text-gray-500 font-medium">Sistema de Gestão</p>
+                </div>
+              </div>
+            )}
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button 
+                  <Button
                     variant="ghost"
-                    size="icon"
-                    onClick={handleToggleSidebar}
-                    className="rounded-full text-gray-500 hover:bg-gray-200/80 hover:text-gray-700"
+                    size="sm"
+                    onClick={onToggleCollapse}
+                    className="p-2 rounded-xl hover:bg-gray-100 transition-all duration-200 hover:scale-110 transform"
                   >
-                    {collapsed ? <PanelLeft className="h-5 w-5" /> : <PanelLeftClose className="h-5 w-5" />}
+                    {isCollapsed ? (
+                      <PanelLeft className="h-5 w-5 text-black" />
+                    ) : (
+                      <PanelLeftClose className="h-5 w-5 text-black" />
+                    )}
                   </Button>
                 </TooltipTrigger>
-                <TooltipContent>
-                  <p>{collapsed ? 'Abrir menu' : 'Recolher menu'}</p>
+                <TooltipContent side={isCollapsed ? 'right' : 'bottom'}>
+                  <p>{isCollapsed ? 'Expandir menu' : 'Recolher menu'}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
           </div>
-        </div>
-      
-        <nav className={clsx(
-          "flex-1 space-y-2 py-2 overflow-y-auto",
-          collapsed ? "px-2" : "px-6"
-        )}>
-          {menuItems.map((item) => {
-            const isActive = activeItem === item.id;
-            if (item.id === 'turmas') {
-              const href = user?.user_metadata?.role === 'professor' ? turmasPath : item.path;
-              return (
-                <div key={item.id} className="relative">
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <a
-                          href={href}
-                          className={clsx(
-                            'flex items-center p-2 rounded-md transition-colors duration-200',
-                            {
-                              'bg-blue-100 text-blue-600': isActive,
-                              'text-gray-600 hover:bg-gray-100': !isActive
-                            },
-                            collapsed ? 'justify-center' : ''
-                          )}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            handleItemClick(href);
-                          }}
-                        >
-                          <item.icon className="h-5 w-5" />
-                          {!collapsed && <span className="ml-3">{item.label}</span>}
-                        </a>
-                      </TooltipTrigger>
-                      {collapsed && (
-                        <TooltipContent side="right">
-                          <p>{item.label}</p>
-                        </TooltipContent>
-                      )}
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-              );
-            }
 
-            return (
-              <div key={item.id} className="relative">
-                <TooltipProvider>
+          {/* Navigation */}
+          <nav className="flex-1 py-2 overflow-y-auto scrollbar-hide">
+             <div className="space-y-0">
+              {menuItems.map((item) => (
+                <TooltipProvider key={item.id}>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <a
-                        href={item.path}
-                        className={clsx(
-                          'flex items-center p-2 rounded-md transition-colors duration-200',
-                          {
-                            'bg-blue-100 text-blue-600': isActive,
-                            'text-gray-600 hover:bg-gray-100': !isActive
-                          },
-                          collapsed ? 'justify-center' : ''
+                      <NavLink to={item.path} end={item.path === '/'} className={getNavLinkClass}>
+                        {({ isActive }) => (
+                          <div className={clsx(
+                            'flex items-center gap-3 transition-all duration-200',
+                            isCollapsed ? 'justify-center h-9 px-2' : 'pl-3 pr-2 py-1.5'
+                          )}>
+                            <span className="flex items-center justify-center h-7 w-7 transition-colors duration-200">
+                              <item.icon
+                                className={clsx(
+                                  'h-5 w-5 flex-shrink-0 transition-colors duration-200',
+                                  isActive ? 'text-white drop-shadow-sm' : 'text-gray-700 group-hover:text-gray-900'
+                                )}
+                                stroke="currentColor"
+                                fill="none"
+                                strokeWidth={isActive ? 2 : 1.5}
+                              />
+                            </span>
+                            {!isCollapsed && (
+                              <span
+                                className={clsx(
+                                  'truncate font-medium transition-colors duration-200',
+                                  isActive ? 'text-white font-semibold drop-shadow-sm' : 'text-gray-900'
+                                )}
+                              >
+                                {item.label}
+                              </span>
+                            )}
+                          </div>
                         )}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          handleItemClick(item.path);
-                        }}
-                      >
-                        <item.icon className="h-5 w-5" />
-                        {!collapsed && <span className="ml-3">{item.label}</span>}
-                      </a>
+                      </NavLink>
                     </TooltipTrigger>
-                    {collapsed && (
-                      <TooltipContent side="right">
+                    {isCollapsed && (
+                      <TooltipContent side="right" className="bg-black text-white">
                         <p>{item.label}</p>
                       </TooltipContent>
                     )}
                   </Tooltip>
                 </TooltipProvider>
+              ))}
+            </div>
+          </nav>
+
+          {/* Footer */}
+          <div className="p-4">
+            {/* User Info (desativado por solicitação) */}
+            {false && (
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-blue-500 rounded-xl flex items-center justify-center shadow-md">
+                <span className="text-white font-bold text-sm">
+                  {user?.email?.charAt(0).toUpperCase() || 'U'}
+                </span>
               </div>
-            );
-          })}
-        </nav>
-      
-        <div className={clsx(
-          "mt-auto py-2 border-t border-gray-200",
-          collapsed ? "px-2" : "px-6"
-        )}>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => setShowLogoutModal(true)}
-                  className={clsx(
-                    'group relative flex items-center w-full transition-all duration-200 ease-out transform rounded-xl ring-1 ring-transparent',
-                    'px-3 py-2.5 h-10',
-                    'text-gray-600 hover:bg-red-50 hover:text-red-600 hover:ring-red-200 hover:shadow-sm',
-                    collapsed ? 'justify-center' : ''
-                  )}
-                >
-                  <LogOut className="w-5 h-5 flex-shrink-0" />
-                  {!collapsed && <span className="font-medium text-sm ml-3">Sair</span>}
-                </button>
-              </TooltipTrigger>
-              {collapsed && (
-                <TooltipContent side="right">
-                  <p>Sair</p>
-                </TooltipContent>
+              {!isCollapsed && (
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-gray-900 truncate">
+                    {user?.email || 'Usuário'}
+                  </p>
+                  <p className="text-xs text-gray-500 font-medium">Professor</p>
+                </div>
               )}
-            </Tooltip>
-          </TooltipProvider>
+            </div>
+            )}
+
+            {/* Logout Button */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setShowLogoutModal(true)}
+                    className={clsx(
+                      'group flex items-center w-full transition-all duration-300 ease-in-out rounded-xl',
+                      'hover:scale-105 hover:shadow-md transform mx-2',
+                      isCollapsed ? 'justify-center h-10 px-2' : 'px-3 py-2 gap-3',
+                      'text-sm font-medium text-black hover:bg-red-50 hover:text-red-600 border border-transparent hover:border-red-200'
+                    )}
+                  >
+                    <LogOut className={clsx(
+                      'h-5 w-5 flex-shrink-0 transition-all duration-200 group-hover:scale-110 transform text-current',
+                      isCollapsed && 'mx-auto'
+                    )} 
+                    stroke="currentColor"
+                    fill="none"
+                    strokeWidth={2}
+                    />
+                    {!isCollapsed && <span className="truncate font-medium">Sair</span>}
+                  </button>
+                </TooltipTrigger>
+                {isCollapsed && (
+                  <TooltipContent side="right" className="bg-black text-white">
+                    <p>Sair</p>
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            </TooltipProvider>
+          </div>
         </div>
       </aside>
 
+      {/* Logout Modal */}
       {showLogoutModal && (
-        <div className="fixed inset-0 flex items-center justify-center z-50 backdrop-blur-sm bg-black/50">
-          <div className="bg-white rounded-2xl p-8 max-w-md w-full mx-6 shadow-2xl">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">
-              Confirmar Saída
-            </h3>
-            <p className="text-gray-600 mb-6">
-              Tem certeza que deseja sair do sistema?
-            </p>
-            <div className="flex justify-end space-x-3">
+        <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 backdrop-blur-sm">
+          <div className="bg-white rounded-2xl p-8 w-96 shadow-2xl transform transition-all duration-300 scale-100">
+            <div className="text-center mb-6">
+              <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <LogOut className="h-8 w-8 text-red-500" />
+              </div>
+              <h3 className="text-xl font-bold text-gray-900 mb-2">Confirmar Saída</h3>
+              <p className="text-gray-600">Tem certeza que deseja sair do sistema?</p>
+            </div>
+            <div className="flex space-x-3">
               <button
                 onClick={() => setShowLogoutModal(false)}
-                className="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors duration-200"
+                className="flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium hover:scale-105 transform"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors duration-200"
+                className="flex-1 px-4 py-3 text-white bg-red-500 rounded-xl hover:bg-red-600 transition-all duration-200 font-medium hover:scale-105 transform shadow-lg"
               >
                 Sair
               </button>

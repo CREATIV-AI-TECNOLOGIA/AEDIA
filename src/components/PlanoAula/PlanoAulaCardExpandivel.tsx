@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Trash2, CalendarDays, BookOpen, Users, Layers, ChevronRight, Save, X, Loader, Maximize } from 'lucide-react';
 import { PlanoAulaSupabase } from '../../pages/PlanosAula';
 import toast from 'react-hot-toast';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '../../lib/supabase';
 
 interface PlanoAulaCardExpandivelProps {
   plano: PlanoAulaSupabase;
@@ -587,4 +587,4 @@ const PlanoAulaCardExpandivel: React.FC<PlanoAulaCardExpandivelProps> = ({ plano
   );
 }; 
 
-export default PlanoAulaCardExpandivel; 
+export default PlanoAulaCardExpandivel;

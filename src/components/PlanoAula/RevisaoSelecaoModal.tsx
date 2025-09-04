@@ -4,7 +4,7 @@ import { fetchDetalhesHabilidadeContextual, fetchCamposCurricularesTrimestre } f
 import SolicitacaoIAPlanoAulaModal from './SolicitacaoIAPlanoAulaModal';
 import toast from 'react-hot-toast';
 import { generateLessonPlanWithOpenAI, LessonPlanParams } from '../../services/openaiService';
-import { supabase } from '../../lib/supabaseClient';
+import { supabase } from '../../lib/supabase';
 import { useEscola } from '../../context/EscolaContext';
 // Ex: import { salvarPlanoDeAula } from '../../services/planosAulaService';
 
@@ -455,4 +455,4 @@ const RevisaoSelecaoModal: React.FC<RevisaoSelecaoModalProps> = ({
   );
 };
 
-export default RevisaoSelecaoModal; 
+export default RevisaoSelecaoModal;

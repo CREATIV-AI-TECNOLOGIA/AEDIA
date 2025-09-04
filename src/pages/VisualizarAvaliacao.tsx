@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabase';
 import toast from 'react-hot-toast';
 import {
   ArrowLeft,

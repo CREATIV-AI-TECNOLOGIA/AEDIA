@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabase';
 
 /**
  * Busca o nome do trimestre letivo atual para um professor específico.

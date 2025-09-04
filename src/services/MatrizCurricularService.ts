@@ -1,4 +1,4 @@
-import { supabase } from '../lib/supabaseClient';
+import { supabase } from '../lib/supabase';
 import type { Habilidade } from '../components/PlanoAula/SeletorHabilidades'; // Ajuste o caminho se necessário
 
 interface MatrizHabilidadeRawFromDB {
@@ -66,4 +66,4 @@ export const getHabilidadesFormatadas = async (
     console.error('Exceção ao tentar buscar habilidades da matriz curricular:', e);
     return [];
   }
-}; 
+};

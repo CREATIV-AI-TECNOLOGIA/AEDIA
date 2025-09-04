@@ -60,6 +60,13 @@ const Layout: React.FC<LayoutProps> = ({
     setMounted(true);
   }, []);
 
+  // Fechar drawer mobile automaticamente quando a rota mudar
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      setMobileMenuOpen(false);
+    }
+  }, [location.pathname]);
+
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
@@ -92,19 +99,15 @@ const Layout: React.FC<LayoutProps> = ({
 
       {/* Sidebar para mobile (sobreposta) com animação */}
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-30 md:hidden">
+        <div className="fixed inset-0 z-50 md:hidden">
           <div 
-            className="absolute inset-0 bg-gray-800 bg-opacity-75 transition-opacity duration-200" 
+            className="absolute inset-0 bg-gray-800/70 transition-opacity duration-200" 
             onClick={toggleMobileMenu}
-            style={{ 
-              opacity: mounted ? 1 : 0 
-            }}
-          ></div>
+            style={{ opacity: mounted ? 1 : 0 }}
+          />
           <div 
             className="relative flex h-full transition-transform duration-200" 
-            style={{ 
-              transform: mounted ? 'translateX(0)' : 'translateX(-100%)' 
-            }}
+            style={{ transform: mounted ? 'translateX(0)' : 'translateX(-100%)' }}
           >
             <Sidebar />
             <button 
@@ -119,7 +122,10 @@ const Layout: React.FC<LayoutProps> = ({
         </div>
       )}
 
-      <div className="flex flex-col flex-1 transition-all duration-300 ease-in-out">
+      {/* Conteúdo com offset da sidebar fixa em desktop */}
+      <div
+        className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'md:ml-20' : 'md:ml-72'}`}
+      >
         <Header 
           onMenuToggle={toggleMobileMenu} 
           className="bg-white border-b border-gray-200"

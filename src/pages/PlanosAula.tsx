@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { useEscola } from '../context/EscolaContext';
 import { getProfessorComModalidades, ProfessorComModalidades } from '../services/ProfessorService';
 import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabaseClient'; // Importar supabase
+import { supabase } from '../lib/supabase'; // Importar supabase
 import { FileText, AlertTriangle, PlusCircle, Search, X, BookOpen, Calendar, Clock, Filter, Target, Award, Sparkle } from 'lucide-react'; // Adicionado ícones Search e X
 import toast from 'react-hot-toast'; // Para notificações
 import PlanoAulaCardModerno from '../components/PlanoAula/PlanoAulaCardModerno'; // Novo card moderno
@@ -631,4 +631,4 @@ export const PlanosAulaWithSearch: React.FC = memo(() => {
   );
 });
 
-PlanosAulaWithSearch.displayName = 'PlanosAulaWithSearch'; 
+PlanosAulaWithSearch.displayName = 'PlanosAulaWithSearch';

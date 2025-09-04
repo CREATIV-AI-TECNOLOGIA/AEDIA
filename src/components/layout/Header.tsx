@@ -8,6 +8,7 @@ import styles from './Header.module.css'; // Supondo que você terá um CSS modu
 
 import SeletorEscolaModal from './SeletorEscolaModal';
 import { Search, X } from 'lucide-react';
+import Avatar from '../ui/Avatar';
 
 interface HeaderProps {
   onMenuToggle?: () => void;
@@ -95,17 +96,20 @@ const Header: React.FC<HeaderProps> = ({
     setIsNotificationOpen(false);
   };
 
+  const avatarSrc = professorData?.avatar_url || (user as any)?.user_metadata?.avatar_url || undefined;
+  const avatarName = professorData?.nome || (user as any)?.user_metadata?.full_name || user?.email || 'Usuário';
+
   return (
     <header className={`
-      bg-white/60 backdrop-blur-md border-b border-gray-200/80 shadow-sm
-      sticky top-0 z-50 transition-all duration-300
+      h-[64px] bg-white/60 backdrop-blur-md border-b border-gray-200/80 shadow-sm
+      sticky top-0 z-20 transition-all duration-300
       ${className || ''}
     `}>
       {NOTIFICATION_SOUND_URL && (
         <audio ref={notificationSoundRef} src={NOTIFICATION_SOUND_URL} preload="auto" />
       )}
-      <div className="px-6 py-4 flex items-center justify-between h-24">
-        <div className="flex items-center space-x-4 flex-1">
+      <div className="px-6 h-full flex items-center justify-between">
+        <div className="flex items-center space-x-4 flex-1 min-w-0">
           {/* Botão do menu mobile */}
           <button
             onClick={onMenuToggle}
@@ -143,7 +147,7 @@ const Header: React.FC<HeaderProps> = ({
                   value={searchValue || ''}
                   onChange={(e) => onSearchChange?.(e.target.value)}
                   placeholder={searchPlaceholder || 'Buscar...'}
-                  className="w-full py-3 pl-12 pr-12 bg-transparent text-slate-800 placeholder-slate-500 outline-none rounded-xl text-sm font-medium"
+                  className="w-full py-2.5 pl-12 pr-12 bg-transparent text-slate-800 placeholder-slate-500 outline-none rounded-xl text-sm font-medium"
                 />
                 {searchValue && (
                   <button 
@@ -159,10 +163,10 @@ const Header: React.FC<HeaderProps> = ({
         )}
 
         {/* Itens à Direita do Header */}
-        <div className="flex items-center space-x-3 md:space-x-4">
+        <div className="flex items-center space-x-3 md:space-x-4 flex-shrink-0">
           {/* 1. Notificações */}
           <div className={styles.notificationContainer}>
-            <button onClick={() => setIsNotificationOpen(prev => !prev)} className={`${styles.notificationButton} ${bellShouldShake ? styles.shake : ''}`}>
+            <button onClick={() => setIsNotificationOpen(prev => !prev)} className={`${styles.notificationButton} ${bellShouldShake ? styles.shake : ''}`} aria-label="Abrir notificações">
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
@@ -176,65 +180,40 @@ const Header: React.FC<HeaderProps> = ({
               )}
             </button>
             {isNotificationOpen && (
-              <div className={styles.notificationDropdown}>
+              <div className={styles.notificationDropdown} role="menu" aria-label="Notificações">
                 <div className={styles.dropdownHeader}>
-                  <h4>Notificações</h4>
-                  <button onClick={handleClearAll} className={styles.clearAllButton}>Limpar todas</button>
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-semibold text-gray-800">Notificações</h3>
+                    <button onClick={handleClearAll} className="text-xs text-blue-600 hover:underline">Marcar todas como lidas</button>
+                  </div>
                 </div>
-                {notifications.length > 0 ? (
-                  <ul>
-                    {notifications.map(notif => (
-                      <li key={notif.id} onClick={() => handleNotificationClick(notif)}>
-                        <strong>{notif.data.sender_name}</strong> enviou uma mensagem:
-                        <p>"{notif.data.message_preview}..."</p>
-                      </li>
-                    ))}
-                  </ul>
-                ) : (
-                  <div className={styles.noNotifications}>Nenhuma nova notificação</div>
-                )}
+                <div className={styles.dropdownContent}>
+                  {notifications.length === 0 ? (
+                    <p className="text-sm text-gray-500">Sem notificações</p>
+                  ) : (
+                    notifications.map((n) => (
+                      <button key={n.id} onClick={() => handleNotificationClick(n)} className={styles.notificationItem}>
+                        <div>
+                          <p className="text-sm font-medium text-gray-800">{n.title || 'Nova mensagem'}</p>
+                          <p className="text-xs text-gray-500">{n.message || 'Você tem uma nova mensagem'}</p>
+                        </div>
+                      </button>
+                    ))
+                  )}
+                </div>
               </div>
             )}
           </div>
 
-          {/* 2. Seletor de Escola Modal */}
-          {!isDiretora && (
-            <div className="flex items-center">
-              <SeletorEscolaModal />
-            </div>
-          )}
-         
-          {/* 3. Nome do Professor */}
-          <span className="text-sm font-medium text-gray-700 truncate max-w-[120px] md:max-w-[150px] transition-colors duration-300 hover:text-gray-800">
-            {professorData?.nome || user?.user_metadata?.nome || user?.user_metadata?.name || user?.email?.split('@')[0] || 'Professor'}
-          </span>
-            
-          {/* 4. Avatar do usuário com efeitos */}
-          <div className="relative group/avatar">
-            {((professorData?.avatar_url || user?.user_metadata?.avatar_url) && !avatarError) ? (
-              <img
-                src={professorData?.avatar_url || user?.user_metadata?.avatar_url}
-                alt="Perfil"
-                className="h-10 w-10 rounded-full object-cover ring-2 ring-white/50 shadow-md transition-all duration-300 group/avatar:scale-110 group/avatar:ring-indigo-300"
-                onError={() => setAvatarError(true)}
-              />
-            ) : !avatarError ? (
-              <img 
-                src="https://avatar.iran.liara.run/public/girl" 
-                alt="Avatar Padrão"
-                className="h-10 w-10 rounded-full object-cover ring-2 ring-white/50 shadow-md transition-all duration-300 group/avatar:scale-110 group/avatar:ring-indigo-300"
-                onError={() => setAvatarError(true)}
-              />
-            ) : (
-              <div className="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center ring-2 ring-white/50 shadow-md transition-all duration-300 group/avatar:scale-110 group/avatar:ring-indigo-300">
-                <span className="text-white text-lg font-medium">
-                  {(user?.email?.[0] || 'P').toUpperCase()}
-                </span>
-              </div>
-            )}
-            {/* Indicador online */}
-            <div className="absolute -bottom-1 -right-1 h-3 w-3 rounded-full bg-green-500 border-2 border-white shadow-sm animate-pulse"></div>
-          </div>
+          {/* 2. Avatar/Perfil */}
+          <button className="flex items-center gap-2 rounded-full p-1 hover:bg-gray-100 transition-colors" aria-label="Abrir perfil">
+            <Avatar 
+              src={avatarSrc}
+              name={avatarName}
+              size="sm"
+              className="ring-1 ring-gray-200"
+            />
+          </button>
         </div>
       </div>
     </header>

@@ -29,6 +29,7 @@ import Card from '../components/layout/Card';
 import Layout from '../components/layout/Layout';
 import { PlusIcon } from 'lucide-react';
 import { useDebounce } from '../hooks/useDebounce';
+import StatusSelect from '../components/ui/StatusSelect';
 
 interface Avaliacao {
   id: string;
@@ -451,42 +452,48 @@ const Avaliacoes: React.FC<AvaliacoesProps> = ({
           
           {showFiltros && (
             <div className="flex items-center gap-3">
-              <select
+              <StatusSelect
                 value={filtroStatus}
                 onChange={handleFiltroStatusChange}
-                className="text-sm px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value="todos">Todos os status</option>
-                <option value="pendente">Pendente</option>
-                <option value="aplicada">Aplicada</option>
-                <option value="corrigida">Corrigida</option>
-                <option value="publicada">Publicada</option>
-                <option value="pendente_correcao">Aguardando Correção</option>
-              </select>
+                options={
+                  [
+                    { value: 'todos', label: 'Todos os status' },
+                    { value: 'pendente', label: 'Pendente' },
+                    { value: 'aplicada', label: 'Aplicada' },
+                    { value: 'corrigida', label: 'Corrigida' },
+                    { value: 'publicada', label: 'Publicada' },
+                    { value: 'pendente_correcao', label: 'Aguardando Correção' }
+                  ]
+                }
+              />
 
-              <select
+              <StatusSelect
                 value={filtroTipo}
                 onChange={handleFiltroTipoChange}
-                className="text-sm px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value="todos">Todos os tipos</option>
-                <option value="prova">Prova</option>
-                <option value="trabalho">Trabalho</option>
-                <option value="projeto">Projeto</option>
-                <option value="atividade">Atividade</option>
-                <option value="apresentacao">Apresentação</option>
-              </select>
+                options={
+                  [
+                    { value: 'todos', label: 'Todos os tipos' },
+                    { value: 'prova', label: 'Prova' },
+                    { value: 'trabalho', label: 'Trabalho' },
+                    { value: 'projeto', label: 'Projeto' },
+                    { value: 'atividade', label: 'Atividade' },
+                    { value: 'apresentacao', label: 'Apresentação' }
+                  ]
+                }
+              />
 
-              <select
+              <StatusSelect
                 value={filtroPeriodo}
                 onChange={handleFiltroPeriodoChange}
-                className="text-sm px-3 py-1.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-              >
-                <option value="todos">Todos os períodos</option>
-                <option value="hoje">Hoje</option>
-                <option value="semana">Próximos 7 dias</option>
-                <option value="mes">Próximos 30 dias</option>
-              </select>
+                options={
+                  [
+                    { value: 'todos', label: 'Todos os períodos' },
+                    { value: 'hoje', label: 'Hoje' },
+                    { value: 'semana', label: 'Próximos 7 dias' },
+                    { value: 'mes', label: 'Próximos 30 dias' }
+                  ]
+                }
+              />
 
               {filtrosAtivos && (
                 <button 
@@ -618,4 +625,4 @@ export const AvaliacoesWithSearch: React.FC = memo(() => {
 
 AvaliacoesWithSearch.displayName = 'AvaliacoesWithSearch';
 
-export default Avaliacoes; 
+export default Avaliacoes;
