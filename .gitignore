@@ -47,3 +47,13 @@ dist-ssr
 /coverage
 .turbo
 *.pem
+
+# PostgreSQL binários e arquivos grandes
+postgresql-binaries.zip
+postgresql/
+*.dll
+*.exe
+*.zip
+*.tar.gz
+*.7z
+*.rar
