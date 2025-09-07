@@ -2,7 +2,6 @@ import jsPDF from 'jspdf';
 import { saveAs } from 'file-saver';
 import { Document, Packer, Paragraph, TextRun, HeadingLevel } from 'docx';
 
-// Interface para os dados do plano de aula
 interface PlanoAulaData {
   titulo: string;
   disciplinaNome?: string;
@@ -11,7 +10,6 @@ interface PlanoAulaData {
   conteudoHTML: string;
 }
 
-// Interface para os dados da avaliação
 interface AvaliacaoData {
   id?: string;
   titulo: string;
@@ -29,14 +27,12 @@ interface AvaliacaoData {
   conteudoHTML: string;
 }
 
-// Função para limpar HTML e extrair texto puro
 function htmlToText(html: string): string {
   const div = document.createElement('div');
   div.innerHTML = html;
   return div.textContent || div.innerText || '';
 }
 
-// Função utilitária para processar tags HTML
 function processHTMLTag(tagName: string, content: string): { type: 'heading' | 'paragraph' | 'list', level?: number } {
   if (tagName.startsWith('h')) {
     return { type: 'heading', level: parseInt(tagName.charAt(1)) };

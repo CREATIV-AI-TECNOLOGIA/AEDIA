@@ -62,7 +62,6 @@ export async function generateLessonPlanWithGemini(params: LessonPlanParams): Pr
 Aja como um especialista em pedagogia e design instrucional com foco em ensino de alta qualidade para qualquer nível, modalidade ou disciplina. Sua tarefa é criar um plano de aula robusto, detalhado e completo, com base nos seguintes filtros:
 
 DADOS DO PLANO DE AULA:
-===========================
 - Tema/Tópico: ${params.topico}
 - Disciplina: ${params.disciplina}
 - Ano escolar/Série: ${params.serie}
@@ -74,27 +73,22 @@ DADOS DO PLANO DE AULA:
 - Abordagem Pedagógica Preferida: ${params.abordagemPedagogica || "Sem preferência específica"}
 
 HABILIDADES DA BNCC A SEREM TRABALHADAS:
-=====================================
 ${params.habilidadesBNCC.map(h => `- ${h}`).join('\n')}
 
 OBJETIVOS ESPECÍFICOS:
-==============================================
 ${params.objetivos && params.objetivos.length > 0
   ? params.objetivos.map(obj => `- ${obj}`).join('\n')
   : "A definir com base nas habilidades da BNCC e no tema."}
 
 RECURSOS/MATERIAIS SUGERIDOS:
-==========================
 ${params.recursos && params.recursos.length > 0
   ? params.recursos.map(r => `- ${r}`).join('\n')
   : "A definir com base no tema e série."}
 
 OBSERVAÇÕES ADICIONAIS:
-====================
 ${params.observacoes || "Sem observações adicionais específicas."}
 
 INSTRUÇÕES ESPECIAIS:
-==================
 ${params.instrucoesAdicionais || "Sem instruções especiais."}
 
 Você é responsável por garantir que o plano seja aplicável, didaticamente coerente, envolvente, e alinhado com práticas pedagógicas modernas. O plano de aula deve contemplar a duração especificada, mas também deve permitir divisão em unidades menores, conforme o conteúdo e a realidade escolar.
@@ -219,4 +213,4 @@ Nome do Plano: ${params.nomePlano || "Defina um nome descritivo e criativo para 
         throw new Error("Ocorreu um erro desconhecido ao se comunicar com a API Gemini.");
     }
   }
-} 
+}

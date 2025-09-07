@@ -23,7 +23,3 @@ export interface Aluno {
   created_at?: string;
   updated_at?: string;
 }
-
-// Outros tipos podem ser adicionados aqui conforme necessário
-// Ex: export interface Turma { ... }
-// Ex: export interface Escola { ... } 

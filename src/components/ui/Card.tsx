@@ -1,15 +1,15 @@
-import React from 'react';
+import { ReactNode, FC } from 'react';
 
 interface CardProps {
   title?: string;
   subtitle?: string;
-  icon?: React.ReactNode;
-  action?: React.ReactNode;
-  children: React.ReactNode;
+  icon?: ReactNode;
+  action?: ReactNode;
+  children: ReactNode;
   className?: string;
 }
 
-const Card: React.FC<CardProps> = ({ 
+const Card: FC<CardProps> = ({ 
   title, 
   subtitle, 
   icon, 
@@ -36,4 +36,4 @@ const Card: React.FC<CardProps> = ({
   );
 };
 
-export default Card; 
+export default Card;

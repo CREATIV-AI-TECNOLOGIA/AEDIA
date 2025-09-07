@@ -1,7 +1,7 @@
-import React from 'react';
+import { ReactNode, FC } from 'react';
 
 interface CardProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   withHover?: boolean;
   withAnimation?: boolean;
@@ -10,7 +10,7 @@ interface CardProps {
   variant?: 'default' | 'outlined' | 'elevated';
 }
 
-const Card: React.FC<CardProps> = ({ 
+const Card: FC<CardProps> = ({ 
   children, 
   className = '',
   withHover = false,
@@ -62,4 +62,4 @@ const Card: React.FC<CardProps> = ({
   );
 };
 
-export default Card; 
+export default Card;

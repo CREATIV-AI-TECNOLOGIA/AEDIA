@@ -1,23 +1,21 @@
-import React from 'react';
+import { ReactNode, forwardRef } from 'react';
 
 interface ButtonProps {
-  children: React.ReactNode;
+  children: ReactNode;
   variant?: 'primary' | 'secondary' | 'outline' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   fullWidth?: boolean;
   onClick?: () => void;
   type?: 'button' | 'submit' | 'reset';
   disabled?: boolean;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   className?: string;
 }
 
-const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
+const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, variant = 'primary', size = 'md', fullWidth = false, onClick, type = 'button', disabled = false, icon, className = '' }, ref) => {
-    // Estilos base
     const baseStyles = 'font-medium rounded-md transition-colors focus:outline-none';
     
-    // Variantes
     const variantStyles = {
       primary: 'bg-blue-500 hover:bg-blue-600 text-white',
       secondary: 'bg-gray-200 hover:bg-gray-300 text-gray-800',
@@ -25,19 +23,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       danger: 'bg-red-500 hover:bg-red-600 text-white',
     };
     
-    // Tamanhos
     const sizeStyles = {
       sm: 'text-xs py-2 px-3',
       md: 'text-sm py-3 px-4',
       lg: 'text-base py-3 px-6',
     };
     
-    // Estado desabilitado
     const disabledStyles = disabled 
       ? 'opacity-50 cursor-not-allowed' 
       : 'cursor-pointer';
     
-    // Largura total
     const widthStyles = fullWidth ? 'w-full' : '';
     
     return (

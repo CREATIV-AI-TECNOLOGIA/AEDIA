@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 
 interface ColorBoxProps {
   name: string;
@@ -7,7 +7,7 @@ interface ColorBoxProps {
   description?: string;
 }
 
-const ColorBox: React.FC<ColorBoxProps> = ({ name, colorClass, hexCode, description }) => (
+const ColorBox: FC<ColorBoxProps> = ({ name, colorClass, hexCode, description }) => (
   <div className="group relative overflow-hidden rounded-lg shadow-sm hover:shadow-araruama transition-all duration-300">
     <div className={`h-20 ${colorClass} relative`}>
       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-black/10 transition-opacity flex items-center justify-center">
@@ -26,7 +26,7 @@ const ColorBox: React.FC<ColorBoxProps> = ({ name, colorClass, hexCode, descript
   </div>
 );
 
-const ColorPalette: React.FC = () => {
+const ColorPalette: FC = () => {
   const blueColors = [
     { name: 'Blue 50', colorClass: 'bg-araruama-blue-50', hexCode: '#f0f8ff', description: 'Backgrounds sutis' },
     { name: 'Blue 100', colorClass: 'bg-araruama-blue-100', hexCode: '#e0f2ff', description: 'Seções destacadas' },
@@ -187,4 +187,4 @@ const ColorPalette: React.FC = () => {
   );
 };
 
-export default ColorPalette; 
+export default ColorPalette;

@@ -3,20 +3,17 @@ import { tokenService, TokenUsage } from './tokenService';
 import { contextOptimizer, ConversationMessage } from './contextOptimizer';
 import { conversationMemory } from './conversationMemory';
 import { performWebSearchIfNeeded, WebSearchInfo as TavilyWebSearchInfo } from './tavilyIntegration';
-// import { applyWebSearchToPrompt, WebSearchInfo } from './tavilyIntegration'; // TAVILY DESABILITADO
 import { openaiService } from './openaiService';
 
-// Interface temporária para substituir WebSearchInfo quando Tavily está desabilitado
 interface WebSearchInfo {
   used: boolean;
   sources: string[];
   error?: string;
 }
 
-// Função mock para substituir applyWebSearchToPrompt quando Tavily está desabilitado
 const applyWebSearchToPrompt = async (systemPrompt: string, message: string) => {
   return {
-    enhancedPrompt: systemPrompt, // Retorna o prompt original sem busca web
+    enhancedPrompt: systemPrompt,
     webSearchInfo: {
       used: false,
       sources: [],
@@ -967,4 +964,4 @@ Responda APENAS com o texto pontuado, sem explicações.`;
   }
 }
 
-export const aiService = AIService.getInstance(); 
+export const aiService = AIService.getInstance();

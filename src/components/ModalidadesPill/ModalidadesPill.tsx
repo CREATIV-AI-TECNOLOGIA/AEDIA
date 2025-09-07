@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import { Modalidade } from '../../services/ProfessorService';
 import './ModalidadesPill.css';
 
@@ -8,7 +8,7 @@ interface ModalidadesPillProps {
   selectedModalidade?: Modalidade | null;
 }
 
-const ModalidadesPill: React.FC<ModalidadesPillProps> = ({ 
+const ModalidadesPill: FC<ModalidadesPillProps> = ({ 
   modalidades,
   onChange,
   selectedModalidade
@@ -37,4 +37,4 @@ const ModalidadesPill: React.FC<ModalidadesPillProps> = ({
   );
 };
 
-export default ModalidadesPill; 
+export default ModalidadesPill;

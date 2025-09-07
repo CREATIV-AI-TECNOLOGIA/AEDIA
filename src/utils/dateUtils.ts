@@ -18,17 +18,7 @@ export const getGreeting = (): string => {
  * Retorna a classe CSS adequada para o gradiente de cores baseado na hora do dia.
  * @returns {string} Classe CSS para o gradiente
  */
-export const getGreetingGradientClass = (): string => {
-  const hour = new Date().getHours();
-  
-  if (hour >= 5 && hour < 12) {
-    return 'text-gradient-morning'; // Azul-claro para manhã
-  } else if (hour >= 12 && hour < 18) {
-    return 'text-gradient-afternoon'; // Dourado para tarde
-  } else {
-    return 'text-gradient-night'; // Violeta para noite
-  }
-};
+
 
 /**
  * Retorna as classes CSS para o ícone e fundo com base na hora do dia.
@@ -56,4 +46,4 @@ export const getTimeBasedClasses = (): { icon: string, background: string, text:
       text: 'text-indigo-500'
     }; // Noite: tons de índigo/roxo
   }
-}; 
+};

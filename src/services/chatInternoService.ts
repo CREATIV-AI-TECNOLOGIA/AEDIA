@@ -1,8 +1,5 @@
 import { supabase } from '../lib/supabase';
 
-// ----------------------
-// Tipagens
-// ----------------------
 export interface ChatUser {
   user_id: string;
   nome: string;
@@ -37,10 +34,6 @@ export interface Mensagem {
   visualizado_em: string | null;
   status?: 'enviando' | 'enviado' | 'falhou';
 }
-
-// ------------------------------------------------------------------
-// Funções de Conversas
-// ------------------------------------------------------------------
 
 /**
  * Busca as conversas existentes em que o usuário participa (apenas as não deletadas).

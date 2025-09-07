@@ -47,10 +47,3 @@ export const buscarHabilidades = async (
     return [];
   }
 };
-
-/**
- * Dados mock para desenvolvimento enquanto a API não está pronta
- */
-export const getHabilidadesMock = (): Habilidade[] => {
-  return habilidadesMock;
-};

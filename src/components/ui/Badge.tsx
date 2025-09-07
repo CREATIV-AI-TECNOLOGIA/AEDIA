@@ -1,15 +1,15 @@
-import React from 'react';
+import { ReactNode, FC } from 'react';
 
 interface BadgeProps {
-  children: React.ReactNode;
+  children: ReactNode;
   variant?: 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'default';
   size?: 'sm' | 'md' | 'lg';
   rounded?: boolean;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   className?: string;
 }
 
-const Badge: React.FC<BadgeProps> = ({
+const Badge: FC<BadgeProps> = ({
   children,
   variant = 'default',
   size = 'md',
@@ -17,10 +17,8 @@ const Badge: React.FC<BadgeProps> = ({
   icon,
   className = '',
 }) => {
-  // Estilos base
   const baseStyles = 'inline-flex items-center font-medium';
   
-  // Variantes
   const variantStyles = {
     primary: 'bg-blue-100 text-blue-800',
     success: 'bg-green-100 text-green-800',
@@ -30,14 +28,12 @@ const Badge: React.FC<BadgeProps> = ({
     default: 'bg-gray-100 text-gray-800',
   };
   
-  // Tamanhos
   const sizeStyles = {
     sm: 'text-xs px-2 py-0.5',
     md: 'text-xs px-2.5 py-1',
     lg: 'text-sm px-3 py-1.5',
   };
   
-  // Arredondamento
   const roundedStyles = rounded ? 'rounded-full' : 'rounded';
   
   return (
@@ -56,4 +52,4 @@ const Badge: React.FC<BadgeProps> = ({
   );
 };
 
-export default Badge; 
+export default Badge;

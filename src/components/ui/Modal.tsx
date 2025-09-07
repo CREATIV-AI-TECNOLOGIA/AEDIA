@@ -8,7 +8,6 @@ interface ModalProps {
 }
 
 const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
-  // Fecha o modal com a tecla ESC
   useEffect(() => {
     const handleEsc = (e: KeyboardEvent) => e.key === 'Escape' && onClose();
     isOpen && window.addEventListener('keydown', handleEsc);
@@ -23,14 +22,12 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
         className="max-w-md w-full bg-white rounded-lg shadow-lg"
         onClick={e => e.stopPropagation()}
       >
-        {/* Cabeçalho */}
         {title && (
           <div className="px-4 py-3 border-b border-gray-200">
             <h3 className="text-lg font-medium text-gray-900">{title}</h3>
           </div>
         )}
 
-        {/* Conteúdo */}
         <div className="p-4">
           {children}
         </div>
@@ -39,4 +36,4 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
   );
 };
 
-export default Modal; 
+export default Modal;

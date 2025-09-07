@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 import DOMPurify from 'dompurify';
 
 interface AvaliacaoStructuredViewProps {
@@ -30,7 +30,7 @@ interface AvaliacaoData {
   nota?: string;
 }
 
-const AvaliacaoStructuredView: React.FC<AvaliacaoStructuredViewProps> = ({ conteudoHtml }) => {
+const AvaliacaoStructuredView: FC<AvaliacaoStructuredViewProps> = ({ conteudoHtml }) => {
   const parseAvaliacaoContent = (html: string): AvaliacaoData | null => {
     if (!html) return null;
 

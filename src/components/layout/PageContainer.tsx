@@ -1,12 +1,12 @@
-import React from 'react';
+import { ReactNode, FC } from 'react';
 
 interface PageContainerProps {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   withGradient?: boolean;
 }
 
-const PageContainer: React.FC<PageContainerProps> = ({ 
+const PageContainer: FC<PageContainerProps> = ({ 
   children, 
   className = '',
   withGradient = false 
@@ -20,4 +20,4 @@ const PageContainer: React.FC<PageContainerProps> = ({
   );
 };
 
-export default PageContainer; 
+export default PageContainer;

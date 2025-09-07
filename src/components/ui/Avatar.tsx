@@ -33,7 +33,6 @@ const Avatar: React.FC<AvatarProps> = ({
     return (names[0].charAt(0) + names[names.length - 1].charAt(0)).toUpperCase();
   };
   
-  // Tamanhos
   const sizeStyles = {
     xs: 'w-6 h-6 text-xs',
     sm: 'w-8 h-8 text-sm',
@@ -42,13 +41,11 @@ const Avatar: React.FC<AvatarProps> = ({
     xl: 'w-16 h-16 text-lg',
   };
   
-  // Formas
   const shapeStyles = {
     circle: 'rounded-full',
     square: 'rounded-md',
   };
   
-  // Status (indicador online/offline)
   const statusStyles = {
     online: 'bg-green-500',
     offline: 'bg-gray-400',
@@ -56,7 +53,6 @@ const Avatar: React.FC<AvatarProps> = ({
     away: 'bg-yellow-500',
   };
   
-  // Cores de background para fallback (baseadas na primeira letra do nome)
   const bgColors = [
     'bg-blue-500',
     'bg-green-500',
@@ -130,4 +126,4 @@ const Avatar: React.FC<AvatarProps> = ({
   );
 };
 
-export default Avatar; 
+export default Avatar;

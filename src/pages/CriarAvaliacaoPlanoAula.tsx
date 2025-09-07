@@ -31,7 +31,6 @@ interface PlanoAulaDetalhado {
   escola_id: number;
   trimestre: string;
   habilidades: string[];
-  // Dados relacionados
   disciplinaNome: string;
   turmaAno: string;
   turmaNome: string;
@@ -110,7 +109,6 @@ const CriarAvaliacaoPlanoAula: React.FC = () => {
 
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Estados principais
   const [planoAula, setPlanoAula] = useState<PlanoAulaDetalhado | null>(null);
   const [configuracaoFaixa, setConfiguracaoFaixa] = useState<ConfiguracaoFaixaEtaria | null>(null);
   const [conteudosExtracted, setConteudosExtracted] = useState<ConteudoExtract[]>([]);
@@ -136,12 +134,10 @@ const CriarAvaliacaoPlanoAula: React.FC = () => {
     instrucoesPersonalizadas: undefined // Padrão undefined = usar instruções padrão
   });
 
-  // Estados de controle
   const [loading, setLoading] = useState(true);
 
   const [generating, setGenerating] = useState(false);
   const [etapaAtual, setEtapaAtual] = useState(() => {
-    // Inicializar etapa atual baseada na URL
     const etapaUrl = searchParams.get('etapa');
     return etapaUrl ? parseInt(etapaUrl) : 1;
   });
@@ -156,10 +152,8 @@ const CriarAvaliacaoPlanoAula: React.FC = () => {
     observacoes: string[];
   } | null>(null);
 
-  // Ref para o container das etapas
   const etapasContainerRef = useRef<HTMLDivElement>(null);
 
-  // Efeito para sincronizar etapa com URL
   useEffect(() => {
     const etapaUrl = searchParams.get('etapa');
     const etapaNumero = etapaUrl ? parseInt(etapaUrl) : 1;
@@ -168,9 +162,7 @@ const CriarAvaliacaoPlanoAula: React.FC = () => {
     }
   }, [searchParams]);
 
-  // Efeito para scroll para o topo quando mudar de etapa
   useEffect(() => {
-    // Função robusta para resetar scroll
     const resetScroll = () => {
       // Primeiro, tentar usar a ref do container das etapas
       if (etapasContainerRef.current) {

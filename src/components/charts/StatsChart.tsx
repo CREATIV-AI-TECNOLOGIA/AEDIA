@@ -1,4 +1,4 @@
-import React from 'react';
+import { ReactNode, FC } from 'react';
 
 interface StatsProps {
   title: string;
@@ -7,11 +7,11 @@ interface StatsProps {
     value: number;
     type: 'increase' | 'decrease';
   };
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   className?: string;
 }
 
-const StatsChart: React.FC<StatsProps> = ({
+const StatsChart: FC<StatsProps> = ({
   title,
   value,
   change,
@@ -62,4 +62,4 @@ const StatsChart: React.FC<StatsProps> = ({
   );
 };
 
-export default StatsChart; 
+export default StatsChart;

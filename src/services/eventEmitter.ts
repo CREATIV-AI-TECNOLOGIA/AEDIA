@@ -1,5 +1,3 @@
-// src/services/eventEmitter.ts
-
 type EventCallback = (data?: any) => void;
 
 class EventEmitter {
@@ -33,4 +31,4 @@ class EventEmitter {
   }
 }
 
-export const eventEmitter = new EventEmitter(); 
+export const eventEmitter = new EventEmitter();

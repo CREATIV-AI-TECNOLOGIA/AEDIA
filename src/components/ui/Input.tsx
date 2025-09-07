@@ -1,24 +1,24 @@
-import React from 'react';
+import { ChangeEvent, FocusEvent, ReactNode, FC } from 'react';
 
 interface InputProps {
   type?: string;
   placeholder?: string;
   value?: string;
-  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   name?: string;
   id?: string;
   label?: string;
   error?: string;
   disabled?: boolean;
   required?: boolean;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   iconPosition?: 'left' | 'right';
   className?: string;
-  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void;
-  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void;
+  onBlur?: (e: FocusEvent<HTMLInputElement>) => void;
+  onFocus?: (e: FocusEvent<HTMLInputElement>) => void;
 }
 
-const Input: React.FC<InputProps> = ({
+const Input: FC<InputProps> = ({
   type = 'text',
   placeholder,
   value,
@@ -95,4 +95,4 @@ const Input: React.FC<InputProps> = ({
   );
 };
 
-export default Input; 
+export default Input;
