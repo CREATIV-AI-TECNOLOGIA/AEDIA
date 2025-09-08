@@ -438,7 +438,7 @@ const Avaliacoes: React.FC<AvaliacoesProps> = ({
   }, [filtroStatus, filtroTipo, filtroPeriodo]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 space-y-6">
       <div className="flex justify-between items-center mb-6">
         <div className="flex items-center gap-4">
           <button
@@ -545,19 +545,21 @@ const Avaliacoes: React.FC<AvaliacoesProps> = ({
           <p className="mt-4 text-gray-600">Carregando avaliações...</p>
         </div>
       ) : getAvaliacoesFiltradas.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {getAvaliacoesFiltradas.map(avaliacao => (
-            <AvaliacaoCard
-              key={avaliacao.id}
-              avaliacao={avaliacao}
-              onVisualizar={visualizarAvaliacao}
-              onExcluir={excluirAvaliacao}
-              getTipoIcon={getTipoIcon}
-              getTipoLabel={getTipoLabel}
-              getStatusLabel={getStatusLabel}
-              getStatusBadgeClass={getStatusBadgeClass}
-            />
-          ))}
+        <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-slate-200/70 ring-1 ring-white/50">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {getAvaliacoesFiltradas.map(avaliacao => (
+              <AvaliacaoCard
+                key={avaliacao.id}
+                avaliacao={avaliacao}
+                onVisualizar={visualizarAvaliacao}
+                onExcluir={excluirAvaliacao}
+                getTipoIcon={getTipoIcon}
+                getTipoLabel={getTipoLabel}
+                getStatusLabel={getStatusLabel}
+                getStatusBadgeClass={getStatusBadgeClass}
+              />
+            ))}
+          </div>
         </div>
       ) : (
         <div className="text-center py-16">

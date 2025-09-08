@@ -402,14 +402,16 @@ const CalendarioEscolar: React.FC = () => {
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 md:p-8">
-      {loading ? (
-        <div className="flex justify-center items-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-          <p className="ml-4 text-gray-600">Carregando dados do calendário...</p>
-        </div>
-      ) : (
-        <>
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 space-y-6">
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+              <p className="ml-4 text-gray-600">Carregando dados do calendário...</p>
+            </div>
+          ) : (
+            <>
           {/* Seção de Informações e Trimestre Atual */}
           <motion.div 
             variants={itemVariants}
@@ -613,8 +615,10 @@ const CalendarioEscolar: React.FC = () => {
               </form>
             </Modal>
           )}
-        </>
-      )}
+            </>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

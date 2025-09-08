@@ -23,14 +23,17 @@ import {
   TooltipTrigger,
 } from '../ui/Tooltip';
 import { useAuth } from '../../context/AuthContext';
+import SidebarToggle from '../ui/SidebarToggle';
 
 interface SidebarProps {
   className?: string;
   isCollapsed?: boolean;
   onToggleCollapse?: () => void;
+  // Novo: variante de estilo visual
+  styleVariant?: 'classic' | 'alt';
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ className, isCollapsed = false, onToggleCollapse }) => {
+const Sidebar: React.FC<SidebarProps> = ({ className, isCollapsed = false, onToggleCollapse, styleVariant = 'classic' }) => {
   const { signOut, user } = useAuth();
   const navigate = useNavigate();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
@@ -50,19 +53,30 @@ const Sidebar: React.FC<SidebarProps> = ({ className, isCollapsed = false, onTog
     try {
       await signOut();
       setShowLogoutModal(false);
-      navigate('/login');
+      navigate('/auth');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
     }
   };
 
   const getNavLinkClass = ({ isActive }: { isActive: boolean }) => {
+    if (styleVariant === 'alt') {
+      return clsx(
+        'group flex items-center h-12 transition-all duration-200 mx-3',
+        isCollapsed ? 'w-12 justify-center rounded-full' : 'w-full justify-start px-4 rounded-xl',
+        isActive
+          ? 'bg-school-sidebar-active text-white'
+          : 'hover:bg-school-sidebar-hover text-muted-foreground hover:text-foreground'
+      );
+    }
+
     return clsx(
-      'group block w-full transition-all duration-300 ease-in-out text-sm font-medium rounded-lg mx-2 mb-1',
-      'hover:shadow-sm transform relative z-10',
+      'group flex items-center w-full transition-all duration-200 text-base font-medium rounded-xl mx-3 mb-3 px-5 py-3',
+      'bg-transparent hover:bg-blue-50',
+      'gap-3 justify-center',
       isActive
-        ? '!bg-black text-white shadow-lg'
-        : 'text-gray-900 hover:bg-gray-100 hover:text-gray-900 border border-transparent hover:border-gray-300'
+        ? 'bg-blue-100 text-blue-900 font-semibold border-none shadow-none max-w-xs'
+        : 'text-gray-800 hover:text-blue-700 border-none shadow-none'
     );
   };
 
@@ -70,7 +84,8 @@ const Sidebar: React.FC<SidebarProps> = ({ className, isCollapsed = false, onTog
     <>
       <aside
         className={clsx(
-          'fixed left-0 top-0 z-30 h-screen bg-white sidebar transition-all duration-300 ease-in-out shadow-lg overflow-hidden',
+          'fixed left-0 top-0 z-30 h-screen sidebar transition-all duration-300 ease-in-out overflow-hidden',
+          styleVariant === 'alt' ? 'bg-school-sidebar border-r border-border text-sidebar-foreground shadow-none' : 'bg-[#F8FAFC] shadow-lg',
           isCollapsed ? 'w-20' : 'w-72',
           className
         )}>
@@ -78,10 +93,11 @@ const Sidebar: React.FC<SidebarProps> = ({ className, isCollapsed = false, onTog
           {/* Header */}
           <div
             className={clsx(
-              'flex items-center px-4 h-[64px] border-b border-gray-200',
+              'flex items-center px-4 h-[64px] border-b border-gray-200 transition-all duration-300',
               isCollapsed ? 'justify-center' : 'justify-between'
             )}
           >
+            {/* Logo, only shown when expanded */}
             {!isCollapsed && (
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center shadow-md">
@@ -93,21 +109,12 @@ const Sidebar: React.FC<SidebarProps> = ({ className, isCollapsed = false, onTog
                 </div>
               </div>
             )}
+
+            {/* Toggle Button, always visible */}
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={onToggleCollapse}
-                    className="p-2 rounded-xl hover:bg-gray-100 transition-all duration-200 hover:scale-110 transform"
-                  >
-                    {isCollapsed ? (
-                      <PanelLeft className="h-5 w-5 text-black" />
-                    ) : (
-                      <PanelLeftClose className="h-5 w-5 text-black" />
-                    )}
-                  </Button>
+                  <SidebarToggle isCollapsed={isCollapsed} onToggle={onToggleCollapse} />
                 </TooltipTrigger>
                 <TooltipContent side={isCollapsed ? 'right' : 'bottom'}>
                   <p>{isCollapsed ? 'Expandir menu' : 'Recolher menu'}</p>
@@ -117,7 +124,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className, isCollapsed = false, onTog
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 py-2 overflow-y-auto scrollbar-hide">
+          <nav className="flex-1 py-6 overflow-y-auto scrollbar-hide">
              <div className="space-y-0">
               {menuItems.map((item) => (
                 <TooltipProvider key={item.id}>
@@ -126,14 +133,14 @@ const Sidebar: React.FC<SidebarProps> = ({ className, isCollapsed = false, onTog
                       <NavLink to={item.path} end={item.path === '/'} className={getNavLinkClass}>
                         {({ isActive }) => (
                           <div className={clsx(
-                            'flex items-center gap-3 transition-all duration-200',
-                            isCollapsed ? 'justify-center h-9 px-2' : 'pl-3 pr-2 py-1.5'
+                            'flex items-center gap-3 transition-all duration-200 h-full',
+                            isCollapsed ? 'justify-center' : 'pl-3 pr-2 py-1.5 w-full'
                           )}>
                             <span className="flex items-center justify-center h-7 w-7 transition-colors duration-200">
                               <item.icon
                                 className={clsx(
                                   'h-5 w-5 flex-shrink-0 transition-colors duration-200',
-                                  isActive ? 'text-white drop-shadow-sm' : 'text-gray-700 group-hover:text-gray-900'
+                                  isActive ? 'text-white' : 'text-muted-foreground group-hover:text-foreground'
                                 )}
                                 stroke="currentColor"
                                 fill="none"
@@ -144,7 +151,7 @@ const Sidebar: React.FC<SidebarProps> = ({ className, isCollapsed = false, onTog
                               <span
                                 className={clsx(
                                   'truncate font-medium transition-colors duration-200',
-                                  isActive ? 'text-white font-semibold drop-shadow-sm' : 'text-gray-900'
+                                  isActive ? 'text-white font-semibold' : 'text-foreground'
                                 )}
                               >
                                 {item.label}
@@ -193,14 +200,14 @@ const Sidebar: React.FC<SidebarProps> = ({ className, isCollapsed = false, onTog
                   <button
                     onClick={() => setShowLogoutModal(true)}
                     className={clsx(
-                      'group flex items-center w-full transition-all duration-300 ease-in-out rounded-xl',
-                      'hover:scale-105 hover:shadow-md transform mx-2',
+                      'group flex items-center w-full transition-all duration-200 rounded-xl',
+                      'mx-2',
                       isCollapsed ? 'justify-center h-10 px-2' : 'px-3 py-2 gap-3',
-                      'text-sm font-medium text-black hover:bg-red-50 hover:text-red-600 border border-transparent hover:border-red-200'
+                      'text-sm font-medium hover:bg-destructive/10 text-destructive hover:text-destructive border-none focus:outline-none focus:ring-0 focus:border-transparent'
                     )}
                   >
                     <LogOut className={clsx(
-                      'h-5 w-5 flex-shrink-0 transition-all duration-200 group-hover:scale-110 transform text-current',
+                      'h-5 w-5 flex-shrink-0 transition-all duration-200 text-current',
                       isCollapsed && 'mx-auto'
                     )} 
                     stroke="currentColor"
@@ -235,13 +242,13 @@ const Sidebar: React.FC<SidebarProps> = ({ className, isCollapsed = false, onTog
             <div className="flex space-x-3">
               <button
                 onClick={() => setShowLogoutModal(false)}
-                className="flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium hover:scale-105 transform"
+                className="flex-1 px-4 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all duration-200 font-medium hover:scale-105 transform focus:outline-none focus:ring-0 focus:border-transparent"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleLogout}
-                className="flex-1 px-4 py-3 text-white bg-red-500 rounded-xl hover:bg-red-600 transition-all duration-200 font-medium hover:scale-105 transform shadow-lg"
+                className="flex-1 px-4 py-3 text-white bg-red-500 rounded-xl hover:bg-red-600 transition-all duration-200 font-medium hover:scale-105 transform shadow-lg focus:outline-none focus:ring-0 focus:border-transparent"
               >
                 Sair
               </button>

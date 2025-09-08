@@ -32,6 +32,12 @@ export const useRouteState = () => {
   // Função para restaurar a última rota salva
   const restoreLastRoute = () => {
     try {
+      // Evita sobrepor navegação iniciada pelo usuário:
+      // só tenta restaurar quando estamos na raiz '/' (ex.: após login ou carga inicial)
+      if (location.pathname !== '/') {
+        return false;
+      }
+
       const savedRoute = localStorage.getItem(ROUTE_STATE_KEY);
       const savedData = localStorage.getItem(ROUTE_DATA_KEY);
       
@@ -39,12 +45,19 @@ export const useRouteState = () => {
         const routeState = JSON.parse(savedRoute);
         const routeData = savedData ? JSON.parse(savedData) : null;
         
+        const fullSavedPath = `${routeState.pathname}${routeState.search}${routeState.hash}`;
+        const currentFullPath = `${location.pathname}${location.search}${location.hash}`;
+
+        // Já estamos exatamente na rota salva
+        if (fullSavedPath === currentFullPath) {
+          return false;
+        }
+        
         // Só restaura se foi salvo recentemente (últimas 24 horas)
         const isRecent = Date.now() - routeState.timestamp < 24 * 60 * 60 * 1000;
         
         if (isRecent && routeState.pathname !== '/auth') {
-          const fullPath = `${routeState.pathname}${routeState.search}${routeState.hash}`;
-          navigate(fullPath, { 
+          navigate(fullSavedPath, { 
             replace: true, 
             state: routeData 
           });
@@ -78,4 +91,4 @@ export const usePageReload = () => {
                    (performance.getEntriesByType('navigation')[0] as any)?.type === 'reload';
   
   return isReload;
-}; 
+};

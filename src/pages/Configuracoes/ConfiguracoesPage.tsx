@@ -199,10 +199,10 @@ const ConfiguracoesPage: React.FC = () => {
   }
 
   return (
-    <PageContainer>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50">
-        {/* Conteúdo Principal */}
-        <div className="max-w-6xl mx-auto px-6 py-8">
+    <div className="min-h-screen bg-slate-50">
+      <div className="max-w-7xl mx-auto p-6 md:p-8">
+        <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 space-y-6">
+          {/* Conteúdo Principal */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
             {/* Coluna Principal - Perfil */}
@@ -397,7 +397,7 @@ const ConfiguracoesPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </PageContainer>
+    </div>
   );
 };
 

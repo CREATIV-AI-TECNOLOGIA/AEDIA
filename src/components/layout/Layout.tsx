@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './Sidebar';
+import { PanelLeft } from 'lucide-react';
+import NewSidebar from '@/components/NewSidebar';
 import Header from './Header';
+import { SidebarProvider, useSidebar } from '@/context/SidebarContext';
 import { useLocation } from 'react-router-dom';
 
 interface LayoutProps {
@@ -22,19 +24,37 @@ interface LayoutProps {
 }
 
 const routeTitles: { [key: string]: string } = {
-    '/': 'Início',
-    '/planos-aula': 'Planos de Aula',
-    '/avaliacoes': 'Avaliações',
-    '/turmas': 'Turmas',
-    '/assistente': 'Assistente',
-    '/diagnostico': 'Diagnóstico',
-    '/calendario-escolar': 'Calendário Escolar',
-    '/chat-interno': 'Comunicação Interna',
-    '/configuracoes': 'Configurações',
-    // Adicione outras rotas e títulos aqui
+  '/': 'Início',
+  '/planos-aula': 'Planos de Aula',
+  '/avaliacoes': 'Avaliações',
+  '/turmas': 'Turmas',
+  '/chat': 'Assistente',
+  '/diagnostico': 'Diagnóstico',
+  '/calendario-escolar': 'Calendário Escolar',
+  '/chat-interno': 'Comunicação Interna',
+  '/notificacoes': 'Chat',
+  '/configuracoes': 'Configurações',
+}
+
+// Componente para o botão mobile da sidebar
+const MobileSidebarTrigger: React.FC<{ pageTitle: string }> = ({ pageTitle }) => {
+  const { toggleSidebar } = useSidebar();
+
+  return (
+    <>
+      <button
+        onClick={toggleSidebar}
+        className="h-7 w-7 flex items-center justify-center text-school-blue hover:bg-gray-100 rounded-md transition-colors"
+      >
+        <PanelLeft className="h-4 w-4" />
+        <span className="sr-only">Toggle Sidebar</span>
+      </button>
+      <h1 className="ml-3 font-semibold">{pageTitle}</h1>
+    </>
+  );
 };
 
-const Layout: React.FC<LayoutProps> = ({ 
+const LayoutContent: React.FC<LayoutProps> = ({ 
   children, 
   headerTitle, 
   headerSubtitle, 
@@ -51,28 +71,25 @@ const Layout: React.FC<LayoutProps> = ({
   subtitle,
   showHeader: forceShowHeader
 }) => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const { isCollapsed } = useSidebar();
   const location = useLocation();
 
+  // Lógica para persistir o estado da sidebar
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    const savedState = localStorage.getItem('sidebarCollapsed');
+    // Garante que o valor seja booleano
+    return savedState ? JSON.parse(savedState) : false;
+  });
+
+  const [sidebarStyle, setSidebarStyle] = useState<'classic' | 'alt'>('alt');
+
+  // Salva o estado no localStorage sempre que ele mudar
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    localStorage.setItem('sidebarCollapsed', JSON.stringify(isSidebarCollapsed));
+  }, [isSidebarCollapsed]);
 
-  // Fechar drawer mobile automaticamente quando a rota mudar
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      setMobileMenuOpen(false);
-    }
-  }, [location.pathname]);
-
-  const toggleMobileMenu = () => {
-    setMobileMenuOpen(!mobileMenuOpen);
-  };
-
-  const handleToggleSidebar = () => {
-    setSidebarCollapsed(!sidebarCollapsed);
+  const toggleSidebarCollapse = () => {
+    setIsSidebarCollapsed(prevState => !prevState);
   };
 
   // Determina o título da página com base na rota atual
@@ -82,67 +99,49 @@ const Layout: React.FC<LayoutProps> = ({
     if (routeTitles[path]) return routeTitles[path];
     // Correspondência por prefixo (ex: /turmas/123)
     const mainRoute = Object.keys(routeTitles).find(route => path.startsWith(route) && route !== '/');
-    return mainRoute ? routeTitles[mainRoute] : 'Araruama IA';
+    return mainRoute ? routeTitles[mainRoute] : 'Escola Digital';
   };
 
   const pageTitle = title || getPageTitle();
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-100">
-      {/* Sidebar para desktop */}
-      <div className={`hidden md:block relative`}>
-        <Sidebar 
-          isCollapsed={sidebarCollapsed}
-          onToggleCollapse={handleToggleSidebar}
-        />
-      </div>
+      <div className="min-h-screen flex w-full bg-slate-50">
+        <NewSidebar />
+        
+        <div className={`flex-1 flex flex-col transition-all duration-200 min-h-screen ${isCollapsed ? 'ml-20' : 'ml-64'}`}>
+          {/* Mobile Header */}
+          <header className="h-14 flex items-center border-b bg-white lg:hidden px-4">
+            <MobileSidebarTrigger pageTitle={pageTitle} />
+          </header>
 
-      {/* Sidebar para mobile (sobreposta) com animação */}
-      {mobileMenuOpen && (
-        <div className="fixed inset-0 z-50 md:hidden">
-          <div 
-            className="absolute inset-0 bg-gray-800/70 transition-opacity duration-200" 
-            onClick={toggleMobileMenu}
-            style={{ opacity: mounted ? 1 : 0 }}
-          />
-          <div 
-            className="relative flex h-full transition-transform duration-200" 
-            style={{ transform: mounted ? 'translateX(0)' : 'translateX(-100%)' }}
-          >
-            <Sidebar />
-            <button 
-              className="absolute top-4 right-4 text-white p-2 rounded-full bg-blue-600 hover:bg-blue-700"
-              onClick={toggleMobileMenu}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-              </svg>
-            </button>
+          {/* Desktop Header */}
+          <div className="hidden lg:block">
+            <Header 
+              titulo={headerTitle || pageTitle}
+              subtitulo={headerSubtitle}
+              icone={headerIcon}
+              mostrarEscola={mostrarEscola}
+              showSearch={showSearch}
+              searchValue={searchValue}
+              onSearchChange={onSearchChange}
+              searchPlaceholder={searchPlaceholder}
+            />
           </div>
-        </div>
-      )}
 
-      {/* Conteúdo com offset da sidebar fixa em desktop */}
-      <div
-        className={`flex flex-col flex-1 transition-all duration-300 ease-in-out ${sidebarCollapsed ? 'md:ml-20' : 'md:ml-72'}`}
-      >
-        <Header 
-          onMenuToggle={toggleMobileMenu} 
-          className="bg-white border-b border-gray-200"
-          titulo={pageTitle}
-          subtitulo={headerSubtitle}
-          icone={headerIcon}
-          mostrarEscola={mostrarEscola}
-          showSearch={showSearch}
-          searchValue={searchValue}
-          onSearchChange={onSearchChange}
-          searchPlaceholder={searchPlaceholder}
-        />
-        <main className="flex-1 overflow-auto scrollbar-hide">
-          {children}
-        </main>
+          {/* Main Content */}
+          <main className="flex-1 overflow-auto p-4 lg:p-6 bg-slate-50">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+  );
+};
+
+const Layout: React.FC<LayoutProps> = (props) => {
+  return (
+    <SidebarProvider>
+      <LayoutContent {...props} />
+    </SidebarProvider>
   );
 };
 

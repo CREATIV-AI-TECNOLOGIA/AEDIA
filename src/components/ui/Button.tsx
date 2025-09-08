@@ -12,9 +12,9 @@ interface ButtonProps {
   className?: string;
 }
 
-const Button = forwardRef<HTMLButtonElement, ButtonProps>(
+export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ children, variant = 'primary', size = 'md', fullWidth = false, onClick, type = 'button', disabled = false, icon, className = '' }, ref) => {
-    const baseStyles = 'font-medium rounded-md transition-colors focus:outline-none';
+    const baseStyles = 'font-medium rounded-md transition-colors focus:outline-none focus:ring-0 focus:border-transparent';
     
     const variantStyles = {
       primary: 'bg-blue-500 hover:bg-blue-600 text-white',

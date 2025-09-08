@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import PageContainer from '../../components/layout/PageContainer';
+import Layout from '../../components/layout/Layout';
 import { useAuth } from '../../context/AuthContext';
 import { 
   Users, School, BookOpenText, GraduationCap, Calendar, 
@@ -201,7 +201,10 @@ const DashboardGestaoPage: React.FC = () => {
   };
 
   return (
-    <PageContainer withGradient>
+    <Layout 
+      headerTitle="Início"
+      headerSubtitle="Visão geral das suas atividades"
+    >
       <div className="py-6">
         {/* Cabeçalho */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
@@ -409,7 +412,7 @@ const DashboardGestaoPage: React.FC = () => {
 
         </div>
       </div>
-    </PageContainer>
+    </Layout>
   );
 };
 

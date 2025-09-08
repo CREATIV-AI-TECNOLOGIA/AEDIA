@@ -52,7 +52,7 @@
 }
 
 .notificationDropdown li {
-    padding: 12px 16px;
+    padding: 16px 20px;
     border-bottom: 1px solid #f3f4f6; /* gray-100 */
     cursor: pointer;
     transition: background-color 0.2s;
@@ -67,7 +67,7 @@
 }
 
 .notificationDropdown li p {
-    margin: 4px 0 0 0;
+    margin: 8px 0 0 0;
     font-size: 0.9em;
     color: #6b7280; /* gray-500 */
     font-style: italic;
@@ -126,4 +126,35 @@
 
 .clearAllButton:hover {
     color: #312e81;
-} 
+}
+
+.dropdownContent {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.notificationItem {
+  display: block;
+  width: 100%;
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb; /* gray-200 */
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.notificationItem:hover {
+  background-color: #f9fafb; /* gray-50 */
+}
+
+.notificationItem:last-child {
+  border-bottom: none;
+}
+
+.avatarButton:focus,
+.avatarButton:focus-visible,
+.notificationButton:focus,
+.notificationButton:focus-visible {
+  outline: none !important;
+  box-shadow: none !important;
+}

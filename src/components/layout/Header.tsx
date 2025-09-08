@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.css'; // Supondo que você terá um CSS module
 
 import SeletorEscolaModal from './SeletorEscolaModal';
-import { Search, X } from 'lucide-react';
+import { Search, X, Sparkles } from 'lucide-react';
 import Avatar from '../ui/Avatar';
 
 interface HeaderProps {
@@ -21,6 +21,8 @@ interface HeaderProps {
   searchValue?: string;
   onSearchChange?: (value: string) => void;
   searchPlaceholder?: string;
+  // Novo: callback para alternar a aparência da Sidebar
+  onToggleSidebarStyle?: () => void;
 }
 
 // Removido URL externa do Freesound para evitar erro ORB
@@ -36,7 +38,8 @@ const Header: React.FC<HeaderProps> = ({
   showSearch,
   searchValue,
   onSearchChange,
-  searchPlaceholder
+  searchPlaceholder,
+  onToggleSidebarStyle
 }) => {
   const { user, professorData } = useAuth();
   const navigate = useNavigate();
@@ -101,7 +104,7 @@ const Header: React.FC<HeaderProps> = ({
 
   return (
     <header className={`
-      h-[64px] bg-white/60 backdrop-blur-md border-b border-gray-200/80 shadow-sm
+      h-[64px] bg-white/60 backdrop-blur-md border-b border-gray-200
       sticky top-0 z-20 transition-all duration-300
       ${className || ''}
     `}>
@@ -119,6 +122,7 @@ const Header: React.FC<HeaderProps> = ({
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
             </svg>
           </button>
+
           
           {/* Título da Página - Layout vertical */}
           <div className="flex flex-col">
@@ -184,12 +188,14 @@ const Header: React.FC<HeaderProps> = ({
                 <div className={styles.dropdownHeader}>
                   <div className="flex items-center justify-between">
                     <h3 className="font-semibold text-gray-800">Notificações</h3>
-                    <button onClick={handleClearAll} className="text-xs text-blue-600 hover:underline">Marcar todas como lidas</button>
+                    {notifications.length >= 2 && (
+                      <button onClick={handleClearAll} className="text-xs text-blue-600 hover:underline">Marcar todas como lidas</button>
+                    )}
                   </div>
                 </div>
                 <div className={styles.dropdownContent}>
                   {notifications.length === 0 ? (
-                    <p className="text-sm text-gray-500">Sem notificações</p>
+                    <p className={styles.noNotifications}>Sem notificações</p>
                   ) : (
                     notifications.map((n) => (
                       <button key={n.id} onClick={() => handleNotificationClick(n)} className={styles.notificationItem}>
@@ -206,12 +212,11 @@ const Header: React.FC<HeaderProps> = ({
           </div>
 
           {/* 2. Avatar/Perfil */}
-          <button className="flex items-center gap-2 rounded-full p-1 hover:bg-gray-100 transition-colors" aria-label="Abrir perfil">
+          <button className={`${styles.avatarButton} flex items-center gap-2 rounded-full p-1 focus:outline-none focus-visible:outline-none focus:ring-0`} aria-label="Abrir perfil">
             <Avatar 
               src={avatarSrc}
               name={avatarName}
               size="sm"
-              className="ring-1 ring-gray-200"
             />
           </button>
         </div>

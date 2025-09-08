@@ -184,7 +184,7 @@ const SidebarAluno: React.FC<SidebarAlunoProps> = ({
                   activeItem === item.id
                     ? 'bg-blue-50 text-blue-600'
                     : 'text-gray-600 hover:bg-gray-100'
-                } transition-colors`}
+                } transition-colors focus:outline-none`}
                 onClick={() => handleItemClick(item.id, item.path)}
               >
                 <span className="flex-shrink-0">{item.icon}</span>
@@ -206,13 +206,13 @@ const SidebarAluno: React.FC<SidebarAlunoProps> = ({
             <div className="flex justify-end space-x-3">
               <button
                 onClick={() => setShowLogoutModal(false)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg"
+                className="px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg focus:outline-none"
               >
                 Cancelar
               </button>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg"
+                className="px-4 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg focus:outline-none"
               >
                 Sair
               </button>
@@ -245,4 +245,4 @@ const SidebarAluno: React.FC<SidebarAlunoProps> = ({
   );
 };
 
-export default SidebarAluno; 
+export default SidebarAluno;

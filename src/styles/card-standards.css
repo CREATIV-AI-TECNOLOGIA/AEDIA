@@ -1,0 +1,371 @@
+/* ===== PADRONIZAÇÃO DE CARDS - SISTEMA UNIFICADO ===== */
+
+/* Variáveis CSS para dimensões padronizadas */
+:root {
+  /* Dimensões base dos cards */
+  --card-min-height: 200px;
+  --card-max-height: 400px;
+  --card-padding: 1.5rem; /* 24px */
+  --card-margin: 1rem; /* 16px */
+  --card-border-radius: 0.75rem; /* 12px */
+  --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --card-shadow-hover: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  
+  /* Cores padronizadas */
+  --card-bg: #ffffff;
+  --card-border: #e5e7eb;
+  --card-text-primary: #1f2937;
+  --card-text-secondary: #6b7280;
+  
+  /* Espaçamentos internos */
+  --card-header-padding: 1rem 1.5rem;
+  --card-content-padding: 1.5rem;
+  --card-footer-padding: 1rem 1.5rem;
+}
+
+/* ===== CLASSES BASE PARA CARDS ===== */
+
+/* Card padrão - aplicar em todos os cards */
+.card-standard {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow);
+  padding: var(--card-padding);
+  margin-bottom: var(--card-margin);
+  min-height: var(--card-min-height);
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-standard:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* Card compacto - para listas e grids */
+.card-compact {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  min-height: 120px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-compact:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-1px);
+}
+
+/* Card expandido - para conteúdo detalhado */
+.card-expanded {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow-hover);
+  padding: 2rem;
+  margin-bottom: var(--card-margin);
+  min-height: 300px;
+  max-height: none;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ===== COMPONENTES INTERNOS DOS CARDS ===== */
+
+/* Header do card */
+.card-header {
+  padding: var(--card-header-padding);
+  border-bottom: 1px solid var(--card-border);
+  margin: calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) 1rem calc(-1 * var(--card-padding));
+  background-color: #f9fafb;
+  border-radius: var(--card-border-radius) var(--card-border-radius) 0 0;
+}
+
+.card-header h3 {
+  color: var(--card-text-primary);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+.card-header p {
+  color: var(--card-text-secondary);
+  font-size: 0.875rem;
+  margin: 0.25rem 0 0 0;
+}
+
+/* Conteúdo do card */
+.card-content {
+  flex: 1;
+  padding: var(--card-content-padding);
+  margin: calc(-1 * var(--card-padding));
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* Footer do card */
+.card-footer {
+  padding: var(--card-footer-padding);
+  border-top: 1px solid var(--card-border);
+  margin: 1rem calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding)) calc(-1 * var(--card-padding));
+  background-color: #f9fafb;
+  border-radius: 0 0 var(--card-border-radius) var(--card-border-radius);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* ===== GRID SYSTEMS PARA CARDS ===== */
+
+/* Grid responsivo para cards */
+.cards-grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: 1fr;
+}
+
+/* Mobile */
+@media (min-width: 640px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablet */
+@media (min-width: 768px) {
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+  }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .cards-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Desktop large */
+@media (min-width: 1280px) {
+  .cards-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* ===== VARIAÇÕES DE CARDS ESPECÍFICAS ===== */
+
+/* Cards de métricas/dashboard */
+.card-metric {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  min-height: 140px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  justify-content: center;
+}
+
+.card-metric:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-1px);
+}
+
+/* Cards de planos de aula */
+.card-plano-aula {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow);
+  padding: var(--card-padding);
+  margin-bottom: var(--card-margin);
+  min-height: 250px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-plano-aula:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* Cards de notificações/chat */
+.card-chat {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow);
+  padding: 1rem;
+  margin-bottom: 0.75rem;
+  min-height: 100px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-chat:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-1px);
+}
+
+/* Cards de configurações */
+.card-config {
+  background-color: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--card-border-radius);
+  box-shadow: var(--card-shadow);
+  padding: var(--card-padding);
+  margin-bottom: var(--card-margin);
+  min-height: 180px;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.card-config:hover {
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+/* ===== ESTADOS DOS CARDS ===== */
+
+/* Card ativo/selecionado */
+.card-active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Card com erro */
+.card-error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+}
+
+/* Card carregando */
+.card-loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.card-loading::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin: -10px 0 0 -10px;
+  border: 2px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ===== RESPONSIVIDADE ESPECÍFICA ===== */
+
+/* Mobile - ajustes para telas pequenas */
+@media (max-width: 639px) {
+  :root {
+    --card-padding: 1rem;
+    --card-margin: 0.75rem;
+    --card-min-height: 160px;
+  }
+  
+  .card-standard,
+  .card-compact,
+  .card-expanded {
+    margin-left: 0;
+    margin-right: 0;
+  }
+  
+  .cards-grid {
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+}
+
+/* Tablet - ajustes para telas médias */
+@media (min-width: 640px) and (max-width: 1023px) {
+  :root {
+    --card-padding: 1.25rem;
+    --card-min-height: 180px;
+  }
+}
+
+/* Desktop - ajustes para telas grandes */
+@media (min-width: 1024px) {
+  :root {
+    --card-padding: 1.5rem;
+    --card-min-height: 200px;
+  }
+  
+  .cards-grid {
+    gap: 2rem;
+  }
+}
+
+/* ===== UTILITÁRIOS ===== */
+
+/* Força altura igual em grids */
+.cards-equal-height {
+  display: grid;
+  grid-auto-rows: 1fr;
+}
+
+/* Remove margens do último card */
+.card-standard:last-child,
+.card-compact:last-child,
+.card-expanded:last-child {
+  margin-bottom: 0;
+}
+
+/* Centraliza conteúdo do card */
+.card-centered {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* Card com scroll interno */
+.card-scrollable {
+  max-height: var(--card-max-height);
+  overflow-y: auto;
+}
+
+.card-scrollable::-webkit-scrollbar {
+  width: 6px;
+}
+
+.card-scrollable::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.card-scrollable::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.card-scrollable::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

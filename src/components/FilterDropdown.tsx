@@ -74,7 +74,7 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
           {showClearButton && value && (
             <button
               onClick={handleClear}
-              className="mr-1 text-gray-400 hover:text-gray-500 focus:outline-none"
+              className="mr-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-0 focus:border-transparent"
             >
               <X size={16} />
             </button>
@@ -124,4 +124,4 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   );
 };
 
-export default FilterDropdown; 
+export default FilterDropdown;

@@ -389,8 +389,8 @@ const PlanosAula: React.FC<PlanosAulaProps> = ({
 
   if (loadingEscolas && !escolaAtiva) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/30 flex items-center justify-center">
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-2xl p-8 border border-white/50">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="bg-white rounded-2xl shadow-lg p-8 border border-slate-200">
           <div className="flex items-center space-x-4">
             <div className="relative">
               <div className="animate-spin rounded-full h-12 w-12 border-2 border-slate-200"></div>
@@ -410,13 +410,7 @@ const PlanosAula: React.FC<PlanosAulaProps> = ({
 
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-indigo-50/30 to-purple-50/30 relative overflow-hidden">
-      {/* Elementos decorativos de fundo */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-indigo-400/10 to-purple-400/10 rounded-full blur-3xl"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-tr from-pink-400/10 to-indigo-400/10 rounded-full blur-3xl"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-radial from-white/20 to-transparent rounded-full blur-3xl"></div>
-      </div>
+    <div className="min-h-screen bg-slate-50">
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
 
@@ -437,7 +431,7 @@ const PlanosAula: React.FC<PlanosAulaProps> = ({
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                     !currentSearchTerm 
                       ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-md' 
-                      : 'bg-white/60 text-slate-600 hover:bg-white/80 border border-white/50'
+                      : 'bg-white/80 text-slate-700 hover:bg-white/90 border border-slate-200/60 shadow-sm backdrop-blur-sm'
                   }`}
                 >
                   Todos ({planosAula.length})
@@ -450,7 +444,7 @@ const PlanosAula: React.FC<PlanosAulaProps> = ({
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
                       currentSearchTerm === disciplina 
                         ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md' 
-                        : 'bg-white/60 text-slate-600 hover:bg-white/80 border border-white/50'
+                        : 'bg-white/80 text-slate-700 hover:bg-white/90 border border-slate-200/60 shadow-sm backdrop-blur-sm'
                     }`}
                   >
                     {disciplina} ({planosAula.filter(p => p.disciplinaNome === disciplina).length})
@@ -477,7 +471,7 @@ const PlanosAula: React.FC<PlanosAulaProps> = ({
         {/* Estado de erro modernizado */}
         {error && (
           <div className="max-w-2xl mx-auto mb-8">
-            <div className="relative bg-red-50/80 backdrop-blur-sm border border-red-200/50 rounded-2xl p-6 shadow-lg">
+            <div className="relative bg-red-50/90 backdrop-blur-sm border border-red-200/70 rounded-2xl p-6 shadow-lg ring-1 ring-red-100/50">
               <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500"></div>
               <div className="flex items-start space-x-4">
                 <div className="p-2 bg-red-100 rounded-xl">
@@ -498,7 +492,7 @@ const PlanosAula: React.FC<PlanosAulaProps> = ({
         {!loadingPlanos && !loadingProfessor && !error && planosAula.length === 0 && professor && dadosCarregados && (
           <div className="flex items-center justify-center min-h-[80vh]">
             <div className="max-w-3xl mx-auto w-full">
-              <div className="relative bg-white/60 backdrop-blur-sm rounded-3xl p-12 shadow-lg border border-white/50 text-center overflow-hidden">
+              <div className="relative bg-white/85 backdrop-blur-sm rounded-3xl p-12 shadow-xl border border-slate-200/60 text-center overflow-hidden ring-1 ring-white/60">
                 {/* Gradiente decorativo */}
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500"></div>
                 
@@ -541,7 +535,7 @@ const PlanosAula: React.FC<PlanosAulaProps> = ({
 
         {/* Lista de planos modernizada */}
         {!loadingPlanos && planosFiltrados.length > 0 && (
-          <div>
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-slate-200/70 ring-1 ring-white/50 hover:shadow-xl transition-all duration-300">
             {/* Grid de cards modernos */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {planosFiltrados.map((plano) => (
@@ -559,7 +553,7 @@ const PlanosAula: React.FC<PlanosAulaProps> = ({
         {/* Estado "nenhum resultado" modernizado */}
         {!loadingPlanos && currentSearchTerm.trim() !== '' && planosFiltrados.length === 0 && (
           <div className="max-w-xl mx-auto">
-            <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-8 shadow-lg border border-white/50 text-center">
+            <div className="bg-white/85 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-slate-200/60 text-center ring-1 ring-white/60">
               <div className="p-4 bg-slate-100 rounded-2xl mb-6 w-fit mx-auto">
                 <Search className="h-8 w-8 text-slate-400" />
               </div>

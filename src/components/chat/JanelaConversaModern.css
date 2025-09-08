@@ -512,8 +512,9 @@
 }
 
 .chat-input:focus {
-  border-color: #25d366;
-  box-shadow: 0 0 0 1px #25d366;
+  border-color: #d1d7db;
+  box-shadow: none;
+  outline: none;
 }
 
 .chat-input::placeholder {
@@ -825,4 +826,4 @@
 /* Melhorar a área de mensagens para posicionamento relativo */
 .chat-messages-area {
   position: relative;
-} 
+}

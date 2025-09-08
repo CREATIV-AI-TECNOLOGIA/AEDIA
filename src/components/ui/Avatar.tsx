@@ -8,7 +8,7 @@ interface AvatarProps {
   alt?: string;
   name?: string;
   size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
-  shape?: 'circle' | 'square';
+  shape?: 'circle';
   className?: string;
   status?: 'online' | 'offline' | 'busy' | 'away';
 }
@@ -43,7 +43,6 @@ const Avatar: React.FC<AvatarProps> = ({
   
   const shapeStyles = {
     circle: 'rounded-full',
-    square: 'rounded-md',
   };
   
   const statusStyles = {
@@ -106,12 +105,13 @@ const Avatar: React.FC<AvatarProps> = ({
         <img
           src={src}
           alt={alt || name || 'Avatar'}
-          className={`${sizeStyles[size]} ${shapeStyles[shape]} object-cover`}
+          className={`${sizeStyles[size]} ${shapeStyles[shape]} object-cover select-none focus:outline-none border-0`}
           onError={() => setImageError(true)}
+          draggable={false}
         />
       ) : (
         <div 
-          className={`${sizeStyles[size]} ${shapeStyles[shape]} ${getBackgroundColor()} flex items-center justify-center text-white font-medium`}
+          className={`${sizeStyles[size]} ${shapeStyles[shape]} ${getBackgroundColor()} flex items-center justify-center text-white font-medium select-none focus:outline-none border-0`}
         >
           {getInitials()}
         </div>

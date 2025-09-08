@@ -46,7 +46,9 @@ const shouldBypassRedirectForRoute = (currentPath: string, targetPath: string, u
     '/auth/login',
     '/auth/register',
     '/auth/reset-password',
-    '/auth/update-password'
+    '/auth/update-password',
+    '/auth',
+    '/login-perfis'
   ];
   
   // Se estiver em rota de auth, não redirecionar
@@ -116,7 +118,7 @@ export default function AuthRedirector() {
         console.log('[AuthRedirector] Sem usuário, redirecionando para login');
         if (!hasRedirected.current) {
           hasRedirected.current = true;
-          navigate('/auth/login');
+          navigate('/auth');
         }
         return;
       }
@@ -195,4 +197,4 @@ export default function AuthRedirector() {
   }, []);
 
   return null;
-} 
+}

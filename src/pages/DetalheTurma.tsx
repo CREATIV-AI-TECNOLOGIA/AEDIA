@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Input } from '../components/ui';
+import { Button } from '../components/ui';
+import Input from '../components/ui/Input';
 import Modal from '../components/ui/Modal';
 import { supabase } from '../lib/supabase';
 import { useEscola } from '../context/EscolaContext';

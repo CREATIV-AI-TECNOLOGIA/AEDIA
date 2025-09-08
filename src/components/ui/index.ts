@@ -6,6 +6,7 @@ import Card from './Card';
 import Dropdown from './Dropdown';
 import Input from './Input';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from './tabs';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './tooltip';
 
 export {
   Modal,
@@ -18,8 +19,12 @@ export {
   Tabs,
   TabsList,
   TabsTrigger,
-  TabsContent
+  TabsContent,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger
 };
 
 export { default as AutoCapitalizeInput } from './AutoCapitalizeInput';
-export { default as AutoCapitalizeTextarea } from './AutoCapitalizeTextarea'; 
+export { default as AutoCapitalizeTextarea } from './AutoCapitalizeTextarea';

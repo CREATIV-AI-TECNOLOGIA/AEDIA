@@ -25,7 +25,7 @@ const AutoCapitalizeTextarea = forwardRef<HTMLTextAreaElement, AutoCapitalizeTex
       }
     };
 
-    const defaultClasses = "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 resize-vertical";
+    const defaultClasses = "block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-0 focus:border-gray-300 resize-vertical";
     const combinedClassName = className || defaultClasses;
 
     return (
@@ -46,4 +46,4 @@ const AutoCapitalizeTextarea = forwardRef<HTMLTextAreaElement, AutoCapitalizeTex
 
 AutoCapitalizeTextarea.displayName = 'AutoCapitalizeTextarea';
 
-export default AutoCapitalizeTextarea; 
+export default AutoCapitalizeTextarea;

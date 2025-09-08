@@ -59,7 +59,7 @@ const PlanoAulaCardModerno: React.FC<PlanoAulaCardModernoProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="bg-white rounded-xl shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200 overflow-hidden"
+      className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border-2 border-slate-200/60 hover:border-indigo-300/70 hover:shadow-xl ring-1 ring-slate-200/40 hover:ring-indigo-200/50 transition-all duration-300 overflow-hidden"
     >
       {/* Header do Card */}
       <div className="p-6 pb-4">
@@ -180,4 +180,4 @@ const PlanoAulaCardModerno: React.FC<PlanoAulaCardModernoProps> = ({
   );
 };
 
-export default PlanoAulaCardModerno; 
+export default PlanoAulaCardModerno;

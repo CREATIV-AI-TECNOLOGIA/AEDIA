@@ -39,6 +39,7 @@ import NovaSessaoPage from './pages/CorrecaoMobile/NovaSessao'
 import CorrecoesAvaliacoesPage from './pages/CorrecaoMobile/CorrecoesAvaliacoes'
 import TokenMonitoring from './pages/TokenMonitoring'
 import ChatInternoPage from './pages/ChatInternoPage'
+import NotificacoesPage from './pages/NotificacoesPage'
 import { debugEnvironmentVariables } from './debug-env'
 
 // Stagewise removido
@@ -537,6 +538,23 @@ function AppContent() {
                 <ProtectedRoute>
                   <Layout>
                     <ChatInternoPage />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Rota para Notificações */}
+            <Route
+              path="/notificacoes"
+              element={
+                <ProtectedRoute>
+                  <Layout
+                    headerTitle="Notificações"
+                    headerSubtitle="Acompanhe suas mensagens e lembretes importantes"
+                    headerIcon={<svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-5 5v-5zM4 19h6v-2H4v2zM4 15h8v-2H4v2zM4 11h10V9H4v2zM4 7h12V5H4v2z" /></svg>}
+                    mostrarEscola={true}
+                  >
+                    <NotificacoesPage />
                   </Layout>
                 </ProtectedRoute>
               }

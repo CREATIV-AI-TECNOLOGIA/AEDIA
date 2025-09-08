@@ -15,7 +15,7 @@ interface CardHomeProps {
 const CardHome: React.FC<CardHomeProps> = ({ title, icon, value, trend, trendValue, color, path }) => {
   return (
     <Link to={path} className="block">
-      <div className={`bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-300 overflow-hidden border-t-4 ${color}`}>
+      <div className={`card-standard overflow-hidden border-t-4 ${color}`}>
         <div className="p-5">
           <div className="flex justify-between items-center">
             <h3 className="text-gray-700 text-lg font-semibold">{title}</h3>
@@ -234,7 +234,7 @@ export default function PainelPais() {
       </div>
       
       {/* Cards principais */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="cards-grid cards-equal-height mb-8">
         <CardHome
           title="Frequência Escolar"
           icon={<svg className="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
@@ -427,4 +427,4 @@ export default function PainelPais() {
       </div>
     </div>
   );
-} 
+}

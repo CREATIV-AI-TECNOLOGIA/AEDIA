@@ -23,8 +23,8 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-white/20 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-sm w-full overflow-hidden animate-fade-in-up">
+    <div className="fixed inset-0 bg-black/75 backdrop-blur-md flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-3xl shadow-2xl border border-gray-100 max-w-sm w-full overflow-hidden animate-fade-in-up">
         {/* Header */}
         <div className="p-5 border-b border-gray-200 flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -62,4 +62,4 @@ const ConfirmationModal: React.FC<ConfirmationModalProps> = ({
   );
 };
 
-export default ConfirmationModal; 
+export default ConfirmationModal;

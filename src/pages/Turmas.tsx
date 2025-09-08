@@ -464,10 +464,13 @@ const TurmasPage: React.FC = () => {
 
   // Renderização principal da página
   return (
-    <PageContainer withGradient>
+    <>
+      <div className="flex-1 flex flex-col overflow-hidden p-4">
+      <div className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200/60 flex-1 flex flex-col p-6">
+
       {/* Cabeçalho da Página */}
       <header className="mb-8 py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div>
               <h1 className="text-3xl font-bold text-gray-800 flex items-center">
@@ -496,7 +499,7 @@ const TurmasPage: React.FC = () => {
       </header>
 
       {/* Barra de Filtros */} 
-      <div className="mb-8 bg-white/80 backdrop-blur-md p-5 rounded-xl shadow-lg border border-gray-200">
+      <div className="mb-8 bg-white/85 backdrop-blur-sm p-5 rounded-2xl shadow-xl border border-slate-200/60 ring-1 ring-white/60">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
           <div className="lg:col-span-2">
             <label htmlFor="searchTurma" className="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
@@ -583,7 +586,7 @@ const TurmasPage: React.FC = () => {
           </div>
           </div>
         ) : turmas.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-xl shadow-lg border border-gray-200">
+        <div className="text-center py-16 bg-white/85 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/60 ring-1 ring-white/60">
           <School className="w-20 h-20 text-gray-300 mx-auto mb-6" />
           <h3 className="text-2xl font-semibold text-gray-700 mb-3">
             {isGestor ? 'Nenhuma turma cadastrada' : 'Nenhuma turma atribuída'}
@@ -605,7 +608,7 @@ const TurmasPage: React.FC = () => {
           )}
             </div>
         ) : turmasFiltradas.length === 0 ? (
-        <div className="text-center py-16 bg-white rounded-xl shadow-lg border border-gray-200">
+        <div className="text-center py-16 bg-white/85 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/60 ring-1 ring-white/60">
           <Filter className="w-20 h-20 text-gray-300 mx-auto mb-6" />
           <h3 className="text-2xl font-semibold text-gray-700 mb-3">Nenhuma turma encontrada</h3>
           <p className="text-gray-500 mb-6 max-w-md mx-auto">
@@ -634,12 +637,12 @@ const TurmasPage: React.FC = () => {
                 className="h-2.5 rounded-t-xl"
                 style={{ 
                   background: turma.modalidade.toLowerCase().includes('infantil') 
-                    ? 'linear-gradient(to right, #a78bfa, #7c3aed)' // Roxo
+                    ? '#7c3aed' // Roxo
                     : turma.modalidade.toLowerCase().includes('fundamental i') 
-                      ? 'linear-gradient(to right, #93c5fd, #3b82f6)' // Azul
+                      ? '#3b82f6' // Azul
                       : turma.modalidade.toLowerCase().includes('fundamental ii')
-                        ? 'linear-gradient(to right, #6ee7b7, #10b981)' // Verde Esmeralda
-                        : 'linear-gradient(to right, #fdba74, #f97316)' // Laranja
+                        ? '#10b981' // Verde Esmeralda
+                        : '#f97316' // Laranja
                 }}
               ></div>
               
@@ -711,8 +714,9 @@ const TurmasPage: React.FC = () => {
             ))}
           </div>
         )}
-    </PageContainer>
+        </div>
+      </div>
+    </>
   );
 };
-
 export default TurmasPage;

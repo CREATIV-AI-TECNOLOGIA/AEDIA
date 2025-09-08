@@ -738,11 +738,13 @@ const Chat: React.FC = () => {
   }
 
   return (
-    <div className="h-full bg-gray-100 flex overflow-hidden relative">
-      {/* Área Principal do Chat */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Botões no canto superior direito */}
-        <div className="absolute top-4 right-4 z-20 flex items-center space-x-2">
+    <>
+      <div className="min-h-screen bg-slate-50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8">
+        {/* Card único que engloba todo o conteúdo do chat */}
+        <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-slate-200/70 ring-1 ring-white/50 hover:shadow-xl transition-all duration-300 min-h-[calc(100vh-8rem)] flex flex-col relative">
+          {/* Botões no canto superior direito */}
+          <div className="absolute top-4 right-4 z-20 flex items-center space-x-2">
           <button
             onClick={startNewConversation}
             className="p-2 bg-white border border-yellow-200 text-black hover:text-yellow-600 hover:bg-yellow-50 hover:border-yellow-400 rounded-xl shadow-sm transition-all duration-200 hover:shadow-md"
@@ -778,7 +780,7 @@ const Chat: React.FC = () => {
               </p>
               
               {/* Caixa de Input Integrada */}
-              <div className="relative bg-white rounded-2xl border-2 border-gray-300 focus-within:border-gray-500 hover:border-gray-400 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 w-full shadow-lg">
+              <div className="relative bg-white rounded-2xl border-2 border-gray-300 hover:border-gray-400 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 w-full shadow-lg">
                 <textarea
                   ref={inputRef}
                   value={inputValue}
@@ -836,7 +838,7 @@ const Chat: React.FC = () => {
                   <button
                     onClick={handleSubmit}
                     disabled={isLoading || !inputValue.trim()}
-                    className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
+                    className="p-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
                   >
                     {isLoading ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -873,7 +875,7 @@ const Chat: React.FC = () => {
                   >
                     {/* Avatar - só para IA */}
                     {message.sender === 'assistant' && (
-                      <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 shadow-lg ring-2 ring-blue-100">
+                      <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-blue-600 shadow-lg ring-2 ring-blue-100">
                         <Brain className="w-6 h-6 text-white" />
                       </div>
                     )}
@@ -950,7 +952,7 @@ const Chat: React.FC = () => {
                 {isThinking && !isSearchingWeb && !streamingMessageId && (
                   <div className="flex items-start gap-4 message-enter">
                     {/* Avatar da IA */}
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-gradient-to-br from-blue-500 via-blue-600 to-indigo-600 shadow-lg ring-2 ring-blue-100">
+                    <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-blue-600 shadow-lg ring-2 ring-blue-100">
                       <Brain className="w-6 h-6 text-white" />
                     </div>
 
@@ -985,7 +987,7 @@ const Chat: React.FC = () => {
             {/* Caixa de Input Fixa na parte inferior */}
             <div className="bg-white p-6">
               <div className="max-w-4xl mx-auto">
-                <div className="relative bg-white rounded-2xl border-2 border-gray-200 focus-within:border-blue-400 focus-within:ring-4 focus-within:ring-blue-50 transition-all duration-200 shadow-lg">
+                <div className="relative bg-white rounded-2xl border-2 border-gray-200 transition-all duration-200 shadow-lg">
                   <textarea
                     ref={chatInputRef}
                     value={inputValue}
@@ -1054,7 +1056,7 @@ const Chat: React.FC = () => {
                     <button
                       onClick={handleSubmit}
                       disabled={isLoading || !inputValue.trim()}
-                      className="p-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
+                      className="p-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
                     >
                       {isLoading ? (
                         <Loader2 className="w-4 h-4 animate-spin" />
@@ -1072,7 +1074,7 @@ const Chat: React.FC = () => {
 
       {/* Painel Lateral de Histórico */}
       {showHistoryPanel && (
-        <div className="w-80 bg-white border-l border-gray-200 flex flex-col shadow-lg">
+        <div className="w-80 card-standard border-l border-gray-200 flex flex-col ml-4">
           {/* Header do painel */}
           <div className="p-4 border-b border-gray-200">
             <div className="flex items-center justify-between mb-3">
@@ -1153,29 +1155,30 @@ const Chat: React.FC = () => {
         </div>
       )}
 
-      {/* PersonaManager Modal */}
-      <PersonaManager
-        professorId={professorId?.toString() || ''}
-        activePersona={activePersona}
-        onPersonaChange={(persona) => {
-          setActivePersona(persona);
-          loadPersonas();
-        }}
-        isOpen={showPersonaConfig}
-        onClose={() => setShowPersonaConfig(false)}
-      />
-
-      {/* Token Usage Panel */}
-      {professorId && (
-        <TokenUsagePanel
-          isOpen={showTokenUsage}
-          onClose={() => setShowTokenUsage(false)}
-          professorId={professorId}
-          sessionUsage={sessionUsage}
-        />
-      )}
-    </div>
+          {/* Token Usage Panel */}
+          {professorId && (
+            <TokenUsagePanel
+              isOpen={showTokenUsage}
+              onClose={() => setShowTokenUsage(false)}
+              professorId={professorId}
+              sessionUsage={sessionUsage}
+            />
+          )}
+          {/* PersonaManager Modal */}
+          <PersonaManager
+            professorId={professorId?.toString() || ''}
+            activePersona={activePersona}
+            onPersonaChange={(persona) => {
+              setActivePersona(persona);
+              loadPersonas();
+            }}
+            isOpen={showPersonaConfig}
+            onClose={() => setShowPersonaConfig(false)}
+          />
+        </div>
+      </div>
+    </>
   );
 };
 
-export default Chat; 
+export default Chat;

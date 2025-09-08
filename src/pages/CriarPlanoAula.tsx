@@ -473,7 +473,7 @@ const CriarPlanoAula: React.FC = memo(() => {
           )}
 
           {/* Card do seletor de habilidades - largura total e compacto */}
-          <div className="bg-white rounded-lg shadow-lg border border-gray-200">
+          <div className="card-standard">
             {/* Header do card */}
             <div className="border-b border-gray-200 p-4">
               <div className="flex items-center justify-between">
