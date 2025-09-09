@@ -32,7 +32,7 @@ const routeTitles: { [key: string]: string } = {
   '/diagnostico': 'Diagnóstico',
   '/calendario-escolar': 'Calendário Escolar',
   '/chat-interno': 'Comunicação Interna',
-  '/notificacoes': 'Chat',
+  '/notificacoes': 'Chat Interno',
   '/configuracoes': 'Configurações',
 }
 

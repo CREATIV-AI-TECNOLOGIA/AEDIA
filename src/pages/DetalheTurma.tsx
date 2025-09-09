@@ -410,10 +410,11 @@ const alunos = rows.slice(1).map(row => {
   }
 
   return (
-    <div className="p-6 bg-gradient-to-br from-slate-50 via-gray-50 to-blue-100">
-      {/* Cabeçalho da turma */}
-      <div className="max-w-6xl mx-auto">
-        <div className="bg-white rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] border border-gray-100 p-4 mb-4">
+    <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden bg-white rounded-2xl border border-gray-200 shadow-sm m-6">
+          {/* Cabeçalho da turma */}
+      <div className="px-4 sm:px-6 lg:px-8 py-6">
+        <div className="bg-white rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] border border-gray-100 p-6 mb-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between">
             <div className="flex items-center">
               <div className="h-16 w-16 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-lg mr-4">
@@ -524,7 +525,7 @@ const alunos = rows.slice(1).map(row => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] border border-gray-100 p-4 mb-4">
+        <div className="bg-white rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] border border-gray-100 p-6 mb-4">
           <nav className="flex -mb-px">
             <button
               onClick={() => setActiveTab('alunos')}
@@ -779,6 +780,7 @@ const alunos = rows.slice(1).map(row => {
             </div>
           )}
         </Modal>
+        </div>
       </div>
     </div>
   );

@@ -45,11 +45,7 @@ const sidebarItems: SidebarItem[] = [
     icon: ClipboardList,
     label: 'Avaliações'
   },
-  {
-    href: '/notificacoes',
-    icon: Bell,
-    label: 'Chat'
-  },
+  { href: '/chat-interno', icon: Bell, label: 'Chat' },
   {
     href: '/turmas',
     icon: Users,
@@ -80,7 +76,7 @@ export default function NewSidebar() {
     if (href === '/') {
       return location.pathname === '/' || location.pathname === '/dashboard-professor';
     }
-    return location.pathname.startsWith(href);
+    return location.pathname === href;
   };
 
   return (

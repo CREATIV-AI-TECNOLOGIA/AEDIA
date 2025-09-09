@@ -740,7 +740,7 @@ const Chat: React.FC = () => {
   return (
     <>
       <div className="min-h-screen bg-slate-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-8">
+        <div className="px-4 sm:px-6 lg:px-8 pt-6 pb-8">
         {/* Card único que engloba todo o conteúdo do chat */}
         <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-slate-200/70 ring-1 ring-white/50 hover:shadow-xl transition-all duration-300 min-h-[calc(100vh-8rem)] flex flex-col relative">
           {/* Botões no canto superior direito */}
@@ -865,7 +865,7 @@ const Chat: React.FC = () => {
           <div className="flex-1 flex flex-col overflow-hidden">
             {/* Área de mensagens */}
             <div className="flex-1 overflow-y-auto chat-scroll bg-white">
-              <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+              <div className="px-6 py-8 space-y-8">
                 {messages.map((message) => (
                   <div
                     key={message.id}
@@ -881,7 +881,7 @@ const Chat: React.FC = () => {
                     )}
 
                     {/* Mensagem */}
-                    <div className={`flex-1 max-w-3xl ${
+                    <div className={`flex-1 ${
                       message.sender === 'user' ? 'text-right' : 'text-left'
                     }`}>
                       {/* Nome e timestamp */}
@@ -986,7 +986,7 @@ const Chat: React.FC = () => {
 
             {/* Caixa de Input Fixa na parte inferior */}
             <div className="bg-white p-6">
-              <div className="max-w-4xl mx-auto">
+              <div>
                 <div className="relative bg-white rounded-2xl border-2 border-gray-200 transition-all duration-200 shadow-lg">
                   <textarea
                     ref={chatInputRef}

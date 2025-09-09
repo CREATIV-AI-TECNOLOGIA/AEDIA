@@ -1,36 +1,26 @@
-/* ===== CHAT INTERNO - DESIGN MINIMALISTA ===== */
+/* ===== CHAT INTERNO - ESTILOS MÍNIMOS ===== */
 
-/* Container principal */
+/* Container principal - sem interferências */
 .chat-container {
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 80px);
-  background: #fafafa;
-  overflow: hidden;
-  opacity: 1;
-  transition: opacity 0.15s ease-in-out;
-}
-
-/* Evitar flash durante carregamento */
-.chat-container.loading {
-  opacity: 0.7;
+  height: auto;
+  background: transparent !important;
 }
 
 /* Conteúdo principal */
 .chat-main-content {
   display: flex;
   flex: 1;
-  overflow: hidden;
-  transition: all 0.2s ease-in-out;
+  height: 100%;
 }
 
-/* Sidebar */
+/* Sidebar - estilo limpo */
 .chat-sidebar {
   width: 320px;
-  background: #ffffff;
-  border-right: 1px solid #e5e5e5;
-  transition: width 0.2s ease-in-out, transform 0.2s ease-in-out;
-  will-change: transform, width;
+  background: transparent !important;
+  border-right: 1px solid #e5e7eb;
+  height: 100%;
 }
 
 .chat-sidebar.collapsed {
@@ -67,10 +57,8 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  background: #fafafa;
-  transition: all 0.2s ease-in-out;
-  will-change: transform;
+  background: transparent !important;
+  height: 100%;
 }
 
 /* Tela de boas-vindas */
@@ -79,14 +67,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #ffffff;
   opacity: 1;
   transition: opacity 0.3s ease-in-out;
 }
 
 .welcome-content {
   text-align: center;
-  max-width: 400px;
   padding: 48px 24px;
   opacity: 1;
   transform: translateY(0);
@@ -165,19 +151,7 @@ button:focus {
   box-shadow: none;
 }
 
-/* Preload para evitar flash */
-.chat-container::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #fafafa;
-  z-index: -1;
-  opacity: 0;
-  pointer-events: none;
-}
+/* Remover preload background que interfere com o card */
 
 /* Smooth scrolling para toda a aplicação */
 * {

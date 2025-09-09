@@ -223,66 +223,81 @@ const ChatInternoPage = () => {
     }
 
     return (
-        <div className={`chat-container ${isMobile ? 'mobile' : ''}`}>
-            <div className="chat-main-content">
-                {/* Sidebar */}
-                <aside className={`chat-sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
-                    <ListaConversas {...listaConversasProps} />
-                    
-                    {/* Overlay para mobile */}
-                    {isMobile && !sidebarCollapsed && (
-                        <div className="sidebar-overlay" onClick={() => setSidebarCollapsed(true)}></div>
-                    )}
-                </aside>
+        <div style={{ 
+            background: 'transparent',
+            padding: '0'
+        }}>
+            <div 
+                className="bg-white rounded-2xl shadow-2xl border-2 border-slate-300 overflow-hidden" 
+                style={{ 
+                    height: '80vh', 
+                    backgroundColor: '#ffffff !important',
+                    boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05)',
+                    border: '2px solid #cbd5e1',
+                    borderRadius: '1rem'
+                }}>
+                <div className={`chat-container ${isMobile ? 'mobile' : ''}`} style={{ height: '100%', background: 'transparent' }}>
+                    <div className="chat-main-content" style={{ height: '100%' }}>
+                            {/* Sidebar */}
+                            <aside className={`chat-sidebar ${sidebarCollapsed ? 'collapsed' : ''}`}>
+                                <ListaConversas {...listaConversasProps} />
+                                
+                                {/* Overlay para mobile */}
+                                {isMobile && !sidebarCollapsed && (
+                                    <div className="sidebar-overlay" onClick={() => setSidebarCollapsed(true)}></div>
+                                )}
+                            </aside>
 
-                {/* Área principal do chat */}
-                <main className="chat-main-area">
-                    {conversaAtivaId ? (
-                        <div style={{ position: 'relative', height: '100%' }}>
-                            <JanelaConversa 
-                                key={`conversa-${conversaAtivaId}`}
-                                {...janelaConversaProps} 
-                            />
-                            {isChangingConversation && (
-                                <div style={{
-                                    position: 'absolute',
-                                    top: 0,
-                                    left: 0,
-                                    right: 0,
-                                    bottom: 0,
-                                    backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                    zIndex: 1000
-                                }}>
-                                    <div style={{ textAlign: 'center' }}>
-                                        <div style={{ 
-                                            width: '24px', 
-                                            height: '24px', 
-                                            border: '3px solid #f3f3f3',
-                                            borderTop: '3px solid #075e54',
-                                            borderRadius: '50%',
-                                            animation: 'spin 1s linear infinite',
-                                            margin: '0 auto 8px'
-                                        }}></div>
-                                        <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>Carregando conversa...</p>
+                            {/* Área principal do chat */}
+                            <main className="chat-main-area">
+                                {conversaAtivaId ? (
+                                    <div style={{ position: 'relative', height: '100%' }}>
+                                        <JanelaConversa 
+                                            key={`conversa-${conversaAtivaId}`}
+                                            {...janelaConversaProps} 
+                                        />
+                                        {isChangingConversation && (
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: 0,
+                                                left: 0,
+                                                right: 0,
+                                                bottom: 0,
+                                                backgroundColor: 'rgba(255, 255, 255, 0.8)',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                zIndex: 1000
+                                            }}>
+                                                <div style={{ textAlign: 'center' }}>
+                                                    <div style={{ 
+                                                        width: '24px', 
+                                                        height: '24px', 
+                                                        border: '3px solid #f3f3f3',
+                                                        borderTop: '3px solid #075e54',
+                                                        borderRadius: '50%',
+                                                        animation: 'spin 1s linear infinite',
+                                                        margin: '0 auto 8px'
+                                                    }}></div>
+                                                    <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>Carregando conversa...</p>
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
-                                </div>
-                            )}
+                                ) : (
+                                    <div className="chat-welcome">
+                                        <div className="welcome-content">
+                                            <h2>Selecione uma conversa</h2>
+                                            <p>Escolha um contato na barra lateral para começar a conversar</p>
+                                        </div>
+                                    </div>
+                                )}
+                            </main>
                         </div>
-                    ) : (
-                        <div className="chat-welcome">
-                            <div className="welcome-content">
-                                <h2>Selecione uma conversa</h2>
-                                <p>Escolha um contato na barra lateral para começar a conversar</p>
-                            </div>
-                        </div>
-                    )}
-                </main>
+                </div>
             </div>
         </div>
-    );
+     );
 };
 
 export default ChatInternoPage;

@@ -6,7 +6,7 @@ import { useEscola } from '../context/EscolaContext';
 import PageContainer from '../components/layout/PageContainer';
 import { AlertTriangle, ArrowRight, BookOpen, Calendar, ChevronDown, Filter, GraduationCap, Layers, Loader2, PlusCircle, School, Search, Users, X } from 'lucide-react';
 
-// Tipos de dados (manter ou ajustar conforme necessário)
+// Interfaces
 interface Turma {
   id: number;
   nome: string;
@@ -17,13 +17,13 @@ interface Turma {
   modalidade: string;
   modalidade_id?: number;
   periodo: string;
-  professor_id?: string; // Alterado para ID do professor, se aplicável
+  professor_id?: string;
   professor_nome?: string;
   alunos_count?: number;
 }
 
 interface Professor {
-  id: string; // Usar o ID do Supabase Auth ou da tabela professores
+  id: string;
   nome: string;
 }
 
@@ -39,25 +39,27 @@ const PERIODOS = [
   { id: 'INTEGRAL', nome: 'Integral' },
 ];
 
-// Componente principal da página de Turmas (para Gestor e Professor)
 const TurmasPage: React.FC = () => {
-  const { user, loading: authLoading, professorData, userProfile } = useAuth();
-  const { escolaAtiva, loadingEscolas } = useEscola();
   const navigate = useNavigate();
+  const { user, userProfile, authLoading, professorData } = useAuth();
+  const { escolaAtiva, loadingEscolas } = useEscola();
 
+  // Estados
   const [turmas, setTurmas] = useState<Turma[]>([]);
   const [professores, setProfessores] = useState<Professor[]>([]);
   const [modalidades, setModalidades] = useState<Modalidade[]>([]);
-
   const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  // Filtros
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedModalidade, setSelectedModalidade] = useState<string | null>(null);
   const [selectedProfessor, setSelectedProfessor] = useState<string | null>(null);
   const [selectedPeriodo, setSelectedPeriodo] = useState<string | null>(null);
-  const [cardAnimationComplete, setCardAnimationComplete] = useState(false);
+
+  // Fade-in suave para evitar piscada na abertura da página
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Verifica se o usuário é gestor ou professor
   const isGestor = useMemo(() => userProfile === 'diretora', [userProfile]);
@@ -69,8 +71,7 @@ const TurmasPage: React.FC = () => {
     // Logs removidos para limpar console
   }, [hasAccess, escolaAtiva, isGestor, isProfessor]);
 
-  // Efeito para DADOS FICTÍCIOS e simular carregamento - SERÁ COMENTADO
-  /*
+  // Efeito para DADOS FICTÍCIOS e simular carregamento
   useEffect(() => {
     if (!hasAccess) return;
 
@@ -98,256 +99,85 @@ const TurmasPage: React.FC = () => {
       const mockTurmas: Turma[] = [
         {
           id: 1,
-          nome: 'Maternal A - Manhã',
-          ano: 'Maternal',
-          escola_id: escolaAtiva?.id || 1,
-          created_at: new Date().toISOString(),
-          disciplina: 'Geral',
-          modalidade: 'Ensino Infantil',
-          modalidade_id: 1,
-          periodo: 'MANHA',
+          nome: 'Turma 102',
+          ano: '1º Ano',
+          escola_id: 1,
+          created_at: '2024-01-15',
+          disciplina: 'Língua Portuguesa',
+          modalidade: 'Ensino Fundamental I',
+          modalidade_id: 2,
+          periodo: 'Tarde',
           professor_id: 'prof1',
           professor_nome: 'Prof. Carlos Silva',
-          alunos_count: 15,
+          alunos_count: 25
         },
         {
           id: 2,
-          nome: '1º Ano B - Tarde',
-          ano: '1º Ano',
-          escola_id: escolaAtiva?.id || 1,
-          created_at: new Date(Date.now() - 86400000 * 5).toISOString(), // 5 dias atrás
-          disciplina: 'Português',
+          nome: 'Turma 203',
+          ano: '2º Ano',
+          escola_id: 1,
+          created_at: '2024-01-15',
+          disciplina: 'Matemática',
           modalidade: 'Ensino Fundamental I',
           modalidade_id: 2,
-          periodo: 'TARDE',
+          periodo: 'Manhã',
           professor_id: 'prof2',
           professor_nome: 'Prof. Ana Pereira',
-          alunos_count: 22,
+          alunos_count: 28
         },
         {
           id: 3,
-          nome: '6º Ano C - Manhã',
-          ano: '6º Ano',
-          escola_id: escolaAtiva?.id || 1,
-          created_at: new Date(Date.now() - 86400000 * 10).toISOString(), // 10 dias atrás
-          disciplina: 'Matemática',
-          modalidade: 'Ensino Fundamental II',
-          modalidade_id: 3,
-          periodo: 'MANHA',
+          nome: 'Turma 304',
+          ano: '3º Ano',
+          escola_id: 1,
+          created_at: '2024-01-15',
+          disciplina: 'Ciências',
+          modalidade: 'Ensino Fundamental I',
+          modalidade_id: 2,
+          periodo: 'Tarde',
           professor_id: 'prof3',
           professor_nome: 'Prof. Joana Santos',
-          alunos_count: 28,
+          alunos_count: 22
         },
         {
           id: 4,
-          nome: '2º Ano Médio A - Integral',
-          ano: '2º Ano Médio',
-          escola_id: escolaAtiva?.id || 1,
-          created_at: new Date(Date.now() - 86400000 * 2).toISOString(), // 2 dias atrás
-          disciplina: 'Química',
-          modalidade: 'Ensino Médio',
-          modalidade_id: 4,
-          periodo: 'INTEGRAL',
+          nome: 'Turma 405',
+          ano: '4º Ano',
+          escola_id: 1,
+          created_at: '2024-01-15',
+          disciplina: 'História',
+          modalidade: 'Ensino Fundamental II',
+          modalidade_id: 3,
+          periodo: 'Manhã',
           professor_id: 'prof4',
           professor_nome: 'Prof. Miguel Costa',
-          alunos_count: 30,
-        },
-         {
-          id: 5,
-          nome: 'Jardim II B - Tarde',
-          ano: 'Jardim II',
-          escola_id: escolaAtiva?.id || 1,
-          created_at: new Date(Date.now() - 86400000 * 3).toISOString(),
-          disciplina: 'Geral',
-          modalidade: 'Ensino Infantil',
-          modalidade_id: 1,
-          periodo: 'TARDE',
-          professor_id: 'prof1',
-          professor_nome: 'Prof. Carlos Silva',
-          alunos_count: 18,
-        },
-        {
-          id: 6,
-          nome: '3º Ano A - Manhã',
-          ano: '3º Ano',
-          escola_id: escolaAtiva?.id || 1,
-          created_at: new Date(Date.now() - 86400000 * 15).toISOString(),
-          disciplina: 'História',
-          modalidade: 'Ensino Fundamental I',
-          modalidade_id: 2,
-          periodo: 'MANHA',
-          professor_id: 'prof2',
-          professor_nome: 'Prof. Ana Pereira',
-          alunos_count: 25,
-        },
-  ];
+          alunos_count: 30
+        }
+      ];
       setTurmas(mockTurmas);
       setLoadingData(false);
-    }, 1200);
+    }, 1500);
 
     return () => clearTimeout(timer);
-  }, [hasAccess, escolaAtiva]); // Dependência em escolaAtiva para simular recarga se a escola mudar
-  */
-
-  // Efeito para buscar dados iniciais (modalidades, professores)
-  useEffect(() => {
-    if (!hasAccess || !escolaAtiva) return;
-
-    const fetchData = async () => {
-      // setLoadingData(true); // O loading principal será controlado pela busca de turmas
-      setError(null);
-      try {
-        // Buscar Modalidades
-        const { data: modalidadesData, error: modalidadesError } = await supabase
-          .from('modalidades')
-          .select('id, nome')
-          .order('nome');
-        if (modalidadesError) throw modalidadesError;
-        setModalidades(modalidadesData || []);
-
-        // Buscar Professores da escola ativa diretamente da tabela professores
-        const { data: professoresData, error: professoresError } = await supabase
-          .from('professores')
-          .select('id, nome')
-          .eq('escola_id', escolaAtiva.id)
-          .order('nome');
-        if (professoresError) throw professoresError;
-        setProfessores(professoresData || []);
-
-      } catch (err: any) {
-        console.error('Erro ao buscar dados iniciais para filtros:', err);
-        setError('Falha ao carregar dados para filtros. Algumas opções podem não estar disponíveis.');
-        // Não definir setLoadingData(false) aqui, pois a busca de turmas ainda pode estar ocorrendo
-        }
-      };
-    fetchData();
   }, [hasAccess, escolaAtiva]);
-  
 
-  // Efeito para buscar turmas da escola ativa
-  useEffect(() => {
-    if (!hasAccess || !escolaAtiva) {
-      setTurmas([]);
-      setLoadingData(false); // Garante que o loading pare se não houver escola ativa ou não tiver acesso
-      return;
-    }
-
-    setLoadingData(true);
-    setError(null);
-      
-    const fetchTurmas = async () => {
-      try {
-        let query = supabase
-          .from('turmas')
-          .select(`
-            id,
-            nome,
-            ano,
-            periodo,
-            escola_id,
-            created_at,
-            modalidade_id,
-            modalidades!modalidade_id(id, nome),
-            professores_turmas_disciplinas(
-              professor_id,
-              disciplinas!inner(nome),
-              professores!inner(nome)
-            )
-          `)
-          .eq('escola_id', escolaAtiva.id);
-
-        // Se for professor, filtrar apenas turmas onde ele leciona
-        console.log('[Turmas] Debug - isProfessor:', isProfessor, 'professorData:', professorData, 'userProfile:', userProfile);
-        console.log('[Turmas] Debug - user:', user);
-        console.log('[Turmas] Debug - user.email:', user?.email);
-        if (isProfessor && professorData?.id) {
-          console.log('[Turmas] Aplicando filtro para professor ID:', professorData.id);
-          console.log('[Turmas] Tipo do professor ID:', typeof professorData.id);
-          // Usar uma subconsulta para filtrar turmas do professor
-          const { data: turmasDoProf, error: turmasProfError } = await supabase
-            .from('professores_turmas_disciplinas')
-            .select('turma_id')
-            .eq('professor_id', professorData.id);
-          
-          if (turmasProfError) throw turmasProfError;
-          
-          const turmaIds = turmasDoProf?.map(t => t.turma_id) || [];
-          console.log('[Turmas] IDs das turmas do professor:', turmaIds);
-          
-          if (turmaIds.length > 0) {
-            query = query.in('id', turmaIds);
-          } else {
-            // Se não há turmas, retornar array vazio
-            setTurmas([]);
-            return;
-          }
-        }
-
-        const { data, error: turmasError } = await query.order('nome');
-
-        if (turmasError) throw turmasError;
-        
-        // Mapear os dados para o formato esperado
-        const turmasFormatadas = data?.map((turma: any) => {
-          // Pegar o primeiro professor/disciplina (pode haver múltiplos)
-          const primeiroProfessorDisciplina = turma.professores_turmas_disciplinas?.[0];
-          
-          return {
-            id: turma.id,
-            nome: turma.nome,
-            ano: turma.ano,
-            escola_id: turma.escola_id,
-            created_at: turma.created_at,
-            disciplina: primeiroProfessorDisciplina?.disciplinas?.nome || 'Não definida',
-            modalidade: turma.modalidades?.nome || 'Não definida',
-            modalidade_id: turma.modalidades?.id,
-            periodo: turma.periodo || 'Não definido',
-            professor_id: primeiroProfessorDisciplina?.professor_id,
-            professor_nome: primeiroProfessorDisciplina?.professores?.nome || 'Não definido',
-            alunos_count: 0 // Será calculado separadamente se necessário
-          };
-        }) || [];
-        
-        setTurmas(turmasFormatadas);
-      } catch (err: any) {
-        console.error('Erro ao buscar turmas:', err);
-        setError('Falha ao carregar a lista de turmas.');
-        setTurmas([]); // Limpa turmas em caso de erro
-      } finally {
-        setLoadingData(false);
-      }
-    };
-
-      fetchTurmas();
-  }, [hasAccess, escolaAtiva, isProfessor, professorData?.id]); // Dependência em escolaAtiva para recarregar se a escola mudar
-
-  // Redirecionamento removido - agora é feito pelo TurmasRedirector
-
-  // Animação dos cards
-  useEffect(() => {
-    if (!loadingData && turmas.length > 0) {
-      const timer = setTimeout(() => setCardAnimationComplete(true), 300);
-      return () => clearTimeout(timer);
-    }
-  }, [loadingData, turmas]);
-
-  // Lógica de filtragem
+  // Filtrar turmas baseado nos critérios selecionados
   const turmasFiltradas = useMemo(() => {
     return turmas.filter(turma => {
-      const searchLower = searchTerm.toLowerCase();
-      const matchesSearch = searchTerm === '' || 
-        turma.nome.toLowerCase().includes(searchLower) ||
-        (turma.professor_nome && turma.professor_nome.toLowerCase().includes(searchLower)) ||
-        turma.disciplina.toLowerCase().includes(searchLower);
-
+      const matchesSearch = !searchTerm || 
+        turma.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        turma.professor_nome?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        turma.disciplina.toLowerCase().includes(searchTerm.toLowerCase());
+      
       const matchesModalidade = !selectedModalidade || String(turma.modalidade_id) === selectedModalidade;
       const matchesProfessor = !selectedProfessor || turma.professor_id === selectedProfessor;
-      const matchesPeriodo = !selectedPeriodo || turma.periodo === selectedPeriodo;
+      const matchesPeriodo = !selectedPeriodo || turma.periodo.toUpperCase() === selectedPeriodo;
       
       return matchesSearch && matchesModalidade && matchesProfessor && matchesPeriodo;
     });
   }, [turmas, searchTerm, selectedModalidade, selectedProfessor, selectedPeriodo]);
 
+  // Função para limpar todos os filtros
   const clearFilters = () => {
     setSearchTerm('');
     setSelectedModalidade(null);
@@ -355,49 +185,59 @@ const TurmasPage: React.FC = () => {
     setSelectedPeriodo(null);
   };
 
-  // Componente de Dropdown para Filtros (Reutilizável)
+  // Componente de dropdown para filtros
   const FilterDropdownComponent: React.FC<{
     title: string;
     options: { id: string | number; nome: string }[];
     selectedValue: string | null;
     onSelect: (value: string | null) => void;
-    icon?: React.ReactElement;
+    icon: React.ReactNode;
   }> = ({ title, options, selectedValue, onSelect, icon }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const selectedOptionNome = options.find(opt => String(opt.id) === selectedValue)?.nome || title;
+
+    const selectedOption = options.find(option => String(option.id) === selectedValue);
 
     return (
       <div className="relative">
         <button
+          type="button"
+          className="w-full flex items-center justify-between px-3 py-2.5 text-left bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
           onClick={() => setIsOpen(!isOpen)}
-          className={`flex items-center justify-between w-full sm:w-auto min-w-[150px] px-4 py-2.5 text-sm font-medium rounded-lg transition-all border
-            ${selectedValue 
-              ? 'bg-blue-50 text-blue-700 border-blue-200 shadow-sm' 
-              : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-300'}
-          `}
         >
-          <div className="flex items-center">
-            {icon && <span className="mr-2 opacity-70">{icon}</span>}
-            <span className={selectedValue ? 'text-blue-700' : 'text-gray-600'}>{selectedOptionNome}</span>
+          <div className="flex items-center space-x-2">
+            {icon}
+            <span className={selectedOption ? 'text-gray-900' : 'text-gray-500'}>
+              {selectedOption ? selectedOption.nome : `Selecionar ${title}`}
+            </span>
           </div>
-          <ChevronDown className={`ml-2 w-4 h-4 transition-transform ${isOpen ? 'transform rotate-180' : ''}`} />
+          <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </button>
 
         {isOpen && (
           <>
-            <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)}></div>
-            <div className="absolute z-20 mt-1 w-full sm:w-56 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden animate-fadeInUp faster">
-              <div className="max-h-60 overflow-y-auto p-2">
+            <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
+            <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+              <div className="py-1">
                 <button
-                  onClick={() => { onSelect(null); setIsOpen(false); }}
-                  className="w-full text-left px-3 py-2 text-sm text-gray-700 hover:bg-gray-100 rounded-md"
+                  onClick={() => {
+                    onSelect(null);
+                    setIsOpen(false);
+                  }}
+                  className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
+                    !selectedValue
+                      ? 'bg-blue-100 text-blue-700 font-semibold'
+                      : 'text-gray-700 hover:bg-gray-100'
+                  }`}
                 >
-                  Todos {title.toLowerCase()}
+                  Todos
                 </button>
                 {options.map((option) => (
                   <button
                     key={option.id}
-                    onClick={() => { onSelect(String(option.id)); setIsOpen(false); }}
+                    onClick={() => {
+                      onSelect(String(option.id));
+                      setIsOpen(false);
+                    }}
                     className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
                       selectedValue === String(option.id)
                         ? 'bg-blue-100 text-blue-700 font-semibold'
@@ -415,308 +255,301 @@ const TurmasPage: React.FC = () => {
     );
   };
 
-  // Se não tiver acesso ou estiver carregando autenticação/escola, mostra mensagens apropriadas
+  // Loading states
   if (authLoading || loadingEscolas) {
     return (
-      <PageContainer>
-        <div className="flex justify-center items-center h-[calc(100vh-200px)]">
-          <Loader2 className="w-12 h-12 text-blue-600 animate-spin" />
-          <p className="ml-4 text-gray-600 text-lg">Carregando dados...</p>
+      <div className="flex justify-center items-center h-64">
+        <div className="flex items-center space-x-4">
+          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+          <p className="text-slate-600 text-lg">Carregando...</p>
         </div>
-      </PageContainer>
+      </div>
     );
   }
 
   if (!hasAccess) {
     return (
-      <PageContainer>
-        <div className="flex flex-col justify-center items-center h-[calc(100vh-200px)] text-center px-4">
-          <AlertTriangle className="w-16 h-16 text-amber-500 mb-6" />
-          <h2 className="text-2xl font-semibold text-gray-800 mb-3">Acesso Restrito</h2>
-          <p className="text-gray-600 max-w-md">
-            Esta página é destinada apenas para gestores e professores. Se você acredita que deveria ter acesso, por favor, entre em contato com o suporte.
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="max-w-md mx-auto text-center">
+          <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
+            <AlertTriangle className="h-8 w-8 text-red-600" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Acesso Negado</h2>
+          <p className="text-gray-600">
+            Você não tem permissão para acessar esta página. 
+            Entre em contato com o administrador se acredita que isso é um erro.
           </p>
-          <button 
-            onClick={() => navigate('/')} 
-            className="mt-8 px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center"
-          >
-            <School className="w-5 h-5 mr-2" /> Voltar ao Dashboard
-          </button>
         </div>
-      </PageContainer>
+      </div>
     );
   }
-  
+
   if (!escolaAtiva) {
     return (
-      <PageContainer>
-         <div className="flex flex-col justify-center items-center h-[calc(100vh-200px)] text-center px-4">
-          <School className="w-16 h-16 text-gray-400 mb-6" />
-          <h2 className="text-2xl font-semibold text-gray-800 mb-3">Nenhuma Escola Ativa</h2>
-          <p className="text-gray-600 max-w-md">
-            Por favor, selecione uma escola para visualizar as turmas.
+      <div className="flex items-center justify-center min-h-[60vh]">
+        <div className="max-w-md mx-auto text-center">
+          <div className="mx-auto w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-4">
+            <School className="h-8 w-8 text-yellow-600" />
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Nenhuma Escola Selecionada</h2>
+          <p className="text-gray-600">
+            Selecione uma escola para visualizar as turmas.
           </p>
-          {/* Adicionar um botão para selecionar escola se o modal existir e for fácil de integrar */}
         </div>
-      </PageContainer>
+      </div>
     );
   }
 
-  // Renderização principal da página
   return (
-    <>
-      <div className="flex-1 flex flex-col overflow-hidden p-4">
-      <div className="bg-white/60 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200/60 flex-1 flex flex-col p-6">
-
-      {/* Cabeçalho da Página */}
-      <header className="mb-8 py-4">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-          <div>
-              <h1 className="text-3xl font-bold text-gray-800 flex items-center">
-                <Users className="w-8 h-8 mr-3 text-blue-600" />
-                {isGestor ? 'Gestão de Turmas' : 'Minhas Turmas'}
-            </h1>
-              <p className="mt-1 text-gray-600">
-                {isGestor 
-                  ? `Visualize e gerencie todas as turmas da escola ${escolaAtiva.nome}.`
-                  : `Visualize suas turmas na escola ${escolaAtiva.nome}.`
-                }
-            </p>
+    <div className="min-h-screen bg-slate-50">
+      <div className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 transition-opacity duration-300 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+        {/* Header */}
+        <header className="mb-8 py-4">
+          <div className="w-full px-0">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-800 flex items-center">
+                  <Users className="w-8 h-8 mr-3 text-blue-600" />
+                  {isGestor ? 'Gestão de Turmas' : 'Minhas Turmas'}
+                </h1>
+                <p className="mt-1 text-gray-600">
+                  {isGestor 
+                    ? `Visualize e gerencie todas as turmas da escola ${escolaAtiva.nome}.`
+                    : `Visualize suas turmas na escola ${escolaAtiva.nome}.`
+                  }
+                </p>
+              </div>
+              {isGestor && (
+                <Link
+                  to="/turmas/criar"
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-5 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center group disabled:opacity-50"
+                >
+                  <PlusCircle className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
+                  Nova Turma
+                </Link>
+              )}
+            </div>
           </div>
-            {isGestor && (
-              <Link
-                to="/turmas/criar" // Futura rota para criar turma
-                className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-5 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center group disabled:opacity-50"
-                // onClick={(e) => e.preventDefault()} // Desabilitar por enquanto
-              >
-                <PlusCircle className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
-                Nova Turma
-              </Link>
-            )}
-          </div>
-        </div>
-      </header>
+        </header>
 
-      {/* Barra de Filtros */} 
-      <div className="mb-8 bg-white/85 backdrop-blur-sm p-5 rounded-2xl shadow-xl border border-slate-200/60 ring-1 ring-white/60">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
-          <div className="lg:col-span-2">
-            <label htmlFor="searchTurma" className="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
-            <div className="relative">
+        {/* Filtros */}
+        <div className="mb-8 bg-white/85 backdrop-blur-sm px-10 py-6 rounded-2xl shadow-xl border border-slate-200/60 ring-1 ring-white/60">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
+            <div className="lg:col-span-2">
+              <label htmlFor="searchTurma" className="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
+              <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Search className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
-                id="searchTurma"
+                  id="searchTurma"
                   type="text"
-                placeholder="Nome da turma, professor, disciplina..."
-                className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                  placeholder="Nome da turma, professor, disciplina..."
+                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
                 />
-              {searchTerm && (
-                <button 
-                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors"
-                  onClick={() => setSearchTerm('')}
-                >
-                  <X className="h-5 w-5" />
-                </button>
-              )}
-            </div>
-              </div>
-          <div>
-            <label htmlFor="filterModalidade" className="block text-sm font-medium text-gray-700 mb-1">Modalidade</label>
-            <FilterDropdownComponent 
-                  title="Modalidade"
-                  options={modalidades}
-                  selectedValue={selectedModalidade}
-                  onSelect={setSelectedModalidade}
-              icon={<Layers className="h-4 w-4"/>}
-                />
-          </div>
-          <div>
-            <label htmlFor="filterProfessor" className="block text-sm font-medium text-gray-700 mb-1">Professor</label>
-            <FilterDropdownComponent 
-                  title="Professor"
-                  options={professores}
-                  selectedValue={selectedProfessor}
-                  onSelect={setSelectedProfessor}
-              icon={<GraduationCap className="h-4 w-4"/>}
-                />
-          </div>
-          <div>
-            <label htmlFor="filterPeriodo" className="block text-sm font-medium text-gray-700 mb-1">Período</label>
-            <FilterDropdownComponent 
-                  title="Período"
-              options={PERIODOS}
-                  selectedValue={selectedPeriodo}
-                  onSelect={setSelectedPeriodo}
-              icon={<Calendar className="h-4 w-4"/>}
-                />
-          </div>
-        </div>
-        {(searchTerm || selectedModalidade || selectedProfessor || selectedPeriodo) && (
-            <div className="mt-4 flex justify-end">
+                {searchTerm && (
                   <button 
-                    onClick={clearFilters}
-                    className="text-sm text-blue-600 hover:text-blue-800 flex items-center font-medium transition-colors"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors"
+                    onClick={() => setSearchTerm('')}
                   >
-                    <Filter className="w-4 h-4 mr-1.5" />
-                    Limpar todos os filtros
+                    <X className="h-5 w-5" />
                   </button>
-          </div>
-        )}
-      </div>
-
-      {/* Conteúdo Principal: Cards de Turma ou Mensagens de Estado */}
-      {loadingData ? (
-        <div className="flex justify-center items-center py-20">
-          <Loader2 className="w-10 h-10 text-blue-600 animate-spin" />
-          <p className="ml-3 text-gray-600">Carregando turmas...</p>
-        </div>
-      ) : error ? (
-        <div className="bg-red-50 border-l-4 border-red-500 text-red-700 p-6 rounded-md shadow-md">
-          <div className="flex">
-            <div className="py-1"><AlertTriangle className="h-6 w-6 text-red-500 mr-3" /></div>
+                )}
+              </div>
+            </div>
             <div>
-              <p className="font-bold">Erro ao carregar dados</p>
-              <p className="text-sm">{error}</p>
+              <label htmlFor="filterModalidade" className="block text-sm font-medium text-gray-700 mb-1">Modalidade</label>
+              <FilterDropdownComponent 
+                title="Modalidade"
+                options={modalidades}
+                selectedValue={selectedModalidade}
+                onSelect={setSelectedModalidade}
+                icon={<Layers className="h-4 w-4"/>}
+              />
+            </div>
+            <div>
+              <label htmlFor="filterProfessor" className="block text-sm font-medium text-gray-700 mb-1">Professor</label>
+              <FilterDropdownComponent 
+                title="Professor"
+                options={professores}
+                selectedValue={selectedProfessor}
+                onSelect={setSelectedProfessor}
+                icon={<GraduationCap className="h-4 w-4"/>}
+              />
+            </div>
+            <div>
+              <label htmlFor="filterPeriodo" className="block text-sm font-medium text-gray-700 mb-1">Período</label>
+              <FilterDropdownComponent 
+                title="Período"
+                options={PERIODOS}
+                selectedValue={selectedPeriodo}
+                onSelect={setSelectedPeriodo}
+                icon={<Calendar className="h-4 w-4"/>}
+              />
             </div>
           </div>
-          </div>
-        ) : turmas.length === 0 ? (
-        <div className="text-center py-16 bg-white/85 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/60 ring-1 ring-white/60">
-          <School className="w-20 h-20 text-gray-300 mx-auto mb-6" />
-          <h3 className="text-2xl font-semibold text-gray-700 mb-3">
-            {isGestor ? 'Nenhuma turma cadastrada' : 'Nenhuma turma atribuída'}
-          </h3>
-          <p className="text-gray-500 mb-8 max-w-md mx-auto">
-            {isGestor 
-              ? `Ainda não há turmas cadastradas para a escola ${escolaAtiva.nome}. Clique abaixo para adicionar a primeira turma.`
-              : `Você ainda não possui turmas atribuídas na escola ${escolaAtiva.nome}.`
-            }
-          </p>
-          {isGestor && (
-            <Link
-              to="/turmas/criar" // Futura rota para criar turma
-              className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center group mx-auto max-w-xs justify-center"
-            >
-              <PlusCircle className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
-              Criar Nova Turma
-            </Link>
-          )}
-            </div>
-        ) : turmasFiltradas.length === 0 ? (
-        <div className="text-center py-16 bg-white/85 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200/60 ring-1 ring-white/60">
-          <Filter className="w-20 h-20 text-gray-300 mx-auto mb-6" />
-          <h3 className="text-2xl font-semibold text-gray-700 mb-3">Nenhuma turma encontrada</h3>
-          <p className="text-gray-500 mb-6 max-w-md mx-auto">
-            Nenhuma turma corresponde aos filtros selecionados. Tente ajustar sua busca ou limpar os filtros.
-          </p>
-              <button
+          {(searchTerm || selectedModalidade || selectedProfessor || selectedPeriodo) && (
+            <div className="mt-4 flex justify-end">
+              <button 
                 onClick={clearFilters}
-            className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center group mx-auto max-w-xs justify-center"
+                className="text-sm text-blue-600 hover:text-blue-800 flex items-center font-medium transition-colors"
               >
-            <X className="w-5 h-5 mr-2" />
-            Limpar Filtros
+                <Filter className="w-4 h-4 mr-1.5" />
+                Limpar todos os filtros
               </button>
             </div>
-        ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {turmasFiltradas.map((turma, index) => (
-              <Link
-              to={`/turmas/${turma.id}`} 
-                key={turma.id}
-              className={`block bg-white rounded-xl shadow-lg border border-gray-200 hover:shadow-xl hover:border-blue-300 transition-all duration-300 transform hover:-translate-y-1 group
-                         ${cardAnimationComplete ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5'}`}
-              style={{ transitionDelay: cardAnimationComplete ? `${index * 0.07}s` : '0s' }}
-            >
-              {/* Faixa colorida superior */}
-              <div 
-                className="h-2.5 rounded-t-xl"
-                style={{ 
-                  background: turma.modalidade.toLowerCase().includes('infantil') 
-                    ? '#7c3aed' // Roxo
-                    : turma.modalidade.toLowerCase().includes('fundamental i') 
-                      ? '#3b82f6' // Azul
-                      : turma.modalidade.toLowerCase().includes('fundamental ii')
-                        ? '#10b981' // Verde Esmeralda
-                        : '#f97316' // Laranja
-                }}
-              ></div>
-              
-              <div className="p-5">
-                <div className="flex items-start mb-3">
-                    <div 
-                    className="w-12 h-12 flex-shrink-0 rounded-lg flex items-center justify-center text-white text-lg font-bold shadow-md mr-4"
-                      style={{ 
-                      background: turma.modalidade.toLowerCase().includes('infantil') 
-                        ? '#7c3aed' 
-                        : turma.modalidade.toLowerCase().includes('fundamental i') 
-                          ? '#3b82f6' 
-                          : turma.modalidade.toLowerCase().includes('fundamental ii')
-                            ? '#10b981'
-                            : '#f97316'
-                      }}
-                    >
-                    {turma.nome.substring(0, 2).toUpperCase()}
-                    </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-xl font-semibold text-gray-800 group-hover:text-blue-600 transition-colors" title={turma.nome}>
-                        {turma.nome.split(' - ')[0]}
-                      </h3>
-                      <span className="text-gray-600">-</span>
-                      <span className="text-gray-600">{turma.periodo}</span>
-                    </div>
-                    <div className="text-sm text-gray-500 flex items-center mt-2.5">
-                      <BookOpen className="w-4 h-4 mr-2 text-gray-400 opacity-80" />
-                      <span className="mr-4">{turma.disciplina}</span>
-                      <Calendar className="w-4 h-4 mr-2 text-gray-400 opacity-80" />
-                      <span>{turma.ano}</span>
-                    </div>
-                  </div>
-                        </div>
-                        
-                <div className="space-y-2.5 text-sm mb-4">
-                  <div className="flex items-center text-gray-600">
-                    <Layers className="w-4 h-4 mr-2 text-blue-500 opacity-80" /> 
-                    Modalidade: <span className="font-medium ml-1">{turma.modalidade}</span>
-                  </div>
-                  <div className="flex items-center text-gray-600">
-                    <Calendar className="w-4 h-4 mr-2 text-amber-500 opacity-80" />
-                    Período: <span className="font-medium ml-1">{turma.periodo}</span>
+          )}
+        </div>
+
+        {/* Lista de Turmas */}
+        {!loadingData && turmasFiltradas.length > 0 && (
+          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-slate-200/70 ring-1 ring-white/50 hover:shadow-xl transition-all duration-300">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {turmasFiltradas.map((turma) => (
+                <div
+                  key={turma.id}
+                  className="group relative bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-slate-200/60 ring-1 ring-white/60 hover:ring-blue-200/60 hover:border-blue-300/60 cursor-pointer"
+                  onClick={() => navigate(`/turmas/${turma.id}`)}
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-center space-x-3">
+                      <div className="p-2 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg">
+                        <Users className="h-5 w-5 text-white" />
                       </div>
-                  {turma.professor_nome && (
-                    <div className="flex items-center text-gray-600">
-                      <GraduationCap className="w-4 h-4 mr-2 text-purple-500 opacity-80" />
-                      Professor: <span className="font-medium ml-1">{turma.professor_nome}</span>
+                      <div>
+                        <h3 className="font-semibold text-slate-800 group-hover:text-blue-700 transition-colors">
+                          {turma.nome}
+                        </h3>
+                        <p className="text-sm text-slate-500">{turma.ano}</p>
+                      </div>
                     </div>
-                  )}
-                  <div className="flex items-center text-gray-600">
-                    <Users className="w-4 h-4 mr-2 text-green-500 opacity-80" />
-                    Alunos: <span className="font-medium ml-1">{turma.alunos_count || 0}</span>
-                    </div>
+                    <ArrowRight className="h-5 w-5 text-slate-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
                   </div>
-                  
-                <div className="border-t border-gray-200 pt-4 flex justify-between items-center">
-                  <p className="text-xs text-gray-500">
-                    Criada em: {new Date(turma.created_at).toLocaleDateString('pt-BR')}
-                  </p>
-                  <span className="inline-flex items-center text-sm font-medium text-blue-600 group-hover:text-blue-700">
-                    Ver Detalhes
-                    <ArrowRight className="w-4 h-4 ml-1.5 transform transition-transform group-hover:translate-x-1 duration-200" />
+
+                  <div className="space-y-3">
+                    <div className="flex items-center text-sm text-slate-600">
+                      <Layers className="h-4 w-4 mr-2 text-slate-400" />
+                      <span>{turma.modalidade}</span>
+                    </div>
+                    <div className="flex items-center text-sm text-slate-600">
+                      <Calendar className="h-4 w-4 mr-2 text-slate-400" />
+                      <span>{turma.periodo}</span>
+                    </div>
+                    {turma.professor_nome && (
+                      <div className="flex items-center text-sm text-slate-600">
+                        <GraduationCap className="h-4 w-4 mr-2 text-slate-400" />
+                        <span>{turma.professor_nome}</span>
+                      </div>
+                    )}
+                    {turma.alunos_count !== undefined && (
+                      <div className="flex items-center text-sm text-slate-600">
+                        <Users className="h-4 w-4 mr-2 text-slate-400" />
+                        <span>{turma.alunos_count} alunos</span>
+                      </div>
+                    )}
+                  </div>
+
+                  {turma.disciplina && (
+                    <div className="mt-4 pt-3 border-t border-slate-200/60">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        <BookOpen className="h-3 w-3 mr-1" />
+                        {turma.disciplina}
                       </span>
                     </div>
-                  </div>
-              </Link>
-            ))}
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         )}
-        </div>
+
+        {/* Estado Vazio */}
+        {!loadingData && !error && turmasFiltradas.length === 0 && (
+          <div className="flex items-center justify-center min-h-[60vh]">
+            <div className="max-w-2xl mx-auto w-full">
+              <div className="relative bg-white/85 backdrop-blur-sm rounded-3xl p-12 shadow-xl border border-slate-200/60 text-center overflow-hidden ring-1 ring-white/60">
+                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+                
+                <div className="relative z-10">
+                  <div className="mx-auto w-20 h-20 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-6 shadow-xl">
+                    <Users className="h-10 w-10 text-white" strokeWidth={1.5} />
+                  </div>
+
+                  <div className="space-y-3 mb-6">
+                    <h2 className="text-2xl font-bold bg-gradient-to-r from-slate-800 via-blue-700 to-indigo-700 bg-clip-text text-transparent">
+                      {searchTerm || selectedModalidade || selectedProfessor || selectedPeriodo 
+                        ? 'Nenhuma turma encontrada' 
+                        : 'Nenhuma turma cadastrada ainda'
+                      }
+                    </h2>
+                    <p className="text-lg text-slate-600 max-w-xl mx-auto leading-relaxed">
+                      {searchTerm || selectedModalidade || selectedProfessor || selectedPeriodo
+                        ? 'Tente ajustar os filtros para encontrar as turmas desejadas.'
+                        : isGestor 
+                          ? 'Comece criando sua primeira turma para organizar os alunos e disciplinas.'
+                          : 'Aguarde enquanto o gestor configura as turmas da escola.'
+                      }
+                    </p>
+                  </div>
+
+                  {isGestor && !(searchTerm || selectedModalidade || selectedProfessor || selectedPeriodo) && (
+                    <Link
+                      to="/turmas/criar"
+                      className="group relative inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 text-white font-semibold rounded-xl shadow-lg hover:shadow-blue-500/25 focus:outline-none focus:ring-4 focus:ring-blue-300/50 transition-all duration-300 transform hover:scale-105"
+                    >
+                      <div className="flex items-center space-x-2">
+                        <PlusCircle className="h-5 w-5 group-hover:rotate-90 transition-transform duration-300" />
+                        <span>Criar primeira turma</span>
+                      </div>
+                    </Link>
+                  )}
+                  
+                  {(searchTerm || selectedModalidade || selectedProfessor || selectedPeriodo) && (
+                    <button
+                      onClick={clearFilters}
+                      className="px-6 py-3 bg-gradient-to-r from-slate-500 to-slate-600 text-white rounded-xl hover:from-slate-600 hover:to-slate-700 transition-all duration-300 font-medium"
+                    >
+                      Limpar filtros
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Loading */}
+        {loadingData && (
+          <div className="flex justify-center items-center h-64">
+            <div className="flex items-center space-x-4">
+              <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+              <p className="text-slate-600 text-lg">Carregando turmas...</p>
+            </div>
+          </div>
+        )}
+
+        {/* Error */}
+        {error && (
+          <div className="max-w-2xl mx-auto mb-8">
+            <div className="relative bg-red-50/90 backdrop-blur-sm border border-red-200/70 rounded-2xl p-6 shadow-lg ring-1 ring-red-100/50">
+              <div className="absolute top-0 left-0 right-0 h-0.5 bg-gradient-to-r from-red-500 to-orange-500"></div>
+              <div className="flex items-start space-x-4">
+                <div className="p-2 bg-red-100 rounded-xl">
+                  <AlertTriangle className="h-5 w-5 text-red-600" />
+                </div>
+                <div>
+                  <h3 className="font-semibold text-red-800 mb-1">Erro ao carregar turmas</h3>
+                  <p className="text-red-700 text-sm">{error}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
-    </>
+    </div>
   );
 };
+
 export default TurmasPage;

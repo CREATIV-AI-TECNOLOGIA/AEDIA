@@ -200,7 +200,7 @@ const Header: React.FC<HeaderProps> = ({
                     notifications.map((n) => (
                       <button key={n.id} onClick={() => handleNotificationClick(n)} className={styles.notificationItem}>
                         <div>
-                          <p className="text-sm font-medium text-gray-800">{n.title || 'Nova mensagem'}</p>
+                          <p className="text-sm font-medium text-gray-800">{n.data?.title || 'Nova mensagem'}</p>
                           <p className="text-xs text-gray-500">{n.message || 'Você tem uma nova mensagem'}</p>
                         </div>
                       </button>
