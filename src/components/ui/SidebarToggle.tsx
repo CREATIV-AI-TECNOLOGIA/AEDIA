@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/Button"
 import { PanelLeftClose, PanelLeft } from "lucide-react"
 
 interface SidebarToggleProps {
