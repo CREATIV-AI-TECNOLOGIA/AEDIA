@@ -1,16 +1,17 @@
-import React, { useEffect, useState, useMemo, useCallback, useRef, memo } from 'react';
+import React, { useEffect, useState, useMemo, useCallback, memo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useEscola } from '../context/EscolaContext';
 import { getProfessorComModalidades, ProfessorComModalidades } from '../services/ProfessorService';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../lib/supabase'; // Importar supabase
-import { FileText, AlertTriangle, PlusCircle, Search, X, BookOpen, Calendar, Clock, Filter, Target, Award, Sparkle } from 'lucide-react'; // Adicionado ícones Search e X
+import { FileText, AlertTriangle, PlusCircle, Search, X, Filter, Sparkle } from 'lucide-react';
 import toast from 'react-hot-toast'; // Para notificações
 import PlanoAulaCardModerno from '../components/PlanoAula/PlanoAulaCardModerno'; // Novo card moderno
 import PlanoAulaFullView from '../components/PlanoAula/PlanoAulaFullView';
 import Layout from '../components/layout/Layout';
 import { useDebounce } from '../hooks/useDebounce';
 import ConfirmationModal from '../components/ConfirmationModal'; // Importar o novo modal de confirmação
+import { subDays, startOfYear } from 'date-fns';
 
 // Interface para os dados do plano de aula como vêm do Supabase
 export interface PlanoAulaSupabase { // Adicionado export
@@ -51,9 +52,14 @@ const PlanosAula: React.FC<PlanosAulaProps> = ({
   const [dadosCarregados, setDadosCarregados] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [planoToDeleteId, setPlanoToDeleteId] = useState<string | null>(null);
+  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
+  const [selectedDisciplina, setSelectedDisciplina] = useState<string>('todas');
+  const [selectedTurma, setSelectedTurma] = useState<string>('todas');
+  const [selectedModalidade, setSelectedModalidade] = useState<string>('todas');
+  const [selectedPeriodo, setSelectedPeriodo] = useState<'todos' | 'ultimos7' | 'ultimos30' | 'esteAno'>('todos');
+  const [sortOption, setSortOption] = useState<'recentes' | 'antigos' | 'tituloAZ' | 'tituloZA'>('recentes');
 
   // Usar searchValue externo se fornecido, senão usar interno
   const currentSearchTerm = externalSearchValue !== undefined ? externalSearchValue : searchTerm;
@@ -290,22 +296,131 @@ const PlanosAula: React.FC<PlanosAulaProps> = ({
 
   // Filtragem dos planos com base no termo de pesquisa - usando debounced term
   const planosFiltrados = useMemo(() => {
-    if (!debouncedSearchTerm.trim()) return planosAula;
-    
-    const termLower = debouncedSearchTerm.toLowerCase();
-    return planosAula.filter(plano => 
-      plano.titulo?.toLowerCase().includes(termLower) ||
-      (plano.disciplinaNome?.toLowerCase().includes(termLower)) ||
-      (plano.turmaAno?.toLowerCase().includes(termLower)) ||
-      (plano.modalidadeNome?.toLowerCase().includes(termLower)) ||
-      plano.descricao?.toLowerCase().includes(termLower)
+    if (planosAula.length === 0) return [];
+
+    const termLower = debouncedSearchTerm.trim().toLowerCase();
+    const now = new Date();
+    const limiteUltimos7 = subDays(now, 7);
+    const limiteUltimos30 = subDays(now, 30);
+    const inicioAno = startOfYear(now);
+
+    const dataValida = (plano: PlanoAulaSupabase) => {
+      const rawDate = plano.data || plano.updated_at || plano.created_at;
+      const parsed = rawDate ? new Date(rawDate) : null;
+      return parsed && !Number.isNaN(parsed.getTime()) ? parsed : null;
+    };
+
+    const filtrados = planosAula.filter((plano) => {
+      const matchesSearch = !termLower ||
+        plano.titulo?.toLowerCase().includes(termLower) ||
+        plano.descricao?.toLowerCase().includes(termLower) ||
+        plano.disciplinaNome?.toLowerCase().includes(termLower) ||
+        plano.turmaAno?.toLowerCase().includes(termLower) ||
+        plano.modalidadeNome?.toLowerCase().includes(termLower);
+
+      if (!matchesSearch) return false;
+
+      const matchesDisciplina = selectedDisciplina === 'todas' || plano.disciplinaNome === selectedDisciplina;
+      const matchesTurma = selectedTurma === 'todas' || plano.turmaAno === selectedTurma || plano.turmaNome === selectedTurma;
+      const matchesModalidade = selectedModalidade === 'todas' || plano.modalidadeNome === selectedModalidade;
+
+      if (!matchesDisciplina || !matchesTurma || !matchesModalidade) {
+        return false;
+      }
+
+      if (selectedPeriodo === 'todos') {
+        return true;
+      }
+
+      const dataPlano = dataValida(plano);
+      if (!dataPlano) {
+        return false;
+      }
+
+      if (selectedPeriodo === 'ultimos7') {
+        return dataPlano >= limiteUltimos7;
+      }
+
+      if (selectedPeriodo === 'ultimos30') {
+        return dataPlano >= limiteUltimos30;
+      }
+
+      if (selectedPeriodo === 'esteAno') {
+        return dataPlano >= inicioAno;
+      }
+
+      return true;
+    });
+
+    const ordenados = [...filtrados];
+    switch (sortOption) {
+      case 'antigos':
+        ordenados.sort((a, b) => {
+          const aDate = new Date(a.updated_at || a.created_at || 0).getTime();
+          const bDate = new Date(b.updated_at || b.created_at || 0).getTime();
+          return aDate - bDate;
+        });
+        break;
+      case 'tituloAZ':
+        ordenados.sort((a, b) => (a.titulo || '').localeCompare(b.titulo || '', 'pt-BR'));
+        break;
+      case 'tituloZA':
+        ordenados.sort((a, b) => (b.titulo || '').localeCompare(a.titulo || '', 'pt-BR'));
+        break;
+      case 'recentes':
+      default:
+        ordenados.sort((a, b) => {
+          const aDate = new Date(a.updated_at || a.created_at || 0).getTime();
+          const bDate = new Date(b.updated_at || b.created_at || 0).getTime();
+          return bDate - aDate;
+        });
+        break;
+    }
+
+    return ordenados;
+  }, [planosAula, debouncedSearchTerm, selectedDisciplina, selectedTurma, selectedModalidade, selectedPeriodo, sortOption]);
+
+  const disciplinasDisponiveis = useMemo(() => {
+    return Array.from(new Set(planosAula.map((plano) => plano.disciplinaNome).filter(Boolean))) as string[];
+  }, [planosAula]);
+
+  const turmasDisponiveis = useMemo(() => {
+    return Array.from(new Set(planosAula.map((plano) => plano.turmaAno || plano.turmaNome).filter(Boolean))) as string[];
+  }, [planosAula]);
+
+  const modalidadesDisponiveis = useMemo(() => {
+    return Array.from(new Set(planosAula.map((plano) => plano.modalidadeNome).filter(Boolean))) as string[];
+  }, [planosAula]);
+
+  const filtrosAvancadosAtivos = useMemo(() => {
+    return (
+      selectedDisciplina !== 'todas' ||
+      selectedTurma !== 'todas' ||
+      selectedModalidade !== 'todas' ||
+      selectedPeriodo !== 'todos'
     );
-  }, [planosAula, debouncedSearchTerm]);
+  }, [selectedDisciplina, selectedTurma, selectedModalidade, selectedPeriodo]);
 
   // Função para limpar a pesquisa - memoizada
   const clearSearch = useCallback(() => {
     handleSearchChange('');
   }, [handleSearchChange]);
+
+  const toggleAdvancedFilters = useCallback(() => {
+    setShowAdvancedFilters((prev) => !prev);
+  }, []);
+
+  const resetAdvancedFilters = useCallback(() => {
+    setSelectedDisciplina('todas');
+    setSelectedTurma('todas');
+    setSelectedModalidade('todas');
+    setSelectedPeriodo('todos');
+    setSortOption('recentes');
+  }, []);
+
+  const handleDisciplinaFiltro = useCallback((disciplina: string | null) => {
+    setSelectedDisciplina(disciplina ?? 'todas');
+  }, []);
 
   const handleAbrirPlanoFullView = useCallback((plano: PlanoAulaSupabase) => {
     console.log('🎯 [PlanosAula] handleAbrirPlanoFullView chamado com plano:', {
@@ -410,57 +525,161 @@ const PlanosAula: React.FC<PlanosAulaProps> = ({
 
   
   return (
-    <div className="min-h-screen bg-slate-50">
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+    <div className="w-full h-full min-h-screen bg-slate-50">
+      <div className="relative z-10 w-full px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16 pt-8 pb-16">
 
 
         {/* Cabeçalho com contador, filtros e botão de criar */}
-        <div className="flex justify-between items-center mb-6">
-          <div className="flex items-center gap-4">
-            {/* Filtros rápidos horizontais - só mostrar se há mais de uma disciplina */}
-            {!loadingPlanos && !error && planosAula.length > 0 && [...new Set(planosAula.map(p => p.disciplinaNome).filter(Boolean))].length > 1 && (
-              <div className="flex items-center gap-2 overflow-x-auto pb-1">
-                <div className="flex items-center space-x-2 text-sm text-slate-500 whitespace-nowrap">
-                  <Filter className="h-4 w-4" />
-                  <span>Filtros:</span>
+        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between mb-6">
+          <div className="flex-1 flex flex-col gap-3">
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={toggleAdvancedFilters}
+                className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-border/70 bg-card/80 hover:bg-primary/10 hover:border-primary/40 text-sm font-medium transition-colors"
+              >
+                <Filter className="h-4 w-4" />
+                {showAdvancedFilters ? 'Ocultar filtros' : 'Filtros avançados'}
+              </button>
+
+              {(filtrosAvancadosAtivos || sortOption !== 'recentes') && (
+                <>
+                  <span className="px-2 py-1 rounded-full text-xs font-semibold bg-primary/10 text-primary">
+                    Filtros ativos
+                  </span>
+                  <button
+                    onClick={resetAdvancedFilters}
+                    className="text-xs px-3 py-1 rounded-md bg-muted text-foreground/70 hover:bg-muted/80 transition-colors"
+                  >
+                    Limpar filtros
+                  </button>
+                </>
+              )}
+            </div>
+
+            {showAdvancedFilters && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 bg-card/80 border border-border/60 rounded-xl p-4 shadow-sm transition-colors">
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs font-semibold uppercase text-foreground/60">Disciplina</span>
+                  <select
+                    value={selectedDisciplina}
+                    onChange={(e) => setSelectedDisciplina(e.target.value)}
+                    className="px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-colors"
+                  >
+                    <option value="todas">Todas</option>
+                    {disciplinasDisponiveis.map((disciplina) => (
+                      <option key={disciplina} value={disciplina}>
+                        {disciplina}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                
+
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs font-semibold uppercase text-foreground/60">Turma</span>
+                  <select
+                    value={selectedTurma}
+                    onChange={(e) => setSelectedTurma(e.target.value)}
+                    className="px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-colors"
+                  >
+                    <option value="todas">Todas</option>
+                    {turmasDisponiveis.map((turma) => (
+                      <option key={turma} value={turma}>
+                        {turma}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs font-semibold uppercase text-foreground/60">Modalidade</span>
+                  <select
+                    value={selectedModalidade}
+                    onChange={(e) => setSelectedModalidade(e.target.value)}
+                    className="px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-colors"
+                  >
+                    <option value="todas">Todas</option>
+                    {modalidadesDisponiveis.map((modalidade) => (
+                      <option key={modalidade} value={modalidade}>
+                        {modalidade}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs font-semibold uppercase text-foreground/60">Período</span>
+                  <select
+                    value={selectedPeriodo}
+                    onChange={(e) => setSelectedPeriodo(e.target.value as 'todos' | 'ultimos7' | 'ultimos30' | 'esteAno')}
+                    className="px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-colors"
+                  >
+                    <option value="todos">Todos</option>
+                    <option value="ultimos7">Últimos 7 dias</option>
+                    <option value="ultimos30">Últimos 30 dias</option>
+                    <option value="esteAno">Este ano</option>
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <span className="text-xs font-semibold uppercase text-foreground/60">Ordenação</span>
+                  <select
+                    value={sortOption}
+                    onChange={(e) => setSortOption(e.target.value as 'recentes' | 'antigos' | 'tituloAZ' | 'tituloZA')}
+                    className="px-3 py-2 rounded-lg border border-border bg-background text-sm focus:outline-none focus:ring-2 focus:ring-primary/40 transition-colors"
+                  >
+                    <option value="recentes">Mais recentes</option>
+                    <option value="antigos">Mais antigos</option>
+                    <option value="tituloAZ">Título A-Z</option>
+                    <option value="tituloZA">Título Z-A</option>
+                  </select>
+                </div>
+              </div>
+            )}
+
+            {!loadingPlanos && !error && disciplinasDisponiveis.length > 1 && (
+              <div className="flex flex-wrap items-center gap-2 pb-1 overflow-x-auto">
+                <div className="flex items-center space-x-2 text-sm text-foreground/60 whitespace-nowrap">
+                  <Filter className="h-4 w-4" />
+                  <span>Filtros rápidos:</span>
+                </div>
+
                 <button
-                  onClick={() => handleSearchChange('')}
+                  onClick={() => handleDisciplinaFiltro(null)}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-                    !currentSearchTerm 
-                      ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-md' 
-                      : 'bg-white/80 text-slate-700 hover:bg-white/90 border border-slate-200/60 shadow-sm backdrop-blur-sm'
+                    selectedDisciplina === 'todas'
+                      ? 'bg-gradient-to-r from-indigo-500 to-purple-500 text-white shadow-md'
+                      : 'bg-card text-foreground/80 hover:bg-primary/10 border border-border/60 shadow-sm backdrop-blur-sm'
                   }`}
                 >
-                  Todos ({planosAula.length})
+                  Todas ({planosAula.length})
                 </button>
-                
-                {[...new Set(planosAula.map(p => p.disciplinaNome).filter(Boolean))].slice(0, 3).map(disciplina => (
+
+                {disciplinasDisponiveis.slice(0, 4).map((disciplina) => (
                   <button
                     key={disciplina}
-                    onClick={() => handleSearchChange(disciplina || '')}
+                    onClick={() => handleDisciplinaFiltro(disciplina)}
                     className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 whitespace-nowrap ${
-                      currentSearchTerm === disciplina 
-                        ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md' 
-                        : 'bg-white/80 text-slate-700 hover:bg-white/90 border border-slate-200/60 shadow-sm backdrop-blur-sm'
+                      selectedDisciplina === disciplina
+                        ? 'bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-md'
+                        : 'bg-card text-foreground/80 hover:bg-primary/10 border border-border/60 shadow-sm backdrop-blur-sm'
                     }`}
                   >
-                    {disciplina} ({planosAula.filter(p => p.disciplinaNome === disciplina).length})
+                    {disciplina}
                   </button>
                 ))}
               </div>
             )}
           </div>
-          
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-500">
-              {loadingPlanos ? 'Carregando...' : `${planosAula.length} ${planosAula.length === 1 ? 'plano de aula encontrado' : 'planos de aula encontrados'}`}
+
+          <div className="flex items-center gap-4 justify-between md:justify-end">
+            <span className="text-sm text-foreground/70">
+              {loadingPlanos
+                ? 'Carregando...'
+                : `${planosFiltrados.length} ${planosFiltrados.length === 1 ? 'plano de aula encontrado' : 'planos de aula encontrados'}`}
             </span>
             <button
               onClick={() => navigate('/planos-aula/criar')}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+              className="inline-flex items-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg transition-colors shadow-md"
             >
               <PlusCircle className="h-5 w-5" />
               Novo Plano de Aula
@@ -551,7 +770,7 @@ const PlanosAula: React.FC<PlanosAulaProps> = ({
         )}
 
         {/* Estado "nenhum resultado" modernizado */}
-        {!loadingPlanos && currentSearchTerm.trim() !== '' && planosFiltrados.length === 0 && (
+        {!loadingPlanos && (currentSearchTerm.trim() !== '' || filtrosAvancadosAtivos) && planosFiltrados.length === 0 && (
           <div className="max-w-xl mx-auto">
             <div className="bg-white/85 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-slate-200/60 text-center ring-1 ring-white/60">
               <div className="p-4 bg-slate-100 rounded-2xl mb-6 w-fit mx-auto">
@@ -559,11 +778,18 @@ const PlanosAula: React.FC<PlanosAulaProps> = ({
               </div>
               <h3 className="text-xl font-semibold text-slate-800 mb-3">Nenhum resultado encontrado</h3>
               <p className="text-slate-600 mb-6">
-                Não encontramos planos de aula que correspondam a <span className="font-semibold">"{currentSearchTerm}"</span>. 
-                Tente ajustar sua busca ou explorar outros termos.
+                Não encontramos planos que correspondam aos filtros atuais.
+                {currentSearchTerm && (
+                  <> Ajuste a busca por <span className="font-semibold">"{currentSearchTerm}"</span> ou refine os filtros.</>
+                )}
               </p>
               <button
-                onClick={clearSearch}
+                onClick={() => {
+                  clearSearch();
+                  if (filtrosAvancadosAtivos) {
+                    resetAdvancedFilters();
+                  }
+                }}
                 className="px-6 py-3 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl hover:from-indigo-600 hover:to-purple-600 transition-all duration-300 font-medium"
               >
                 Limpar busca

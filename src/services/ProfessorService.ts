@@ -29,7 +29,8 @@ export interface TurmaDetalhadaProfessor {
   nome_turma: string;
   ano_turma: string;
   nome_disciplina: string;
-  // Adicionar mais campos se necessário, como nome da modalidade da turma
+  modalidade_id?: number;
+  modalidade_nome?: string;
 }
 
 /**
@@ -175,7 +176,7 @@ export const getTurmasDoProfessorDetalhado = async (professorId: string): Promis
       .from('professores_turmas_disciplinas')
       .select(`
         turma_id, 
-        turmas!inner ( id, nome, ano ),
+        turmas!inner ( id, nome, ano, modalidade_id, modalidades ( nome ) ),
         disciplinas!inner ( nome )
       `)
       .eq('professor_id', professorId);
@@ -195,6 +196,8 @@ export const getTurmasDoProfessorDetalhado = async (professorId: string): Promis
       nome_turma: item.turmas.nome,
       ano_turma: item.turmas.ano,
       nome_disciplina: item.disciplinas.nome,
+      modalidade_id: item.turmas?.modalidade_id ?? undefined,
+      modalidade_nome: item.turmas?.modalidades?.nome ?? undefined,
     }));
 
     return turmasDetalhadas;

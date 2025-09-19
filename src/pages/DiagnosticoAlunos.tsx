@@ -538,14 +538,14 @@ const DiagnosticoAlunos: React.FC = () => {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
-        className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 rounded-2xl p-6 text-white shadow-xl"
+        className="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-800 rounded-2xl p-6 text-primary-foreground shadow-xl"
       >
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold mb-2">
               Diagnóstico de Aprendizagem
             </h1>
-            <div className="flex items-center text-indigo-100">
+            <div className="flex items-center text-primary-foreground/80">
               <Calendar size={16} className="mr-2" />
               {filtros.periodo}
             </div>
@@ -554,27 +554,27 @@ const DiagnosticoAlunos: React.FC = () => {
           {/* Estatísticas Principais em Destaque */}
           <div className="grid grid-cols-4 gap-6">
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">{estatisticas.alunos}</div>
-              <div className="text-sm text-indigo-100">Alunos</div>
+              <div className="text-3xl font-bold text-primary-foreground">{estatisticas.alunos}</div>
+              <div className="text-sm text-primary-foreground/80">Alunos</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">{estatisticas.turmas}</div>
-              <div className="text-sm text-indigo-100">Turmas</div>
+              <div className="text-3xl font-bold text-primary-foreground">{estatisticas.turmas}</div>
+              <div className="text-sm text-primary-foreground/80">Turmas</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">{estatisticas.planosAula}</div>
-              <div className="text-sm text-indigo-100">Planos</div>
+              <div className="text-3xl font-bold text-primary-foreground">{estatisticas.planosAula}</div>
+              <div className="text-sm text-primary-foreground/80">Planos</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-white">{estatisticas.avaliacoes}</div>
-              <div className="text-sm text-indigo-100">Avaliações</div>
+              <div className="text-3xl font-bold text-primary-foreground">{estatisticas.avaliacoes}</div>
+              <div className="text-sm text-primary-foreground/80">Avaliações</div>
             </div>
           </div>
         </div>
       </motion.div>
 
       {/* Barra de Filtros Compacta */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+      <div className="bg-card rounded-xl shadow-sm border border-border p-4">
         <div className="flex flex-col lg:flex-row gap-4">
           <div className="relative flex-grow">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -585,12 +585,12 @@ const DiagnosticoAlunos: React.FC = () => {
               placeholder="Buscar por nome, matrícula ou turma..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-10 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
+              className="w-full pl-10 pr-10 py-2.5 border border-border bg-background text-foreground rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors"
             />
             {searchTerm && (
               <button
                 onClick={() => setSearchTerm('')}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-muted-foreground hover:text-foreground"
               >
                 <X size={18} />
               </button>
@@ -598,7 +598,7 @@ const DiagnosticoAlunos: React.FC = () => {
           </div>
           
           <div className="flex items-center gap-3">
-            <Filter size={18} className="text-gray-400 hidden sm:block" />
+            <Filter size={18} className="text-muted-foreground hidden sm:block" />
             <div className="flex gap-3">
               <FilterDropdown
                 label=""
@@ -633,7 +633,7 @@ const DiagnosticoAlunos: React.FC = () => {
       
       {/* Tabs Principal */}
       <Tabs defaultValue="visao-geral" className="space-y-6">
-        <TabsList className="bg-white shadow-sm border border-gray-200 p-1 rounded-xl">
+        <TabsList className="bg-card shadow-sm border border-border p-1 rounded-xl">
           <TabsTrigger value="visao-geral" className="data-[state=active]:bg-indigo-600 data-[state=active]:text-white">
             Visão Geral
           </TabsTrigger>
@@ -716,7 +716,7 @@ const DiagnosticoAlunos: React.FC = () => {
 
           {/* Gráficos Lado a Lado - Mais Compactos */}
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div className="bg-card rounded-xl shadow-sm border border-border p-4">
               <AreaChart
                 title="Evolução no período"
                 data={dadosEvolucao}
@@ -729,7 +729,7 @@ const DiagnosticoAlunos: React.FC = () => {
               />
             </div>
             
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
+            <div className="bg-card rounded-xl shadow-sm border border-border p-4">
               <BarChart
                 title="Distribuição por desempenho"
                 data={dadosDistribuicao}
@@ -743,8 +743,8 @@ const DiagnosticoAlunos: React.FC = () => {
           </div>
           
           {/* Lista de Turmas */}
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-6 flex items-center">
+          <div className="bg-card rounded-xl shadow-sm border border-border p-6">
+            <h2 className="text-xl font-semibold text-foreground mb-6 flex items-center">
               <Users className="mr-3 text-indigo-600" size={24} />
               Visão por Turma
             </h2>
@@ -762,10 +762,10 @@ const DiagnosticoAlunos: React.FC = () => {
                 ))
               ) : (
                 <div className="col-span-full flex flex-col items-center justify-center py-12">
-                  <div className="text-gray-400 mb-4">
+                  <div className="text-muted-foreground mb-4">
                     <Filter size={48} />
                   </div>
-                  <p className="text-gray-600 text-center mb-4">
+                  <p className="text-muted-foreground text-center mb-4">
                     Nenhuma turma encontrada com os filtros selecionados.
                   </p>
                   <button
@@ -790,7 +790,7 @@ const DiagnosticoAlunos: React.FC = () => {
         </TabsContent>
         
         <TabsContent value="turmas">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-card rounded-xl shadow-sm border border-border p-6">
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {loading ? (
                 Array.from({ length: 6 }).map((_, index) => (
@@ -805,10 +805,10 @@ const DiagnosticoAlunos: React.FC = () => {
                 ))
               ) : (
                 <div className="col-span-full flex flex-col items-center justify-center py-12">
-                  <div className="text-gray-400 mb-4">
+                  <div className="text-muted-foreground mb-4">
                     <Users size={48} />
                   </div>
-                  <p className="text-gray-600 text-center mb-4">
+                  <p className="text-muted-foreground text-center mb-4">
                     Nenhuma turma encontrada com os filtros selecionados.
                   </p>
                   <button
@@ -833,7 +833,7 @@ const DiagnosticoAlunos: React.FC = () => {
         </TabsContent>
         
         <TabsContent value="alunos">
-          <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
+          <div className="bg-card rounded-xl shadow-sm border border-border p-6">
             <div className="space-y-3">
               {loading ? (
                 Array.from({ length: 3 }).map((_, index) => (
@@ -850,10 +850,10 @@ const DiagnosticoAlunos: React.FC = () => {
                 ))
               ) : (
                 <div className="flex flex-col items-center justify-center py-12">
-                  <div className="text-gray-400 mb-4">
+                  <div className="text-muted-foreground mb-4">
                     <User size={48} />
                   </div>
-                  <p className="text-gray-600 text-center mb-4">
+                  <p className="text-muted-foreground text-center mb-4">
                     Nenhum aluno encontrado com os filtros selecionados.
                   </p>
                   <button
@@ -881,4 +881,4 @@ const DiagnosticoAlunos: React.FC = () => {
   );
 };
 
-export default DiagnosticoAlunos; 
+export default DiagnosticoAlunos;

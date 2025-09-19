@@ -118,7 +118,7 @@ const ConfiguracaoLimites: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="flex items-center space-x-2">
           <RefreshCw className="h-6 w-6 animate-spin text-blue-600" />
           <span className="text-gray-600">Carregando configurações...</span>
@@ -129,10 +129,10 @@ const ConfiguracaoLimites: React.FC = () => {
 
   if (!config || !stats) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <AlertTriangle className="h-12 w-12 text-red-500 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Erro ao carregar dados</h2>
+          <h2 className="text-xl font-semibold text-foreground mb-2">Erro ao carregar dados</h2>
           <button 
             onClick={carregarDados}
             className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -145,9 +145,9 @@ const ConfiguracaoLimites: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <h1 className="text-2xl font-bold text-gray-900">Configuração de Limites</h1>
+        <h1 className="text-2xl font-bold text-foreground">Configuração de Limites</h1>
         <p className="text-gray-600 mt-2">
           Gerencie seus limites de uso da IA e monitore gastos
         </p>
@@ -156,4 +156,4 @@ const ConfiguracaoLimites: React.FC = () => {
   );
 };
 
-export default ConfiguracaoLimites; 
+export default ConfiguracaoLimites;

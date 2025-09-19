@@ -2229,8 +2229,8 @@ const CriarAvaliacaoPlanoAula: React.FC = () => {
       headerIcon={<Sparkles className="h-5 w-5 text-indigo-600" />}
       mostrarEscola={true}
     >
-      <div className="bg-gradient-to-br from-indigo-50 via-white to-purple-50">
-        <div className="max-w-6xl mx-auto px-4 py-6">
+      <div className="page-center px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+        <div className="standard-page-card space-y-6">
           {/* Informações do Plano */}
           <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
             <h2 className="text-lg font-semibold text-gray-900 mb-3 flex items-center">

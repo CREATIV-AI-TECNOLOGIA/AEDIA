@@ -18,10 +18,10 @@ const SectionCard: React.FC<{
   children: React.ReactNode;
   className?: string;
 }> = ({ title, icon: Icon, children, className = '' }) => (
-  <div className={`bg-white shadow-sm rounded-lg p-5 h-full ${className}`}>
+  <div className={`bg-card shadow-sm rounded-lg p-5 h-full ${className}`}>
     <div className="flex items-center mb-4">
       <Icon className="w-5 h-5 mr-2.5 text-indigo-600" />
-      <h2 className="text-lg font-semibold text-gray-700">{title}</h2>
+      <h2 className="text-lg font-semibold text-foreground/90">{title}</h2>
     </div>
     <div className="space-y-3">
       {children}
@@ -35,11 +35,11 @@ const SettingItem: React.FC<{
   description?: string;
   compact?: boolean;
 }> = ({ label, children, description, compact }) => (
-  <div className={`${compact ? 'py-2' : 'py-3'} border-b border-gray-100 last:border-b-0`}>
+  <div className={`${compact ? 'py-2' : 'py-3'} border-b border-border last:border-b-0`}>
     <div className="flex items-center justify-between">
       <div>
-        <label className="block text-sm font-medium text-gray-800">{label}</label>
-        {description && <p className="text-xs text-gray-500 mt-0.5">{description}</p>}
+        <label className="block text-sm font-medium text-foreground">{label}</label>
+        {description && <p className="text-xs text-muted-foreground mt-0.5">{description}</p>}
       </div>
       <div className="ml-4">{children}</div>
     </div>
@@ -50,7 +50,7 @@ const ToggleSwitch: React.FC<{ enabled: boolean; onChange: (enabled: boolean) =>
   <button
     type="button"
     className={`relative inline-flex items-center h-5 rounded-full w-10 transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-indigo-400 ${
-      enabled ? 'bg-indigo-600' : 'bg-gray-300'
+      enabled ? 'bg-indigo-600' : 'bg-muted'
     }`}
     onClick={() => onChange(!enabled)}
   >
@@ -189,19 +189,18 @@ const ConfiguracoesPage: React.FC = () => {
 
   if (authLoading || loadingProfileData) {
     return (
-      <PageContainer>
-        <div className="flex justify-center items-center h-full">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="flex items-center">
           <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600"></div>
-          <p className="ml-3 text-gray-700">Carregando configurações...</p>
+          <p className="ml-3 text-muted-foreground">Carregando configurações...</p>
         </div>
-      </PageContainer>
+      </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="max-w-7xl mx-auto p-6 md:p-8">
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 space-y-6">
+    <PageContainer>
+      <div className="standard-page-card space-y-6">
           {/* Conteúdo Principal */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             
@@ -313,8 +312,8 @@ const ConfiguracoesPage: React.FC = () => {
                               <BookOpen size={16} className="text-white"/>
                             </div>
                             <div className="ml-3 flex-1">
-                              <h4 className="font-semibold text-gray-900">{turma.nome_turma}</h4>
-                              <p className="text-sm text-gray-600">{turma.ano_turma}</p>
+                              <h4 className="font-semibold text-foreground">{turma.nome_turma}</h4>
+                              <p className="text-sm text-muted-foreground">{turma.ano_turma}</p>
                               <p className="text-sm font-medium text-blue-600 mt-1">{turma.nome_disciplina}</p>
                             </div>
                           </div>
@@ -339,17 +338,17 @@ const ConfiguracoesPage: React.FC = () => {
                 </div>
                 
                 <div className="p-4 space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                  <div className="flex items-center justify-between p-3 bg-muted rounded-xl">
                     <div>
-                      <p className="font-medium text-gray-900">Modo Escuro</p>
-                      <p className="text-sm text-gray-500">Interface com tema escuro</p>
+                      <p className="font-medium text-foreground">Modo Escuro</p>
+                      <p className="text-sm text-muted-foreground">Interface com tema escuro</p>
                     </div>
                     <ToggleSwitch enabled={darkMode} onChange={setDarkMode} />
                   </div>
                   
-                  <div className="p-3 bg-gray-50 rounded-xl">
-                    <label className="block font-medium text-gray-900 mb-2">Tamanho da Fonte</label>
-                    <select className="w-full p-2 bg-white border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                  <div className="p-3 bg-muted rounded-xl">
+                    <label className="block font-medium text-foreground mb-2">Tamanho da Fonte</label>
+                    <select className="w-full p-2 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
                       <option>Pequeno</option>
                       <option selected>Médio</option>
                       <option>Grande</option>
@@ -368,26 +367,26 @@ const ConfiguracoesPage: React.FC = () => {
                 </div>
                 
                 <div className="p-4 space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                  <div className="flex items-center justify-between p-3 bg-muted rounded-xl">
                     <div>
-                      <p className="font-medium text-gray-900">Push</p>
-                      <p className="text-sm text-gray-500">Alertas do sistema</p>
+                      <p className="font-medium text-foreground">Push</p>
+                      <p className="text-sm text-muted-foreground">Alertas do sistema</p>
                     </div>
                     <ToggleSwitch enabled={notificationsEnabled} onChange={setNotificationsEnabled} />
                   </div>
                   
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                  <div className="flex items-center justify-between p-3 bg-muted rounded-xl">
                     <div>
-                      <p className="font-medium text-gray-900">E-mail</p>
-                      <p className="text-sm text-gray-500">Atualizações por e-mail</p>
+                      <p className="font-medium text-foreground">E-mail</p>
+                      <p className="text-sm text-muted-foreground">Atualizações por e-mail</p>
                     </div>
                     <ToggleSwitch enabled={emailNotifs} onChange={setEmailNotifs} />
                   </div>
                   
-                  <div className="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
+                  <div className="flex items-center justify-between p-3 bg-muted rounded-xl">
                     <div>
-                      <p className="font-medium text-gray-900">Sons</p>
-                      <p className="text-sm text-gray-500">Sons para notificações</p>
+                      <p className="font-medium text-foreground">Sons</p>
+                      <p className="text-sm text-muted-foreground">Sons para notificações</p>
                     </div>
                     <ToggleSwitch enabled={soundsEnabled} onChange={setSoundsEnabled} />
                   </div>
@@ -395,9 +394,8 @@ const ConfiguracoesPage: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
       </div>
-    </div>
+    </PageContainer>
   );
 };
 

@@ -110,7 +110,9 @@ const LayoutAluno: React.FC<LayoutAlunoProps> = ({ children }) => {
 
         {/* Conteúdo da página */}
         <main className="flex-1 overflow-y-auto">
-          {children}
+          <div className="app-content">
+            {children}
+          </div>
         </main>
       </div>
     </div>

@@ -3,10 +3,10 @@ import TarefasPlanoAula from '../../components/PlanoAula/TarefasPlanoAula';
 
 const TarefasPage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-muted">
       <TarefasPlanoAula />
     </div>
   );
 };
 
-export default TarefasPage; 
+export default TarefasPage;

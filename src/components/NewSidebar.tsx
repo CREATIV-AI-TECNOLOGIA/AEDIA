@@ -69,6 +69,7 @@ export default function NewSidebar() {
   const [showLogoutModal, setShowLogoutModal] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
+  const navId = 'sidebar-nav';
 
 
 
@@ -83,81 +84,66 @@ export default function NewSidebar() {
     <TooltipProvider>
       {/* Mobile Header */}
       <header className="h-14 flex items-center border-b bg-white lg:hidden px-4">
-        <SidebarToggle onToggle={toggleSidebar} isCollapsed={isCollapsed} />
+        <SidebarToggle onToggle={toggleSidebar} isCollapsed={isCollapsed} controlsId={navId} />
         <h1 className="ml-3 font-semibold">Escola Digital</h1>
       </header>
 
       {/* Sidebar */}
       <aside 
-        className={`
-          ${isCollapsed ? 'w-20' : 'w-64'} 
-          bg-white border-r border-gray-200 h-screen fixed transition-all duration-200 z-50 top-0 left-0
+        data-state={isCollapsed ? 'collapsed' : 'expanded'}
+        className={`sidebar bg-white border-r border-gray-200 h-screen fixed z-50 top-0 left-0 flex flex-col
           ${isCollapsed ? 'sidebar-mobile' : 'sidebar-mobile-open'} md:sidebar-mobile-open
         `}
       >
-        <div className="p-4 h-full flex flex-col overflow-hidden">
+        <div className="sidebar__inner p-4 h-full flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className={`flex items-center gap-3 ${isCollapsed ? 'hidden' : ''}`}>
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
-                <Book className="h-5 w-5 text-white" />
+          <div className="sidebar__header flex items-center justify-between mb-8">
+            <div className="sidebar__brand" aria-hidden={isCollapsed}>
+              <div className="sidebar__brand-icon">
+                <Book className="h-4 w-4 text-white" />
               </div>
-              <div>
-                <h2 className="text-lg font-semibold text-gray-900">Escola Digital</h2>
-                <p className="text-sm text-gray-500">Sistema de Gestão</p>
-              </div>
+              <span className="sidebar__brand-label">AEDIA</span>
             </div>
-            <div className={`hidden lg:flex ${isCollapsed ? 'w-full justify-center pr-2' : ''}`}>
-              <SidebarToggle onToggle={toggleSidebar} isCollapsed={isCollapsed} />
+            <div className="sidebar__toggle hidden lg:flex">
+              <SidebarToggle onToggle={toggleSidebar} isCollapsed={isCollapsed} controlsId={navId} />
             </div>
           </div>
 
           {/* Navigation */}
-          <nav className="flex-1 overflow-hidden">
-            <ul className="space-y-2 h-full overflow-y-auto overflow-x-hidden pr-2">
+          <nav id={navId} aria-label="Menu principal" className="sidebar__nav flex-1 overflow-hidden">
+            <ul className="sidebar__list space-y-2 h-full overflow-y-auto overflow-x-hidden pr-2">
               {sidebarItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.href);
-                
+
+                const linkContent = (
+                  <Link
+                    to={item.href}
+                    className={`sidebar-link transition-colors duration-200 ${
+                      active
+                        ? 'bg-black text-white'
+                        : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700'
+                    }`}
+                  >
+                    <span className="sidebar__icon" aria-hidden="true">
+                      <Icon className="h-5 w-5" />
+                    </span>
+                    <span className="sidebar__label">{item.label}</span>
+                  </Link>
+                );
+
                 return (
-                  <li key={item.href}>
-                    {isCollapsed ? (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Link
-                            to={item.href}
-                            className={`
-                              flex items-center gap-3 h-12 rounded-xl transition-all duration-200
-                              justify-center
-                              ${active 
-                                ? 'bg-black text-white' 
-                                : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700'
-                              }
-                            `}
-                          >
-                            <Icon className="h-5 w-5 flex-shrink-0" />
-                          </Link>
-                        </TooltipTrigger>
+                  <li key={item.href} className="sidebar__item">
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        {linkContent}
+                      </TooltipTrigger>
+                      {isCollapsed && (
                         <TooltipContent side="right">
                           <p>{item.label}</p>
                         </TooltipContent>
-                      </Tooltip>
-                    ) : (
-                      <Link
-                        to={item.href}
-                        className={`
-                          flex items-center gap-3 h-12 rounded-xl transition-all duration-200
-                          px-4
-                          ${active 
-                            ? 'bg-black text-white' 
-                            : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700'
-                          }
-                        `}
-                      >
-                        <Icon className="h-5 w-5 flex-shrink-0" />
-                        <span className="font-medium">{item.label}</span>
-                      </Link>
-                    )}
+                      )}
+                    </Tooltip>
                   </li>
                 );
               })}
@@ -166,29 +152,24 @@ export default function NewSidebar() {
 
           {/* Bottom Section */}
           <div className="pt-4">
-            {isCollapsed ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => setShowLogoutModal(true)}
-                    className="flex items-center gap-3 h-12 rounded-xl transition-all duration-200 text-red-500 hover:bg-red-50 hover:text-red-600 w-full justify-center focus:outline-none focus:ring-0 focus:border-transparent"
-                  >
-                    <LogOut className="h-5 w-5 flex-shrink-0" />
-                  </button>
-                </TooltipTrigger>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setShowLogoutModal(true)}
+                  className="sidebar-link text-red-500 hover:bg-red-50 hover:text-red-600 transition-colors duration-200 focus:outline-none focus:ring-0 focus:border-transparent"
+                >
+                  <span className="sidebar__icon" aria-hidden="true">
+                    <LogOut className="h-5 w-5" />
+                  </span>
+                  <span className="sidebar__label">Sair</span>
+                </button>
+              </TooltipTrigger>
+              {isCollapsed && (
                 <TooltipContent side="right">
                   <p>Sair</p>
                 </TooltipContent>
-              </Tooltip>
-            ) : (
-              <button
-                onClick={() => setShowLogoutModal(true)}
-                className="flex items-center gap-3 h-12 rounded-xl transition-all duration-200 text-red-500 hover:bg-red-50 hover:text-red-600 w-full px-4 focus:outline-none focus:ring-0 focus:border-transparent"
-              >
-                <LogOut className="h-5 w-5 flex-shrink-0" />
-                <span className="font-medium">Sair</span>
-              </button>
-            )}
+              )}
+            </Tooltip>
           </div>
         </div>
       </aside>

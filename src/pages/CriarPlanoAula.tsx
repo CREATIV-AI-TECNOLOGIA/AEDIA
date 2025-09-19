@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo, useCallback, memo } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getGreeting, getTimeBasedClasses } from '../utils/dateUtils';
 import { getProfessorComModalidades, ProfessorComModalidades, Modalidade } from '../services/ProfessorService'; // Descomentado
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ModalidadesPill from '../components/ModalidadesPill/ModalidadesPill';
 import SeletorHabilidades, { Habilidade } from '../components/PlanoAula/SeletorHabilidades';
 import { getAnoDisciplinaParaModalidade, ProfessorContexto } from '../services/ProfessorContextoService'; // Descomentado
@@ -15,12 +15,14 @@ import { ProfessorPreferenciasService } from '../services/ProfessorPreferenciasS
 
 const CriarPlanoAula: React.FC = memo(() => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   console.log('CriarPlanoAula montado. Usuário:', user);
 
   const [professor, setProfessor] = useState<ProfessorComModalidades | null>(null);
   const [loadingInicial, setLoadingInicial] = useState(true); 
   const [modalidadeSelecionada, setModalidadeSelecionada] = useState<Modalidade | null>(null);
   const [cardsVisible, setCardsVisible] = useState<boolean>(true); // Valor inicial, será carregado das preferências
+  const [useNewInterface, setUseNewInterface] = useState<boolean>(false); // Estado para controlar a versão da interface
   
   const [professorContexto, setProfessorContexto] = useState<ProfessorContexto | null>(null);
   const [trimestreAtualNome, setTrimestreAtualNome] = useState<string | null>(null);
@@ -309,7 +311,8 @@ const CriarPlanoAula: React.FC = memo(() => {
   
   return (
     <div className="page-container bg-gradient-to-br from-indigo-100 via-purple-50 to-pink-50 min-h-screen">
-      <div className="max-w-7xl mx-auto p-6 md:p-8">
+      <div className="page-center p-6 md:p-8">
+        <div className="standard-page-card w-full">
           {/* Header com título à esquerda e botões à direita */}
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center space-x-4">
@@ -335,20 +338,50 @@ const CriarPlanoAula: React.FC = memo(() => {
                 <p className={`${timeClasses.text} text-2xl font-bold`}>
                   {saudacao} professor {nomeExibicao}!
                 </p>
-                <p className="text-gray-600 text-sm">Vamos criar um novo plano de aula?</p>
+                <p className="text-muted-foreground text-sm">Vamos criar um novo plano de aula?</p>
               </div>
             </div>
             
-            {/* Botão de Configurações da IA */}
-            <Link 
-              to="/planos-aula/configuracoes-ia" 
-              className="flex items-center space-x-2 bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 text-purple-700 py-2 px-4 rounded-lg transition-all duration-200 shadow-sm border border-purple-200/50"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <span className="text-sm font-medium">Configurar IA</span>
-            </Link>
+            <div className="flex items-center space-x-3">
+              {/* Toggle de Versão */}
+              <div className="flex items-center space-x-2 bg-background rounded-lg p-1 shadow-sm border border-border">
+                <button
+                  onClick={() => setUseNewInterface(false)}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 ${
+                    !useNewInterface 
+                      ? 'bg-indigo-600 text-white shadow-sm' 
+                      : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  Versão 1.0
+                </button>
+                <button
+                  onClick={() => {
+                    setUseNewInterface(true);
+                    navigate('/criar-plano-aula-v2');
+                  }}
+                  className={`px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-200 flex items-center space-x-1 ${
+                    useNewInterface 
+                      ? 'bg-gradient-to-r from-green-600 to-emerald-600 text-white shadow-sm' 
+                      : 'text-gray-600 hover:text-gray-800'
+                  }`}
+                >
+                  <span>Versão 2.0</span>
+                  <div className="w-1.5 h-1.5 bg-green-400 rounded-full animate-pulse"></div>
+                </button>
+              </div>
+              
+              {/* Botão de Configurações da IA */}
+              <Link 
+                to="/planos-aula/configuracoes-ia" 
+                className="flex items-center space-x-2 bg-gradient-to-r from-purple-50 to-indigo-50 hover:from-purple-100 hover:to-indigo-100 text-purple-700 py-2 px-4 rounded-lg transition-all duration-200 shadow-sm border border-purple-200/50"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <span className="text-sm font-medium">Configurar IA</span>
+              </Link>
+            </div>
         </div>
         
           {/* Layout em grid responsivo com cards menores */}
@@ -561,6 +594,7 @@ const CriarPlanoAula: React.FC = memo(() => {
             </div>
           )}
                          </div>
+        </div>
         </div>
       </div>
     </div>

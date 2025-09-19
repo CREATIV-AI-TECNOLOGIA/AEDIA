@@ -71,9 +71,9 @@ export default function FrequenciaAluno() {
               </svg>
               Voltar
             </Link>
-            <h1 className="text-2xl font-bold text-gray-800">Frequência Escolar</h1>
+            <h1 className="text-2xl font-bold text-foreground">Frequência Escolar</h1>
           </div>
-          <p className="text-gray-600">{nomeAluno} - {turma}</p>
+          <p className="text-muted-foreground">{nomeAluno} - {turma}</p>
         </div>
         
         {/* Seletor de mês */}
@@ -87,7 +87,7 @@ export default function FrequenciaAluno() {
             </svg>
           </button>
           
-          <span className="text-lg font-medium text-gray-700">{mesAtual}</span>
+          <span className="text-lg font-medium text-foreground/90">{mesAtual}</span>
           
           <button
             onClick={() => navegarMes('proximo')}
@@ -101,7 +101,7 @@ export default function FrequenciaAluno() {
       </div>
       
       {/* Resumo da frequência */}
-      <div className="bg-white rounded-xl shadow-md overflow-hidden mb-8">
+      <div className="bg-card rounded-xl shadow-md overflow-hidden mb-8">
         <div className="p-6 flex flex-wrap">
           <div className="w-full md:w-1/3 p-4">
             <div className="text-center">
@@ -110,8 +110,8 @@ export default function FrequenciaAluno() {
                   <path fillRule="evenodd" d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h3 className="text-sm font-medium text-gray-500">Total de Aulas</h3>
-              <p className="text-3xl font-bold text-gray-800">{totalAulas}</p>
+              <h3 className="text-sm font-medium text-muted-foreground">Total de Aulas</h3>
+              <p className="text-3xl font-bold text-foreground">{totalAulas}</p>
             </div>
           </div>
           
@@ -122,8 +122,8 @@ export default function FrequenciaAluno() {
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h3 className="text-sm font-medium text-gray-500">Presenças</h3>
-              <p className="text-3xl font-bold text-gray-800">{totalPresencas}</p>
+              <h3 className="text-sm font-medium text-muted-foreground">Presenças</h3>
+              <p className="text-3xl font-bold text-foreground">{totalPresencas}</p>
             </div>
           </div>
           
@@ -134,8 +134,8 @@ export default function FrequenciaAluno() {
                   <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
                 </svg>
               </div>
-              <h3 className="text-sm font-medium text-gray-500">Faltas</h3>
-              <p className="text-3xl font-bold text-gray-800">{totalFaltas}</p>
+              <h3 className="text-sm font-medium text-muted-foreground">Faltas</h3>
+              <p className="text-3xl font-bold text-foreground">{totalFaltas}</p>
             </div>
           </div>
         </div>
@@ -143,50 +143,50 @@ export default function FrequenciaAluno() {
         {/* Barra de progresso */}
         <div className="px-6 pb-6">
           <div className="mb-2 flex justify-between items-center">
-            <span className="text-sm font-medium text-gray-700">Porcentagem de presença</span>
-            <span className="text-sm font-medium text-gray-700">{porcentagemPresenca}%</span>
+            <span className="text-sm font-medium text-foreground/90">Porcentagem de presença</span>
+            <span className="text-sm font-medium text-foreground/90">{porcentagemPresenca}%</span>
           </div>
-          <div className="w-full bg-gray-200 rounded-full h-2.5">
+          <div className="w-full bg-muted rounded-full h-2.5">
             <div className={`h-2.5 rounded-full ${porcentagemPresenca >= 75 ? 'bg-green-600' : 'bg-red-600'}`} style={{ width: `${porcentagemPresenca}%` }}></div>
           </div>
-          <div className="mt-2 text-xs text-gray-500 text-right">
+          <div className="mt-2 text-xs text-muted-foreground text-right">
             Mínimo exigido: 75%
           </div>
         </div>
       </div>
       
       {/* Registros detalhados */}
-      <div className="bg-white rounded-xl shadow-md overflow-hidden">
+      <div className="bg-card rounded-xl shadow-md overflow-hidden">
         <div className="px-6 py-4 bg-indigo-50 border-b border-indigo-100">
           <h2 className="text-lg font-bold text-indigo-800">Registros Detalhados</h2>
         </div>
         
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
+          <table className="min-w-full divide-y divide-border">
+            <thead className="bg-muted">
               <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Data
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Disciplina
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Status
                 </th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                   Observação
                 </th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="bg-card divide-y divide-border">
               {Object.entries(frequenciasPorData).map(([data, registros]) => (
                 registros.map((registro, idx) => (
-                  <tr key={`${data}-${registro.disciplina}`} className={idx % 2 === 0 ? 'bg-white' : 'bg-gray-50'}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  <tr key={`${data}-${registro.disciplina}`} className={idx % 2 === 0 ? 'bg-card' : 'bg-muted'}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
                       {idx === 0 ? data : ''}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       {registro.disciplina}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
@@ -200,7 +200,7 @@ export default function FrequenciaAluno() {
                         </span>
                       )}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                       {registro.justificativa || '—'}
                     </td>
                   </tr>
@@ -212,4 +212,4 @@ export default function FrequenciaAluno() {
       </div>
     </div>
   );
-} 
+}

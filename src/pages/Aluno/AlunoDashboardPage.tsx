@@ -7,7 +7,7 @@ const PerformanceChart: React.FC = () => {
     <div className="bg-white rounded-xl p-5 shadow-xl h-full transition-shadow duration-300 ease-in-out hover:shadow-2xl">
       <div className="flex items-center justify-between mb-4">
         <div>
-          <h3 className="font-semibold text-lg text-gray-800">Meu Desempenho</h3>
+          <h3 className="font-semibold text-lg text-foreground">Meu Desempenho</h3>
         </div>
         <select className="bg-gray-50 text-sm border border-gray-200 rounded-lg p-2">
           <option>Mensal</option>
@@ -49,7 +49,7 @@ const PerformanceChart: React.FC = () => {
             </div>
             
             {/* Eixos Y */}
-            <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-gray-500">
+            <div className="absolute left-0 top-0 h-full flex flex-col justify-between text-xs text-muted-foreground">
               <span>R$10.000</span>
               <span>R$8.000</span>
               <span>R$6.000</span>
@@ -135,7 +135,7 @@ const StudentProfilePanel: React.FC<{ userName: string }> = ({ userName }) => {
                 <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
               </svg>
             </div>
-            <span className="text-sm font-medium text-gray-700">Estrela Dourada</span>
+            <span className="text-sm font-medium text-foreground/90">Estrela Dourada</span>
           </div>
           <span className="text-sm font-bold text-amber-500">88%</span>
         </div>
@@ -190,43 +190,45 @@ const AlunoDashboardPage: React.FC = () => {
   }, [user]);
   
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-100 via-pink-50 to-blue-100 p-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col md:flex-row justify-between items-start mb-8">
-          <div>
-            <h1 className="text-2xl font-bold text-gray-800">Meu Desempenho</h1>
-            <p className="text-gray-600">Bem-vindo, {userName}! Confira suas estatísticas.</p>
-          </div>
-          
-          <div className="mt-4 md:mt-0 relative">
-            <div className="flex items-center bg-white rounded-lg p-2 px-4 shadow-sm">
-              <svg className="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
-              <input 
-                type="text" 
-                placeholder="Pesquisar atividade" 
-                className="border-none text-sm focus:ring-0 focus:outline-none w-44"
-              />
-              <button className="ml-1 text-gray-400 hover:text-gray-500">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+    <div className="min-h-screen bg-slate-50">
+      <div className="page-center px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+        <div className="standard-page-card space-y-6">
+          <div className="flex flex-col md:flex-row justify-between items-start mb-8">
+            <div>
+              <h1 className="text-2xl font-bold text-gray-800">Meu Desempenho</h1>
+              <p className="text-muted-foreground">Bem-vindo, {userName}! Confira suas estatísticas.</p>
+            </div>
+            
+            <div className="mt-4 md:mt-0 relative">
+              <div className="flex items-center bg-white rounded-lg p-2 px-4 shadow-sm">
+                <svg className="w-5 h-5 text-gray-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
-              </button>
+                <input 
+                  type="text" 
+                  placeholder="Pesquisar atividade" 
+                  className="border-none text-sm focus:ring-0 focus:outline-none w-44"
+                />
+                <button className="ml-1 text-gray-400 hover:text-gray-500">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:items-stretch">
-          {/* Colunas 1-3: Conteúdo principal */}
-          <div className="lg:col-span-3 space-y-6 animate-fadeIn">
-            {/* Gráfico de Desempenho */}
-            <PerformanceChart />
-          </div>
           
-          {/* Coluna 4: Perfil do aluno */}
-          <div className="lg:col-span-1 animate-slideIn">
-            <StudentProfilePanel userName={userName} />
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 lg:items-stretch">
+            {/* Colunas 1-3: Conteúdo principal */}
+            <div className="lg:col-span-3 space-y-6 animate-fadeIn">
+              {/* Gráfico de Desempenho */}
+              <PerformanceChart />
+            </div>
+            
+            {/* Coluna 4: Perfil do aluno */}
+            <div className="lg:col-span-1 animate-slideIn">
+              <StudentProfilePanel userName={userName} />
+            </div>
           </div>
         </div>
       </div>
@@ -234,4 +236,4 @@ const AlunoDashboardPage: React.FC = () => {
   );
 };
 
-export default AlunoDashboardPage; 
+export default AlunoDashboardPage;

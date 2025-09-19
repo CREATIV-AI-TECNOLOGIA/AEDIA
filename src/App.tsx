@@ -1,46 +1,56 @@
-import React, { useEffect } from 'react'
+import React, { Suspense, useEffect, lazy } from 'react'
 import './App.css'
-import Layout from './components/layout/Layout'
-import LayoutAluno from './components/layout/LayoutAluno'
-import Dashboard from './features/dashboard/Dashboard'
 import { Routes, Route, useNavigate, BrowserRouter } from 'react-router-dom'
 import { useRouteState } from './hooks/useRouteState'
-import CriarTurma from './pages/CriarTurma'
-import DetalheTurmaWrapper from './pages/DetalheTurmaWrapper'
 import TurmasRedirector from './components/TurmasRedirector'
 // import LoginCadastro from './components/auth/LoginCadastro' // Comentando esta importação
-import DefinirSenha from './components/auth/DefinirSenha'
-import AdminConvite from './pages/AdminConvite'
 import { AuthProvider } from './context/AuthContext' // Restaurado AuthProvider
 import AuthRedirector from './context/AuthRedirector'
 import { EscolaProvider } from './context/EscolaContext'
 import { LayoutProvider } from './context/LayoutContext'
-import { PlanosAulaWithSearch } from './pages/PlanosAula'
-import CriarPlanoAula from './pages/CriarPlanoAula'
-import CriarAvaliacaoPlanoAula from './pages/CriarAvaliacaoPlanoAula'
-import ConfiguracoesIA from './pages/ConfiguracoesIA'
-import RevisaoPlanoAula from './pages/RevisaoPlanoAula'
-import CalendarioEscolar from './pages/CalendarioEscolar'
-import { AvaliacoesWithSearch } from './pages/Tarefas'
-import Chat from './pages/Chat'
-import DiagnosticoAlunos from './pages/DiagnosticoAlunos'
-import Turmas from './pages/Turmas'
-import ConfiguracoesPage from './pages/Configuracoes/ConfiguracoesPage'
-import DashboardGestaoPage from './pages/Gestao/DashboardGestaoPage'
-import AlunoTarefasPage from './pages/Aluno/AlunoTarefasPage'
-import AlunoDashboardPage from './pages/Aluno/AlunoDashboardPage'
 import { useAuth } from './context/AuthContext'
-import LoginRolesPage from './pages/LoginRolesPage'
-import VisualizarAvaliacao from './pages/VisualizarAvaliacao'
-import CorrecaoMobilePage from './pages/CorrecaoMobile'
-import EscanearProvaPage from './pages/CorrecaoMobile/EscanearProva'
-import DetalhesSessaoPage from './pages/CorrecaoMobile/DetalhesSessao'
-import NovaSessaoPage from './pages/CorrecaoMobile/NovaSessao'
-import CorrecoesAvaliacoesPage from './pages/CorrecaoMobile/CorrecoesAvaliacoes'
-import TokenMonitoring from './pages/TokenMonitoring'
-import ChatInternoPage from './pages/ChatInternoPage'
-import NotificacoesPage from './pages/NotificacoesPage'
-import { debugEnvironmentVariables } from './debug-env'
+
+console.log('[APP DEBUG] App.tsx carregado - JavaScript está funcionando!')
+
+const Layout = lazy(() => import('./components/layout/Layout'))
+const LayoutAluno = lazy(() => import('./components/layout/LayoutAluno'))
+const Dashboard = lazy(() => import('./features/dashboard/Dashboard'))
+const CriarTurma = lazy(() => import('./pages/CriarTurma'))
+const DetalheTurmaWrapper = lazy(() => import('./pages/DetalheTurmaWrapper'))
+const DefinirSenha = lazy(() => import('./components/auth/DefinirSenha'))
+const AdminConvite = lazy(() => import('./pages/AdminConvite'))
+const PlanosAulaWithSearch = lazy(() =>
+  import('./pages/PlanosAula').then((module) => ({ default: module.PlanosAulaWithSearch }))
+)
+const CriarPlanoAula = lazy(() => import('./pages/CriarPlanoAula'))
+const CriarPlanoAulaV2 = lazy(() => import('./pages/CriarPlanoAulaV2'))
+const CriarAvaliacaoPlanoAula = lazy(() => import('./pages/CriarAvaliacaoPlanoAula'))
+const ConfiguracoesIA = lazy(() => import('./pages/ConfiguracoesIA'))
+const RevisaoPlanoAula = lazy(() => import('./pages/RevisaoPlanoAula'))
+const CalendarioEscolar = lazy(() => import('./pages/CalendarioEscolar'))
+const AvaliacoesWithSearch = lazy(() =>
+  import('./pages/Tarefas').then((module) => ({ default: module.AvaliacoesWithSearch }))
+)
+const Chat = lazy(() => import('./pages/Chat'))
+const DiagnosticoAlunos = lazy(() => import('./pages/DiagnosticoAlunos'))
+const ConfiguracoesPage = lazy(() => import('./pages/Configuracoes/ConfiguracoesPage'))
+const DashboardGestaoPage = lazy(() => import('./pages/Gestao/DashboardGestaoPage'))
+const AlunoTarefasPage = lazy(() => import('./pages/Aluno/AlunoTarefasPage'))
+const AlunoDashboardPage = lazy(() => import('./pages/Aluno/AlunoDashboardPage'))
+const LoginRolesPage = lazy(() => import('./pages/LoginRolesPage'))
+const VisualizarAvaliacao = lazy(() => import('./pages/VisualizarAvaliacao'))
+const CorrecaoMobilePage = lazy(() => import('./pages/CorrecaoMobile'))
+const EscanearProvaPage = lazy(() => import('./pages/CorrecaoMobile/EscanearProva'))
+const DetalhesSessaoPage = lazy(() => import('./pages/CorrecaoMobile/DetalhesSessao'))
+const NovaSessaoPage = lazy(() => import('./pages/CorrecaoMobile/NovaSessao'))
+const CorrecoesAvaliacoesPage = lazy(() => import('./pages/CorrecaoMobile/CorrecoesAvaliacoes'))
+const TokenMonitoring = lazy(() => import('./pages/TokenMonitoring'))
+const ChatInternoPage = lazy(() => import('./pages/ChatInternoPage'))
+const NotificacoesPage = lazy(() => import('./pages/NotificacoesPage'))
+const TesteBancoDados = lazy(() =>
+  import('./components/TesteBancoDados').then((module) => ({ default: module.TesteBancoDados }))
+)
+const TesteIntegracao = lazy(() => import('./pages/TesteIntegracao'))
 
 // Stagewise removido
 
@@ -80,6 +90,18 @@ const stagewiseConfig = {
 }
 */
 
+// Componente simples de loading usado por fallback e rotas protegidas
+function FullScreenLoader({ message = 'Carregando...' }: { message?: string }) {
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
+        <p className="mt-4 text-lg font-medium text-gray-700">{message}</p>
+      </div>
+    </div>
+  );
+}
+
 // Componente para páginas ainda não implementadas
 function EmptyPage() {
   return (
@@ -105,14 +127,7 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
   // Se estiver carregando, mostra o loader
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-lg font-medium text-gray-700">Carregando sua sessão...</p>
-        </div>
-      </div>
-    );
+    return <FullScreenLoader message="Carregando sua sessão..." />
   }
 
   // Se não estiver carregando e houver sessão, renderiza os children
@@ -133,10 +148,23 @@ function AppContent() {
     return () => clearTimeout(timer);
   }, [restoreLastRoute]);
 
+  // Precarregar rotas mais usadas para evitar loaders perceptíveis
+  useEffect(() => {
+    // Preload silencioso de telas frequentes
+    import('./pages/Chat');
+    import('./pages/PlanosAula');
+    import('./pages/Tarefas');
+    import('./pages/CalendarioEscolar');
+    import('./pages/Turmas');
+    import('./pages/Configuracoes/ConfiguracoesPage');
+    import('./features/dashboard/Dashboard');
+  }, []);
+
   return (
     <>
       <AuthRedirector />
-      <Routes>
+      <Suspense fallback={<FullScreenLoader message="Carregando módulos da aplicação..." />}>
+        <Routes>
             {/* Rota de autenticação (login/cadastro) - Substituindo o LoginCadastro pelo LoginRolesPage */}
             <Route path="/auth" element={<LoginRolesPage />} />
             
@@ -360,6 +388,39 @@ function AppContent() {
                 </ProtectedRoute>
               }
             />
+            {/* NOVA ROTA: Criar Plano de Aula V2 */}
+            <Route
+              path="/criar-plano-aula-v2"
+              element={
+                <ProtectedRoute>
+                  <Layout headerTitle="Criar Plano de Aula" headerSubtitle="Desenvolva conteúdos pedagógicos estruturados">
+                    <CriarPlanoAulaV2 />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            {/* ROTA TEMPORÁRIA: Teste do Banco de Dados */}
+            <Route
+              path="/teste-banco"
+              element={
+                <ProtectedRoute>
+                  <Layout headerTitle="Teste do Banco" headerSubtitle="Verificação dos dados existentes">
+                    <TesteBancoDados />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
+            {/* ROTA TEMPORÁRIA: Teste de Integração */}
+            <Route
+              path="/teste-integracao"
+              element={
+                <ProtectedRoute>
+                  <Layout headerTitle="Teste de Integração" headerSubtitle="Verificação da integração com habilidades BNCC">
+                    <TesteIntegracao />
+                  </Layout>
+                </ProtectedRoute>
+              }
+            />
             {/* NOVA ROTA: Criar Avaliação baseada em Plano de Aula */}
             <Route
               path="/planos-aula/:id/criar-avaliacao"
@@ -567,13 +628,14 @@ function AppContent() {
 
             {/* Rota catch-all para páginas não encontradas - Adicionado */}
             <Route path="*" element={<Layout><EmptyPage /></Layout>} /> 
-
-          </Routes>
+        </Routes>
+      </Suspense>
     </>
   );
 }
 
 function App() {
+  console.log('[APP DEBUG] Componente App renderizando...');
   return (
     <div className="App">
       <BrowserRouter>

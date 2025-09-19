@@ -105,32 +105,36 @@ const LayoutContent: React.FC<LayoutProps> = ({
   const pageTitle = title || getPageTitle();
 
   return (
-      <div className="min-h-screen flex w-full bg-slate-50">
+      <div className="h-screen flex w-full bg-slate-50 overflow-hidden">
         <NewSidebar />
         
-        <div className={`flex-1 flex flex-col transition-all duration-200 min-h-screen ${isCollapsed ? 'ml-20' : 'ml-64'}`}>
+        <div className={`flex-1 flex flex-col transition-all duration-200 h-screen overflow-hidden ${isCollapsed ? 'lg:ml-20' : 'lg:ml-64'}`}>
           {/* Mobile Header */}
           <header className="h-14 flex items-center border-b bg-white lg:hidden px-4">
             <MobileSidebarTrigger pageTitle={pageTitle} />
           </header>
 
           {/* Desktop Header */}
-          <div className="hidden lg:block">
-            <Header 
-              titulo={headerTitle || pageTitle}
-              subtitulo={headerSubtitle}
-              icone={headerIcon}
-              mostrarEscola={mostrarEscola}
-              showSearch={showSearch}
-              searchValue={searchValue}
-              onSearchChange={onSearchChange}
-              searchPlaceholder={searchPlaceholder}
-            />
-          </div>
+          {forceShowHeader !== false && (
+            <div className="hidden lg:block">
+              <Header 
+                titulo={headerTitle || pageTitle}
+                subtitulo={headerSubtitle}
+                icone={headerIcon}
+                mostrarEscola={mostrarEscola}
+                showSearch={showSearch}
+                searchValue={searchValue}
+                onSearchChange={onSearchChange}
+                searchPlaceholder={searchPlaceholder}
+              />
+            </div>
+          )}
 
           {/* Main Content */}
-          <main className="flex-1 overflow-auto p-4 lg:p-6 bg-slate-50">
-            {children}
+          <main className="flex-1 overflow-y-auto p-4 lg:p-6 bg-slate-50">
+            <div className="app-content">
+              {children}
+            </div>
           </main>
         </div>
       </div>
@@ -146,3 +150,4 @@ const Layout: React.FC<LayoutProps> = (props) => {
 };
 
 export default Layout;
+

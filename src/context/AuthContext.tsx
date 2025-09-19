@@ -57,20 +57,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [user, userProfile])
 
   useEffect(() => {
+    console.log('[AuthContext DEBUG] useEffect de inicialização executado');
     const inicializarAuth = async () => {
+      console.log('[AuthContext DEBUG] inicializarAuth iniciado');
       setLoading(true)
       try {
+        console.log('[AuthContext DEBUG] Obtendo sessão inicial...');
         const { data, error: sessionError } = await supabase.auth.getSession()
         if (sessionError) {
           console.error('Erro ao obter sessão inicial:', sessionError)
         } else if (data && data.session && data.session.user) {
+          console.log('[AuthContext DEBUG] Sessão encontrada:', data.session.user.email);
           setSession(data.session)
           setUser(data.session.user)
           await fetchUserProfile(data.session.user)
+        } else {
+          console.log('[AuthContext DEBUG] Nenhuma sessão encontrada');
         }
       } catch (error) {
         console.error('Erro catastrófico ao inicializar autenticação:', error)
       } finally {
+        console.log('[AuthContext DEBUG] inicializarAuth finalizado, setLoading(false)');
         setLoading(false)
       }
     }
@@ -78,21 +85,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     inicializarAuth()
 
     const { data: authListener } = supabase.auth.onAuthStateChange((event, currentSessionOrNull) => {
-      console.log('Auth state changed (AuthContext):', event, currentSessionOrNull?.user?.email, currentSessionOrNull?.user?.user_metadata?.role)
+      console.log('[AuthContext DEBUG] Auth state changed:', event, currentSessionOrNull?.user?.email, currentSessionOrNull?.user?.user_metadata?.role)
       setSession(currentSessionOrNull)
       setUser(currentSessionOrNull?.user ?? null)
       setAuthEvent(event)
       
       if (currentSessionOrNull?.user) {
+        console.log('[AuthContext DEBUG] onAuthStateChange: chamando fetchUserProfile');
         fetchUserProfile(currentSessionOrNull.user)
       } else {
+        console.log('[AuthContext DEBUG] onAuthStateChange: sem usuário, limpando dados');
         setUserProfile(null)
         setProfessorData(null)
         setAlunoData(null)
       }
       if (event === 'INITIAL_SESSION') {
+        console.log('[AuthContext DEBUG] INITIAL_SESSION event');
         // setLoading já foi tratado em getInitialSession ou será false se não houver sessão inicial
       } else {
+        console.log('[AuthContext DEBUG] onAuthStateChange: setLoading(false) para event:', event);
         setLoading(false)
       }
     })
@@ -166,6 +177,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [user, userProfile])
 
   const fetchUserProfile = useCallback(async (authUser: User) => {
+    console.log('[AuthContext DEBUG] fetchUserProfile iniciado para usuário:', authUser.id, authUser.email);
     // Evitar chamadas duplicadas usando flag específica e verificação de usuário
     const currentUserId = authUser.id;
     const now = Date.now();
@@ -184,15 +196,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUserProfile(null)
     setProfessorData(null)
     setAlunoData(null)
+    console.log('[AuthContext DEBUG] Estados resetados, iniciando busca de perfil...');
 
     try {
       if (authUser.user_metadata?.role === 'diretora') {
         setUserProfile('diretora')
         console.log('[AuthContext] Usuário identificado como Diretora via metadata.')
+        console.log('[AuthContext DEBUG] Definindo loading=false para diretora')
         setLoading(false)
         setFetchingProfile(false)
         return
       }
+      
+      console.log('[AuthContext DEBUG] Buscando dados de professor...');
 
       // Buscar professor primeiro - usando array ao invés de single() para evitar erro de múltiplas linhas
       let { data: professorData, error: professorError } = await supabase
@@ -234,10 +250,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setProfessorData(professorInfo as Professor)
         setAlunoData(null)
         console.log('[AuthContext] Usuário identificado como Professor:', professorInfo)
+        console.log('[AuthContext DEBUG] Definindo loading=false para professor')
         setLoading(false)
         setFetchingProfile(false)
         return
       }
+      
+      console.log('[AuthContext DEBUG] Professor não encontrado, buscando dados de aluno...');
 
       // Se não encontrou como professor, buscar como aluno
       const { data: alunoData, error: alunoError } = await supabase
@@ -252,17 +271,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setAlunoData(alunoInfo as Aluno)
         setProfessorData(null)
         console.log('[AuthContext] Usuário identificado como Aluno:', alunoInfo)
-             } else {
-         setUserProfile(null)
-         setProfessorData(null)
-         setAlunoData(null)
-         console.warn('[AuthContext] Usuário não encontrado como professor ou aluno.')
-         if (professorError) logSupabaseError('AuthContext - Professor', professorError, { userId: authUser.id })
-         if (alunoError) logSupabaseError('AuthContext - Aluno', alunoError, { userId: authUser.id })
-       }
+        console.log('[AuthContext DEBUG] Definindo loading=false para aluno')
+      } else {
+        setUserProfile(null)
+        setProfessorData(null)
+        setAlunoData(null)
+        console.warn('[AuthContext] Usuário não encontrado como professor ou aluno.')
+        console.log('[AuthContext DEBUG] Definindo loading=false para usuário não encontrado')
+        if (professorError) logSupabaseError('AuthContext - Professor', professorError, { userId: authUser.id })
+        if (alunoError) logSupabaseError('AuthContext - Aluno', alunoError, { userId: authUser.id })
+      }
     } catch (error) {
       console.error('[AuthContext] Erro ao buscar perfil do usuário:', error)
     } finally {
+      console.log('[AuthContext DEBUG] Finally: definindo loading=false e fetchingProfile=false')
       setLoading(false)
       setFetchingProfile(false)
     }

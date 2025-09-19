@@ -34,7 +34,6 @@ export default defineConfig(({ mode }) => {
       host: 'localhost',
       timeout: 120000,
       overlay: false,
-      clientPort: 5173,
       protocol: 'ws' // WebSocket normal para HTTP
     },
     watch: {

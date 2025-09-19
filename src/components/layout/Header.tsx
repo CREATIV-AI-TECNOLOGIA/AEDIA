@@ -48,6 +48,7 @@ const Header: React.FC<HeaderProps> = ({
   const [bellShouldShake, setBellShouldShake] = useState(false);
   const notificationSoundRef = useRef<HTMLAudioElement>(null);
   
+  
   // Usar o hook personalizado de notificações
   const { notifications, markAsRead, markConversationAsRead } = useNotifications(user?.id);
 
@@ -105,13 +106,13 @@ const Header: React.FC<HeaderProps> = ({
   return (
     <header className={`
       h-[64px] bg-white/60 backdrop-blur-md border-b border-gray-200
-      sticky top-0 z-20 transition-all duration-300
+      sticky top-0 z-[60] transition-all duration-300
       ${className || ''}
     `}>
       {NOTIFICATION_SOUND_URL && (
         <audio ref={notificationSoundRef} src={NOTIFICATION_SOUND_URL} preload="auto" />
       )}
-      <div className="px-6 h-full flex items-center justify-between">
+      <div className="px-6 h-full flex items-center justify-between lg:pr-6">
         <div className="flex items-center space-x-4 flex-1 min-w-0">
           {/* Botão do menu mobile */}
           <button
@@ -167,7 +168,7 @@ const Header: React.FC<HeaderProps> = ({
         )}
 
         {/* Itens à Direita do Header */}
-        <div className="flex items-center space-x-3 md:space-x-4 flex-shrink-0">
+        <div className="flex items-center space-x-3 md:space-x-4 flex-shrink-0 mr-2 lg:mr-4">
           {/* 1. Notificações */}
           <div className={styles.notificationContainer}>
             <button onClick={() => setIsNotificationOpen(prev => !prev)} className={`${styles.notificationButton} ${bellShouldShake ? styles.shake : ''}`} aria-label="Abrir notificações">

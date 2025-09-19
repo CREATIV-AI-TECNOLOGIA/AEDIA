@@ -201,22 +201,22 @@ const TurmasPage: React.FC = () => {
       <div className="relative">
         <button
           type="button"
-          className="w-full flex items-center justify-between px-3 py-2.5 text-left bg-white border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+          className="w-full flex items-center justify-between px-3 py-2.5 text-left bg-card border border-border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition-all"
           onClick={() => setIsOpen(!isOpen)}
         >
           <div className="flex items-center space-x-2">
             {icon}
-            <span className={selectedOption ? 'text-gray-900' : 'text-gray-500'}>
+            <span className={selectedOption ? 'text-foreground' : 'text-muted-foreground'}>
               {selectedOption ? selectedOption.nome : `Selecionar ${title}`}
             </span>
           </div>
-          <ChevronDown className={`h-4 w-4 text-gray-400 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
+          <ChevronDown className={`h-4 w-4 text-muted-foreground/60 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
         </button>
 
         {isOpen && (
           <>
             <div className="fixed inset-0 z-10" onClick={() => setIsOpen(false)} />
-            <div className="absolute z-20 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg max-h-60 overflow-auto">
+            <div className="absolute z-20 w-full mt-1 bg-card border border-border rounded-lg shadow-lg max-h-60 overflow-auto">
               <div className="py-1">
                 <button
                   onClick={() => {
@@ -226,7 +226,7 @@ const TurmasPage: React.FC = () => {
                   className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
                     !selectedValue
                       ? 'bg-blue-100 text-blue-700 font-semibold'
-                      : 'text-gray-700 hover:bg-gray-100'
+                      : 'text-foreground/90 hover:bg-muted/50'
                   }`}
                 >
                   Todos
@@ -241,7 +241,7 @@ const TurmasPage: React.FC = () => {
                     className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${
                       selectedValue === String(option.id)
                         ? 'bg-blue-100 text-blue-700 font-semibold'
-                        : 'text-gray-700 hover:bg-gray-100'
+                        : 'text-foreground/90 hover:bg-muted'
                     }`}
                   >
                     {option.nome}
@@ -260,8 +260,8 @@ const TurmasPage: React.FC = () => {
     return (
       <div className="flex justify-center items-center h-64">
         <div className="flex items-center space-x-4">
-          <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-          <p className="text-slate-600 text-lg">Carregando...</p>
+          <Loader2 className="w-8 h-8 text-primary animate-spin" />
+          <p className="text-muted-foreground text-lg">Carregando...</p>
         </div>
       </div>
     );
@@ -274,8 +274,8 @@ const TurmasPage: React.FC = () => {
           <div className="mx-auto w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mb-4">
             <AlertTriangle className="h-8 w-8 text-red-600" />
           </div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Acesso Negado</h2>
-          <p className="text-gray-600">
+          <h2 className="text-xl font-semibold text-foreground mb-2">Acesso Negado</h2>
+        <p className="text-muted-foreground">
             Você não tem permissão para acessar esta página. 
             Entre em contato com o administrador se acredita que isso é um erro.
           </p>
@@ -291,8 +291,8 @@ const TurmasPage: React.FC = () => {
           <div className="mx-auto w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mb-4">
             <School className="h-8 w-8 text-yellow-600" />
           </div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Nenhuma Escola Selecionada</h2>
-          <p className="text-gray-600">
+          <h2 className="text-xl font-semibold text-foreground mb-2">Nenhuma Escola Selecionada</h2>
+        <p className="text-muted-foreground">
             Selecione uma escola para visualizar as turmas.
           </p>
         </div>
@@ -302,17 +302,18 @@ const TurmasPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50">
-      <div className={`relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16 transition-opacity duration-300 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`relative z-10 page-center px-4 sm:px-6 lg:px-8 pt-8 pb-16 transition-opacity duration-300 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+        <div className="standard-page-card">
         {/* Header */}
         <header className="mb-8 py-4">
           <div className="w-full px-0">
             <div className="flex flex-col md:flex-row justify-between items-center gap-4">
               <div>
-                <h1 className="text-3xl font-bold text-gray-800 flex items-center">
+                <h1 className="text-3xl font-bold text-foreground flex items-center">
                   <Users className="w-8 h-8 mr-3 text-blue-600" />
                   {isGestor ? 'Gestão de Turmas' : 'Minhas Turmas'}
                 </h1>
-                <p className="mt-1 text-gray-600">
+                <p className="mt-1 text-muted-foreground">
                   {isGestor 
                     ? `Visualize e gerencie todas as turmas da escola ${escolaAtiva.nome}.`
                     : `Visualize suas turmas na escola ${escolaAtiva.nome}.`
@@ -322,7 +323,7 @@ const TurmasPage: React.FC = () => {
               {isGestor && (
                 <Link
                   to="/turmas/criar"
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-5 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center group disabled:opacity-50"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground font-medium py-2.5 px-5 rounded-lg shadow-md hover:shadow-lg transition-all flex items-center group disabled:opacity-50"
                 >
                   <PlusCircle className="w-5 h-5 mr-2 group-hover:rotate-90 transition-transform duration-300" />
                   Nova Turma
@@ -333,25 +334,25 @@ const TurmasPage: React.FC = () => {
         </header>
 
         {/* Filtros */}
-        <div className="mb-8 bg-white/85 backdrop-blur-sm px-10 py-6 rounded-2xl shadow-xl border border-slate-200/60 ring-1 ring-white/60">
+        <div className="mb-8 bg-card/85 backdrop-blur-sm px-10 py-6 rounded-2xl shadow-xl border border-border/60 ring-1 ring-border/50">
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 items-end">
             <div className="lg:col-span-2">
-              <label htmlFor="searchTurma" className="block text-sm font-medium text-gray-700 mb-1">Buscar</label>
+              <label htmlFor="searchTurma" className="block text-sm font-medium text-foreground/90 mb-1">Buscar</label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Search className="h-5 w-5 text-gray-400" />
+                  <Search className="h-5 w-5 text-muted-foreground/60" />
                 </div>
                 <input
                   id="searchTurma"
                   type="text"
                   placeholder="Nome da turma, professor, disciplina..."
-                  className="block w-full pl-10 pr-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all shadow-sm"
+                  className="block w-full pl-10 pr-3 py-2.5 border border-border rounded-lg bg-input placeholder-muted-foreground focus:ring-2 focus:ring-ring focus:border-ring transition-all shadow-sm"
                   value={searchTerm}
                   onChange={e => setSearchTerm(e.target.value)}
                 />
                 {searchTerm && (
                   <button 
-                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-gray-400 hover:text-gray-600 transition-colors"
+                    className="absolute inset-y-0 right-0 flex items-center pr-3 text-muted-foreground/60 hover:text-muted-foreground transition-colors"
                     onClick={() => setSearchTerm('')}
                   >
                     <X className="h-5 w-5" />
@@ -360,7 +361,7 @@ const TurmasPage: React.FC = () => {
               </div>
             </div>
             <div>
-              <label htmlFor="filterModalidade" className="block text-sm font-medium text-gray-700 mb-1">Modalidade</label>
+              <label htmlFor="filterModalidade" className="block text-sm font-medium text-foreground/90 mb-1">Modalidade</label>
               <FilterDropdownComponent 
                 title="Modalidade"
                 options={modalidades}
@@ -370,7 +371,7 @@ const TurmasPage: React.FC = () => {
               />
             </div>
             <div>
-              <label htmlFor="filterProfessor" className="block text-sm font-medium text-gray-700 mb-1">Professor</label>
+              <label htmlFor="filterProfessor" className="block text-sm font-medium text-foreground/90 mb-1">Professor</label>
               <FilterDropdownComponent 
                 title="Professor"
                 options={professores}
@@ -380,7 +381,7 @@ const TurmasPage: React.FC = () => {
               />
             </div>
             <div>
-              <label htmlFor="filterPeriodo" className="block text-sm font-medium text-gray-700 mb-1">Período</label>
+              <label htmlFor="filterPeriodo" className="block text-sm font-medium text-foreground/90 mb-1">Período</label>
               <FilterDropdownComponent 
                 title="Período"
                 options={PERIODOS}
@@ -394,7 +395,7 @@ const TurmasPage: React.FC = () => {
             <div className="mt-4 flex justify-end">
               <button 
                 onClick={clearFilters}
-                className="text-sm text-blue-600 hover:text-blue-800 flex items-center font-medium transition-colors"
+                className="text-sm text-primary hover:text-primary/80 flex items-center font-medium transition-colors"
               >
                 <Filter className="w-4 h-4 mr-1.5" />
                 Limpar todos os filtros
@@ -405,12 +406,12 @@ const TurmasPage: React.FC = () => {
 
         {/* Lista de Turmas */}
         {!loadingData && turmasFiltradas.length > 0 && (
-          <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-slate-200/70 ring-1 ring-white/50 hover:shadow-xl transition-all duration-300">
+          <div className="bg-card/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-border/70 ring-1 ring-border/50 hover:shadow-xl transition-all duration-300">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {turmasFiltradas.map((turma) => (
                 <div
                   key={turma.id}
-                  className="group relative bg-white/90 backdrop-blur-sm rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-slate-200/60 ring-1 ring-white/60 hover:ring-blue-200/60 hover:border-blue-300/60 cursor-pointer"
+                  className="group relative bg-card/90 backdrop-blur-sm rounded-xl p-6 shadow-md hover:shadow-xl transition-all duration-300 border border-border/60 ring-1 ring-border/50 hover:ring-blue-200/60 hover:border-blue-300/60 cursor-pointer"
                   onClick={() => navigate(`/turmas/${turma.id}`)}
                 >
                   <div className="flex items-start justify-between mb-4">
@@ -419,41 +420,41 @@ const TurmasPage: React.FC = () => {
                         <Users className="h-5 w-5 text-white" />
                       </div>
                       <div>
-                        <h3 className="font-semibold text-slate-800 group-hover:text-blue-700 transition-colors">
+                        <h3 className="font-semibold text-foreground group-hover:text-primary transition-colors">
                           {turma.nome}
                         </h3>
-                        <p className="text-sm text-slate-500">{turma.ano}</p>
+                        <p className="text-sm text-muted-foreground">{turma.ano}</p>
                       </div>
                     </div>
-                    <ArrowRight className="h-5 w-5 text-slate-400 group-hover:text-blue-500 group-hover:translate-x-1 transition-all" />
+                    <ArrowRight className="h-5 w-5 text-muted-foreground/60 group-hover:text-primary group-hover:translate-x-1 transition-all" />
                   </div>
 
                   <div className="space-y-3">
-                    <div className="flex items-center text-sm text-slate-600">
-                      <Layers className="h-4 w-4 mr-2 text-slate-400" />
+                    <div className="flex items-center text-sm text-muted-foreground">
+            <Layers className="h-4 w-4 mr-2 text-muted-foreground/60" />
                       <span>{turma.modalidade}</span>
                     </div>
-                    <div className="flex items-center text-sm text-slate-600">
-                      <Calendar className="h-4 w-4 mr-2 text-slate-400" />
+                    <div className="flex items-center text-sm text-muted-foreground">
+            <Calendar className="h-4 w-4 mr-2 text-muted-foreground/60" />
                       <span>{turma.periodo}</span>
                     </div>
                     {turma.professor_nome && (
-                      <div className="flex items-center text-sm text-slate-600">
-                        <GraduationCap className="h-4 w-4 mr-2 text-slate-400" />
+                      <div className="flex items-center text-sm text-muted-foreground">
+            <GraduationCap className="h-4 w-4 mr-2 text-muted-foreground/60" />
                         <span>{turma.professor_nome}</span>
                       </div>
                     )}
                     {turma.alunos_count !== undefined && (
-                      <div className="flex items-center text-sm text-slate-600">
-                        <Users className="h-4 w-4 mr-2 text-slate-400" />
+                      <div className="flex items-center text-sm text-muted-foreground">
+            <Users className="h-4 w-4 mr-2 text-muted-foreground/60" />
                         <span>{turma.alunos_count} alunos</span>
                       </div>
                     )}
                   </div>
 
                   {turma.disciplina && (
-                    <div className="mt-4 pt-3 border-t border-slate-200/60">
-                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                    <div className="mt-4 pt-3 border-t border-border/60">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary">
                         <BookOpen className="h-3 w-3 mr-1" />
                         {turma.disciplina}
                       </span>
@@ -469,7 +470,7 @@ const TurmasPage: React.FC = () => {
         {!loadingData && !error && turmasFiltradas.length === 0 && (
           <div className="flex items-center justify-center min-h-[60vh]">
             <div className="max-w-2xl mx-auto w-full">
-              <div className="relative bg-white/85 backdrop-blur-sm rounded-3xl p-12 shadow-xl border border-slate-200/60 text-center overflow-hidden ring-1 ring-white/60">
+              <div className="relative bg-card/85 backdrop-blur-sm rounded-3xl p-12 shadow-xl border border-border/60 text-center overflow-hidden ring-1 ring-border/50">
                 <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
                 
                 <div className="relative z-10">
@@ -484,7 +485,7 @@ const TurmasPage: React.FC = () => {
                         : 'Nenhuma turma cadastrada ainda'
                       }
                     </h2>
-                    <p className="text-lg text-slate-600 max-w-xl mx-auto leading-relaxed">
+                    <p className="text-lg text-muted-foreground max-w-xl mx-auto leading-relaxed">
                       {searchTerm || selectedModalidade || selectedProfessor || selectedPeriodo
                         ? 'Tente ajustar os filtros para encontrar as turmas desejadas.'
                         : isGestor 
@@ -524,8 +525,8 @@ const TurmasPage: React.FC = () => {
         {loadingData && (
           <div className="flex justify-center items-center h-64">
             <div className="flex items-center space-x-4">
-              <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
-              <p className="text-slate-600 text-lg">Carregando turmas...</p>
+              <Loader2 className="w-8 h-8 text-primary animate-spin" />
+              <p className="text-muted-foreground text-lg">Carregando turmas...</p>
             </div>
           </div>
         )}
@@ -547,6 +548,7 @@ const TurmasPage: React.FC = () => {
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

@@ -404,17 +404,17 @@ const alunos = rows.slice(1).map(row => {
   if (!turma) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p className="text-slate-500">Carregando detalhes da turma ou turma não encontrada...</p>
+        <p className="text-muted-foreground">Carregando detalhes da turma ou turma não encontrada...</p>
       </div>
     );
   }
 
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
-      <div className="flex-1 flex flex-col overflow-hidden bg-white rounded-2xl border border-gray-200 shadow-sm m-6">
+      <div className="flex-1 flex flex-col overflow-hidden bg-card rounded-2xl border border-border shadow-sm m-0">
           {/* Cabeçalho da turma */}
       <div className="px-4 sm:px-6 lg:px-8 py-6">
-        <div className="bg-white rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] border border-gray-100 p-6 mb-4">
+        <div className="bg-card rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] border border-border p-6 mb-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between">
             <div className="flex items-center">
               <div className="h-16 w-16 bg-gradient-to-br from-indigo-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xl font-bold shadow-lg mr-4">
@@ -422,12 +422,12 @@ const alunos = rows.slice(1).map(row => {
               </div>
               <div>
                 <div className="flex items-center gap-4">
-                  <h1 className="text-2xl font-bold text-slate-800 flex items-center gap-3">
+                  <h1 className="text-2xl font-bold text-foreground flex items-center gap-3">
                     <span>{turma.nome}</span>
-                    <span className="text-gray-500">-</span>
-                    <span className="text-gray-500">{turma.periodo}</span>
+                    <span className="text-muted-foreground">-</span>
+            <span className="text-muted-foreground">{turma.periodo}</span>
                   </h1>
-                  <div className="flex items-center gap-6 text-slate-600">
+                  <div className="flex items-center gap-6 text-muted-foreground">
                     <span className="flex items-center gap-2">
                       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
@@ -464,10 +464,10 @@ const alunos = rows.slice(1).map(row => {
 
                   {/* Dropdown de Turmas */}
                   {seletorTurmaAberto && (
-                    <div className="absolute top-full right-0 mt-2 w-80 bg-white rounded-lg shadow-xl border border-gray-200 z-50 max-h-96 overflow-y-auto">
-                      <div className="p-3 border-b border-gray-100">
-                        <h3 className="text-sm font-medium text-gray-900">Suas Turmas</h3>
-                        <p className="text-xs text-gray-500 mt-1">Selecione uma turma para visualizar</p>
+                    <div className="absolute top-full right-0 mt-2 w-80 bg-card rounded-lg shadow-xl border border-border z-50 max-h-96 overflow-y-auto">
+                      <div className="p-3 border-b border-border">
+                        <h3 className="text-sm font-medium text-foreground">Suas Turmas</h3>
+                        <p className="text-xs text-muted-foreground mt-1">Selecione uma turma para visualizar</p>
                       </div>
                       <div className="py-2">
                         {turmasDisponiveis.map((turmaItem) => (
@@ -484,19 +484,19 @@ const alunos = rows.slice(1).map(row => {
                               onTurmaChange?.(turmaItem);
                               setSeletorTurmaAberto(false);
                             }}
-                            className={`w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors ${
+                            className={`w-full text-left px-4 py-3 hover:bg-muted/50 transition-colors ${
                               turmaItem.id === turma?.id ? 'bg-blue-50 border-r-2 border-blue-500' : ''
                             }`}
                           >
                             <div className="flex items-center">
                               <div className={`flex-shrink-0 h-8 w-8 rounded-full flex items-center justify-center text-white text-sm font-medium ${
-                                turmaItem.id === turma?.id ? 'bg-blue-500' : 'bg-gray-500'
+                                turmaItem.id === turma?.id ? 'bg-blue-500' : 'bg-muted'
                               }`}>
                                 {turmaItem.nome.charAt(0)}
                               </div>
                               <div className="ml-3 flex-1">
-                                <div className="text-sm font-medium text-gray-900">{turmaItem.nome}</div>
-                                <div className="text-xs text-gray-500">
+                                <div className="text-sm font-medium text-foreground">{turmaItem.nome}</div>
+                                <div className="text-xs text-muted-foreground">
                                   {turmaItem.periodo} • {turmaItem.ano} • {turmaItem.disciplina}
                                 </div>
                               </div>
@@ -509,8 +509,8 @@ const alunos = rows.slice(1).map(row => {
                           </button>
                         ))}
                         {turmasDisponiveis.length === 0 && (
-                          <div className="px-4 py-6 text-center text-gray-500">
-                            <svg className="mx-auto h-8 w-8 text-gray-400 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <div className="px-4 py-6 text-center text-muted-foreground">
+              <svg className="mx-auto h-8 w-8 text-muted-foreground/60 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
                             </svg>
                             <p className="text-sm">Nenhuma turma encontrada</p>
@@ -525,14 +525,14 @@ const alunos = rows.slice(1).map(row => {
           </div>
         </div>
 
-        <div className="bg-white rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] border border-gray-100 p-6 mb-4">
+        <div className="bg-card rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] border border-border p-6 mb-4">
           <nav className="flex -mb-px">
             <button
               onClick={() => setActiveTab('alunos')}
               className={`py-4 px-6 font-medium text-sm border-b-2 focus:outline-none ${
                 activeTab === 'alunos' 
                   ? 'border-indigo-500 text-indigo-600' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-muted-foreground hover:text-foreground hover:border-border'
               }`}
             >
               Alunos
@@ -542,7 +542,7 @@ const alunos = rows.slice(1).map(row => {
               className={`py-4 px-6 font-medium text-sm border-b-2 focus:outline-none ${
                 activeTab === 'avisos' 
                   ? 'border-indigo-500 text-indigo-600' 
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                  : 'border-transparent text-muted-foreground hover:text-foreground/90 hover:border-border'
               }`}
             >
               Avisos e Comunicados
@@ -553,7 +553,7 @@ const alunos = rows.slice(1).map(row => {
         {/* Conteúdo */}
         {activeTab === 'alunos' && (
           <div 
-            className={`bg-white rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] border border-gray-100 p-6 hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] transition-shadow duration-300 ${
+            className={`bg-card rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] border border-border p-6 hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] transition-shadow duration-300 ${
               isDragging ? 'border-blue-500 bg-blue-50' : ''
             }`}
             onDragOver={handleDragOver}
@@ -562,9 +562,9 @@ const alunos = rows.slice(1).map(row => {
           >
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center">
-                <h2 className="text-lg font-medium text-slate-800">Lista de Alunos</h2>
+                <h2 className="text-lg font-medium text-foreground">Lista de Alunos</h2>
                 {loadingAlunos && (
-                  <div className="ml-3 flex items-center text-sm text-gray-500">
+                  <div className="ml-3 flex items-center text-sm text-muted-foreground">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500 mr-2"></div>
                     Atualizando...
                   </div>
@@ -575,9 +575,9 @@ const alunos = rows.slice(1).map(row => {
                   <input 
                     type="text" 
                     placeholder="Buscar aluno..." 
-                    className="pl-9 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:ring-indigo-500 focus:border-indigo-500"
+                    className="pl-9 pr-4 py-2 border border-border rounded-md text-sm focus:ring-indigo-500 focus:border-indigo-500"
                   />
-                  <span className="absolute left-3 top-2.5 text-gray-400">
+                  <span className="absolute left-3 top-2.5 text-muted-foreground/60">
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                     </svg>
@@ -591,26 +591,26 @@ const alunos = rows.slice(1).map(row => {
             {isProcessing ? (
               <div className="text-center py-8">
                 <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-4"></div>
-                <p className="text-gray-600">Processando planilha...</p>
+                <p className="text-muted-foreground">Processando planilha...</p>
               </div>
             ) : loadingAlunos ? (
               <div className="space-y-3">
                 {/* Skeleton loading para alunos */}
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="animate-pulse flex items-center p-4 border border-gray-200 rounded-lg">
-                    <div className="h-10 w-10 bg-gray-300 rounded-full"></div>
-                    <div className="ml-4 flex-1">
-                      <div className="h-4 bg-gray-300 rounded w-1/3 mb-2"></div>
-                      <div className="h-3 bg-gray-200 rounded w-1/4"></div>
-                    </div>
-                    <div className="h-8 w-16 bg-gray-300 rounded"></div>
+                  <div key={i} className="animate-pulse flex items-center p-4 border border-border rounded-lg">
+                    <div className="h-10 w-10 bg-muted rounded-full"></div>
+                     <div className="ml-4 flex-1">
+                       <div className="h-4 bg-muted rounded w-1/3 mb-2"></div>
+                       <div className="h-3 bg-muted/60 rounded w-1/4"></div>
+                     </div>
+                     <div className="h-8 w-16 bg-muted rounded"></div>
                   </div>
                 ))}
               </div>
             ) : alunos.length === 0 ? (
-              <div className="text-center py-12 border-2 border-dashed border-gray-300 rounded-lg">
+              <div className="text-center py-12 border-2 border-dashed border-border rounded-lg">
                 <svg 
-                  className="mx-auto h-12 w-12 text-gray-400" 
+                  className="mx-auto h-12 w-12 text-muted-foreground/60" 
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"
@@ -622,11 +622,11 @@ const alunos = rows.slice(1).map(row => {
                     d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                   />
                 </svg>
-                <h3 className="mt-2 text-sm font-medium text-gray-900">Nenhum aluno cadastrado</h3>
-                <p className="mt-1 text-sm text-gray-500">
+                <h3 className="mt-2 text-sm font-medium text-foreground">Nenhum aluno cadastrado</h3>
+                <p className="mt-1 text-sm text-muted-foreground">
                   Arraste uma planilha CSV aqui ou clique em "Adicionar Aluno"
                 </p>
-                <p className="mt-2 text-xs text-gray-400">
+                <p className="mt-2 text-xs text-muted-foreground/60">
                   A planilha deve conter as colunas: Nome, Email, Telefone, Idade
                 </p>
               </div>
@@ -635,14 +635,14 @@ const alunos = rows.slice(1).map(row => {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
                   <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Aluno</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Email</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Média Geral</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Status</th>
-                    <th className="px-4 py-3 text-right text-xs font-medium text-slate-600 uppercase tracking-wider">Ações</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Aluno</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Email</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Média Geral</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-muted-foreground uppercase tracking-wider">Ações</th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-card divide-y divide-border">
                   {alunos.map((aluno) => (
                     <tr key={aluno.id} className="hover:bg-slate-50 transition-colors duration-150">
                       <td className="px-4 py-3 whitespace-nowrap">
@@ -651,12 +651,12 @@ const alunos = rows.slice(1).map(row => {
                               {aluno.nome.split(' ').map(n => n[0]).join('').substring(0, 2)}
                           </div>
                           <div className="ml-4">
-                            <div className="text-sm font-medium text-slate-900">{aluno.nome}</div>
+                            <div className="text-sm font-medium text-foreground">{aluno.nome}</div>
                           </div>
                         </div>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
-                        <div className="text-sm text-slate-600">{aluno.email}</div>
+                        <div className="text-sm text-muted-foreground">{aluno.email}</div>
                       </td>
                       <td className="px-4 py-3 whitespace-nowrap">
                           <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium`}>
@@ -675,7 +675,7 @@ const alunos = rows.slice(1).map(row => {
                           >
                             Ver
                           </button>
-                        <button className="px-3 py-1.5 bg-gray-50 text-gray-700 hover:bg-gray-100 rounded-md font-medium transition-colors duration-150 border border-gray-200">Editar</button>
+                        <button className="px-3 py-1.5 bg-muted text-muted-foreground hover:bg-muted/80 rounded-md font-medium transition-colors duration-150 border border-border">Editar</button>
                       </td>
                     </tr>
                   ))}
@@ -687,9 +687,9 @@ const alunos = rows.slice(1).map(row => {
         )}
         
         {activeTab === 'avisos' && (
-          <div className="bg-white rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] border border-gray-100 p-6 hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+          <div className="bg-card rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] border border-border p-6 hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] transition-shadow duration-300">
             <div className="mb-6">
-              <h2 className="text-lg font-medium text-slate-800 mb-4">Novo Aviso</h2>
+              <h2 className="text-lg font-medium text-foreground mb-4">Novo Aviso</h2>
               <div className="flex space-x-3">
                 <div className="flex-grow">
                   <Input
@@ -705,7 +705,7 @@ const alunos = rows.slice(1).map(row => {
               </div>
             </div>
             
-            <h2 className="text-lg font-medium text-slate-800 mb-4">Avisos e Comunicados</h2>
+            <h2 className="text-lg font-medium text-foreground mb-4">Avisos e Comunicados</h2>
             <div className="space-y-4">
               {/* Avisos serão carregados dinamicamente */}
             </div>
@@ -726,31 +726,31 @@ const alunos = rows.slice(1).map(row => {
                   {alunoSelecionado.nome.split(' ').map(n => n[0]).join('').substring(0, 2)}
                 </div>
                 <div className="ml-3">
-                  <h4 className="text-base font-semibold text-gray-900">{alunoSelecionado.nome}</h4>
-                  <p className="text-sm text-gray-500">Matrícula: {alunoSelecionado.matricula}</p>
+                  <h4 className="text-base font-semibold text-foreground">{alunoSelecionado.nome}</h4>
+            <p className="text-sm text-muted-foreground">Matrícula: {alunoSelecionado.matricula}</p>
                 </div>
               </div>
 
               {/* Informações do Aluno */}
               <div className="space-y-2 mb-4">
                 <div className="flex items-center text-sm">
-                  <span className="w-20 text-gray-500">Email:</span>
-                  <span className="text-gray-900">{alunoSelecionado.email || 'Não informado'}</span>
+                  <span className="w-20 text-muted-foreground">Email:</span>
+              <span className="text-foreground">{alunoSelecionado.email || 'Não informado'}</span>
                 </div>
                 <div className="flex items-center text-sm">
-                  <span className="w-20 text-gray-500">Telefone:</span>
-                  <span className="text-gray-900">{alunoSelecionado.telefone || 'Não informado'}</span>
+                  <span className="w-20 text-muted-foreground">Telefone:</span>
+              <span className="text-foreground">{alunoSelecionado.telefone || 'Não informado'}</span>
                 </div>
                 <div className="flex items-center text-sm">
-                  <span className="w-20 text-gray-500">Idade:</span>
-                  <span className="text-gray-900">{alunoSelecionado.idade || 'Não informada'}</span>
+                  <span className="w-20 text-muted-foreground">Idade:</span>
+              <span className="text-foreground">{alunoSelecionado.idade || 'Não informada'}</span>
                 </div>
                 <div className="flex items-center text-sm">
-                  <span className="w-20 text-gray-500">Status:</span>
+                  <span className="w-20 text-muted-foreground">Status:</span>
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
                     alunoSelecionado.idade 
                       ? 'bg-green-100 text-green-800' 
-                      : 'bg-gray-100 text-gray-800'
+                      : 'bg-muted text-foreground'
                   }`}>
                     {alunoSelecionado.idade ? 'Ativo' : 'Inativo'}
                   </span>

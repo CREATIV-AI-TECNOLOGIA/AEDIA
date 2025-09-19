@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Mic, MicOff, Send, Loader2, Settings, Brain, Copy, Trash2, History, X, Plus, BarChart3, Zap, TrendingDown, Activity, Globe } from 'lucide-react';
+import { Loader2, Brain, Copy, Trash2, History, X, Plus, BarChart3, Zap, TrendingDown, Activity } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import rehypeSanitize from 'rehype-sanitize';
@@ -17,6 +17,7 @@ import PersonaManager from '../components/PersonaManager';
 import { costOptimizedChatService, CostOptimizedResponse } from '../services/costOptimizedChatService';
 
 import TokenUsagePanel from '../components/TokenUsagePanel';
+import { PromptInputBox } from '@/components/ui/ai-prompt-box';
 import EnvDebug from '../components/EnvDebug';
 
 import WebSearchIndicator from '../components/WebSearchIndicator';
@@ -33,6 +34,7 @@ interface Message {
     sources?: string[];
     error?: string;
   };
+
 }
 
 const Chat: React.FC = () => {
@@ -183,10 +185,7 @@ const Chat: React.FC = () => {
   };
 
   // Handler para input com capitalização automática
-  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const value = e.target.value;
-    
-    // Se é o primeiro caractere ou após um ponto/quebra de linha, capitalizar
+  const applyInputValue = (value: string) => {
     if (value.length === 1 || (value.length > 1 && /[.\n]\s*$/.test(value.slice(0, -1)))) {
       setInputValue(capitalizeFirstLetter(value));
     } else {
@@ -451,12 +450,13 @@ const Chat: React.FC = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const handleSubmit = async () => {
-    if (!inputValue.trim() || isLoading || !user?.id || !professorId) return;
+  const handleSubmit = async (overrideMessage?: string) => {
+    const messageText = (overrideMessage ?? inputValue).trim();
+    if (!messageText || isLoading || !user?.id || !professorId) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: inputValue,
+      text: messageText,
       sender: 'user',
       timestamp: new Date()
     };
@@ -465,23 +465,21 @@ const Chat: React.FC = () => {
     setInputValue('');
     setIsLoading(true);
     setIsThinking(true);
-    
-    // --- LÓGICA DE DETECÇÃO AUTOMÁTICA DE BUSCA WEB ---
-    const searchKeywords = ['pesquise', 'pesquisar', 'notícias', 'cotação', 'valor do', 'preço de', 'em tempo real', 'qual é', 'quem é', 'o que é'];
-    const lowerCaseInput = inputValue.toLowerCase();
+
+    const searchKeywords = ['pesquise', 'pesquisar', 'not�cias', 'cota��o', 'valor do', 'pre�o de', 'em tempo real', 'qual �', 'quem �', 'o que �'];
+    const lowerCaseInput = messageText.toLowerCase();
     const autoEnableWebSearch = searchKeywords.some(keyword => lowerCaseInput.includes(keyword));
     const finalWebSearchEnabled = webSearchEnabled || autoEnableWebSearch;
-    
+
     if (finalWebSearchEnabled) {
       setIsSearchingWeb(true);
-      console.log(`🌐 Busca web ativada (Automático: ${autoEnableWebSearch}, Manual: ${webSearchEnabled})`);
+      console.log(`??? Busca web ativada (Autom�tico: ${autoEnableWebSearch}, Manual: ${webSearchEnabled})`);
     }
-    // --------------------------------------------------
 
     try {
       let conversationId = currentConversationId;
       if (!conversationId) {
-        const title = inputValue.slice(0, 50) + (inputValue.length > 50 ? '...' : '');
+        const title = messageText.slice(0, 50) + (messageText.length > 50 ? '...' : '');
         const newConversation = await chatService.createConversation({
           professor_id: professorId,
           title
@@ -496,21 +494,20 @@ const Chat: React.FC = () => {
         sender: 'user',
         content: userMessage.text,
       });
-      
+
       const conversationHistory = messages.map(msg => ({
         role: msg.sender === 'user' ? 'user' as const : 'assistant' as const,
         content: msg.text
       }));
-      
-      console.log('🚀 Usando sistema otimizado de custos com professorId:', professorId);
-      console.log('🔄 Otimização habilitada:', optimizationEnabled);
-      
-      // CHAMADA DIRETA AO aiService, agora com a lógica de busca automática
+
+      console.log('?? Usando sistema otimizado de custos com professorId:', professorId);
+      console.log('?? Otimiza��o habilitada:', optimizationEnabled);
+
       const streamResponse = await aiService.generateResponseWithContextStream(
-        inputValue,
+        messageText,
         professorId.toString(),
         conversationHistory,
-        { 
+        {
           provider: 'openai',
           enableOptimization: optimizationEnabled,
           optimizationMode: optimizationMode,
@@ -519,16 +516,14 @@ const Chat: React.FC = () => {
         conversationId
       );
 
-      // Criar mensagem vazia para o assistente que será preenchida via streaming
       const assistantMessageId = (Date.now() + 1).toString();
       let assistantText = '';
-      // Se a busca web foi usada e há summary, use o summary do Tavily como resposta principal
       if (streamResponse.webSearch?.used && streamResponse.webSearch?.summary) {
         assistantText = streamResponse.webSearch.summary;
       }
       const assistantMessage: Message = {
         id: assistantMessageId,
-        text: assistantText, // já inicia com o summary se houver
+        text: assistantText,
         sender: 'assistant',
         timestamp: new Date(),
         model: streamResponse.model,
@@ -545,41 +540,36 @@ const Chat: React.FC = () => {
       setIsThinking(false);
       setIsSearchingWeb(false);
 
-      // Capturar dados de otimização
       if (streamResponse.optimization) {
         setLastOptimization(streamResponse.optimization);
       }
 
-      // Processar o stream
       const reader = streamResponse.stream.getReader();
       let fullContent = '';
 
       try {
         while (true) {
           const { done, value } = await reader.read();
-          
+
           if (done) {
-            console.log('✅ Streaming concluído no frontend');
+            console.log('? Streaming conclu�do no frontend');
             setStreamingMessageId(null);
             setIsThinking(false);
-            setIsSearchingWeb(false); // Parar indicador de busca web
+            setIsSearchingWeb(false);
             break;
           }
 
           fullContent += value;
-          
-          // Atualizar a mensagem em tempo real
-          setMessages(prev => prev.map(msg => 
-            msg.id === assistantMessageId 
+
+          setMessages(prev => prev.map(msg =>
+            msg.id === assistantMessageId
               ? { ...msg, text: assistantText ? assistantText : fullContent }
               : msg
           ));
 
-          // Scroll automático durante o streaming
           setTimeout(() => scrollToBottom(), 50);
         }
 
-        // Salvar resposta completa da IA no banco
         await chatService.addMessage({
           conversation_id: conversationId,
           sender: 'assistant',
@@ -588,10 +578,8 @@ const Chat: React.FC = () => {
           persona: streamResponse.persona
         });
 
-        // Recarregar tokens da sessão após a resposta
         setTimeout(() => loadSessionTokens(), 1000);
 
-        // Manter foco no input após resposta da IA
         setTimeout(() => {
           if (chatInputRef.current) {
             chatInputRef.current.focus();
@@ -599,14 +587,13 @@ const Chat: React.FC = () => {
         }, 500);
 
       } catch (error) {
-        console.error('❌ Erro durante streaming:', error);
+        console.error('?? Erro durante streaming:', error);
         setStreamingMessageId(null);
         setIsThinking(false);
-        setIsSearchingWeb(false); // Parar indicador de busca web
-        
-        // Atualizar mensagem com erro
-        setMessages(prev => prev.map(msg => 
-          msg.id === assistantMessageId 
+        setIsSearchingWeb(false);
+
+        setMessages(prev => prev.map(msg =>
+          msg.id === assistantMessageId
             ? { ...msg, text: `Erro durante streaming: ${error instanceof Error ? error.message : 'Erro desconhecido'}` }
             : msg
         ));
@@ -615,10 +602,10 @@ const Chat: React.FC = () => {
       }
 
     } catch (error) {
-      console.error('❌ Erro ao gerar resposta:', error);
-      setIsThinking(false); // Esconder animação em caso de erro geral
-      setIsSearchingWeb(false); // Parar indicador de busca web
-      
+      console.error('?? Erro ao gerar resposta:', error);
+      setIsThinking(false);
+      setIsSearchingWeb(false);
+
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: `Desculpe, ocorreu um erro: ${error instanceof Error ? error.message : 'Erro desconhecido'}`,
@@ -627,8 +614,7 @@ const Chat: React.FC = () => {
       };
 
       setMessages(prev => [...prev, errorMessage]);
-      
-      // Manter foco no input mesmo em caso de erro
+
       setTimeout(() => {
         if (chatInputRef.current) {
           chatInputRef.current.focus();
@@ -636,16 +622,13 @@ const Chat: React.FC = () => {
       }, 300);
     } finally {
       setIsLoading(false);
-      setIsThinking(false); // Garantir que a animação seja removida no final
-      setIsSearchingWeb(false); // Parar indicador de busca web
+      setIsThinking(false);
+      setIsSearchingWeb(false);
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSubmit();
-    }
+  const handlePromptSend = (message: string) => {
+    handleSubmit(message);
   };
 
   const startListening = () => {
@@ -739,10 +722,8 @@ const Chat: React.FC = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-slate-50">
-        <div className="px-4 sm:px-6 lg:px-8 pt-6 pb-8">
-        {/* Card único que engloba todo o conteúdo do chat */}
-        <div className="bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg border-2 border-slate-200/70 ring-1 ring-white/50 hover:shadow-xl transition-all duration-300 min-h-[calc(100vh-8rem)] flex flex-col relative">
+      <div className="min-h-screen bg-slate-50 overflow-y-scroll">
+        <div className="px-4 sm:px-6 lg:px-8 pt-6 pb-8 min-h-[calc(100vh-8rem)] flex flex-col relative">
           {/* Botões no canto superior direito */}
           <div className="absolute top-4 right-4 z-20 flex items-center space-x-2">
           <button
@@ -771,84 +752,32 @@ const Chat: React.FC = () => {
         {/* Área de Mensagens */}
         {messages.length === 0 ? (
           <div className="h-full flex flex-col justify-start items-center px-4 pt-20">
-            <div className="max-w-2xl w-full text-center">
-              <h1 className="text-4xl font-normal text-gray-800 mb-2">
-                Bem vindo professor William!
+            <div className="max-w-3xl w-full text-center mx-auto">
+              <h1 className="text-5xl md:text-6xl font-normal text-gray-800 mb-3">
+                Bem vindo professor!
               </h1>
-              <p className="text-lg text-gray-600 mb-6">
+              <p className="text-xl md:text-2xl text-gray-600 mb-8">
                 Como posso te ajudar hoje?
               </p>
               
               {/* Caixa de Input Integrada */}
-              <div className="relative bg-white rounded-2xl border-2 border-gray-300 hover:border-gray-400 hover:shadow-xl hover:scale-[1.02] transition-all duration-300 w-full shadow-lg">
-                <textarea
-                  ref={inputRef}
+              <div className="w-full flex justify-center">
+                <PromptInputBox
                   value={inputValue}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
+                  onValueChange={applyInputValue}
+                  onSend={handlePromptSend}
+                  isLoading={isLoading}
                   placeholder="Envie uma mensagem"
-                  disabled={isLoading}
-                  className="w-full p-4 pr-20 resize-none border-0 bg-transparent focus:outline-none text-gray-800 placeholder-gray-400 h-[60px]"
-                  style={{ scrollbarWidth: 'none' }}
+                  onSettingsClick={() => setShowPersonaConfig(!showPersonaConfig)}
+                  webSearchEnabled={webSearchEnabled}
+                  onWebSearchToggle={() => setWebSearchEnabled(!webSearchEnabled)}
+                  isListening={isListening}
+                  onStartListening={startListening}
+                  onStopListening={stopListening}
+                  inputRef={inputRef}
                 />
-                
-                {/* Botões dentro da caixa de texto */}
-                <div className="absolute right-2 bottom-2 flex items-center space-x-2">
-                  {/* Botão de Configurações */}
-                  <button
-                    onClick={() => setShowPersonaConfig(!showPersonaConfig)}
-                    className="p-2 text-black hover:text-yellow-500 hover:bg-yellow-50 rounded-xl transition-all duration-200"
-                    title="Configurações"
-                  >
-                    <Settings className="w-4 h-4" />
-                  </button>
-                  
-                  
-                  {/* Botão de Voz */}
-                  <button
-                    onClick={isListening ? stopListening : startListening}
-                    className={`p-2 rounded-xl transition-all duration-200 ${
-                      isListening
-                        ? 'text-red-600 bg-red-100 hover:bg-red-200'
-                        : 'text-black hover:text-yellow-500 hover:bg-yellow-50'
-                    }`}
-                    title={isListening ? 'Parar gravação' : 'Gravação de voz'}
-                  >
-                    {isListening ? (
-                      <MicOff className="w-4 h-4" />
-                    ) : (
-                      <Mic className="w-4 h-4" />
-                    )}
-                  </button>
-                  
-                  {/* Botão de Pesquisa Web (Globo) */}
-                  <button
-                    onClick={() => setWebSearchEnabled(!webSearchEnabled)}
-                    className={`p-2 rounded-xl transition-all duration-200 ${
-                      webSearchEnabled
-                        ? 'text-white bg-blue-600 hover:bg-blue-700'
-                        : 'text-black hover:text-yellow-500 hover:bg-yellow-50'
-                    }`}
-                    title={`Pesquisa na Web: ${webSearchEnabled ? 'Ativada' : 'Desativada'}`}
-                  >
-                    <Globe className="w-4 h-4" />
-                  </button>
-                  
-                  {/* Botão de Enviar */}
-                  <button
-                    onClick={handleSubmit}
-                    disabled={isLoading || !inputValue.trim()}
-                    className="p-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
-                  >
-                    {isLoading ? (
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                    ) : (
-                      <Send className="w-4 h-4" />
-                    )}
-                  </button>
-                </div>
               </div>
-              
+
               {/* Indicador de Persona Ativa */}
               {activePersona && (
                 <div className="mt-3 text-center">
@@ -862,17 +791,17 @@ const Chat: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex flex-col overflow-hidden">
-            {/* Área de mensagens */}
-            <div className="flex-1 overflow-y-auto chat-scroll bg-white">
-              <div className="px-6 py-8 space-y-8">
-                {messages.map((message) => (
-                  <div
-                    key={message.id}
-                    className={`flex items-start gap-4 message-enter message-hover ${
-                      message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
-                    }`}
-                  >
+          <div className="flex-1 flex flex-col overflow-hidden max-w-3xl w-full mx-auto mt-16">
+             {/* Área de mensagens */}
+            <div className="flex-1 overflow-y-auto chat-scroll">
+               <div className="px-6 py-8 space-y-8">
+                 {messages.map((message) => (
+                   <div
+                     key={message.id}
+                     className={`flex items-start gap-4 message-enter message-hover ${
+                       message.sender === 'user' ? 'flex-row-reverse' : 'flex-row'
+                     }`}
+                   >
                     {/* Avatar - só para IA */}
                     {message.sender === 'assistant' && (
                       <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-blue-600 shadow-lg ring-2 ring-blue-100">
@@ -941,152 +870,48 @@ const Chat: React.FC = () => {
                   </div>
                 ))}
 
-                {/* Indicador de Busca Web */}
-                {isSearchingWeb && !streamingMessageId && (
-                  <div className="flex justify-center message-enter">
-                    <WebSearchIndicator isSearching={true} />
-                  </div>
-                )}
-
-                {/* Animação de Pensando */}
-                {isThinking && !isSearchingWeb && !streamingMessageId && (
-                  <div className="flex items-start gap-4 message-enter">
-                    {/* Avatar da IA */}
-                    <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center bg-blue-600 shadow-lg ring-2 ring-blue-100">
-                      <Brain className="w-6 h-6 text-white" />
-                    </div>
-
-                    {/* Mensagem de pensando */}
-                    <div className="flex-1 max-w-3xl text-left">
-                      {/* Nome */}
-                      <div className="flex items-center gap-3 mb-3">
-                        <span className="text-sm font-semibold text-gray-800">
-                          {activePersona?.name || 'Assistente'}
-                        </span>
-                        <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
-                          Digitando...
-                        </span>
-                      </div>
-
-                      {/* Animação de bolinhas */}
-                      <div className="mr-8">
-                        <div className="flex items-center space-x-1">
-                          <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-                          <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-                          <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                {/* Removidos: Indicador de Busca Web e Animação de Pensando */}
 
                 <div ref={messagesEndRef} />
               </div>
             </div>
 
             {/* Caixa de Input Fixa na parte inferior */}
-            <div className="bg-white p-6">
-              <div>
-                <div className="relative bg-white rounded-2xl border-2 border-gray-200 transition-all duration-200 shadow-lg">
-                  <textarea
-                    ref={chatInputRef}
-                    value={inputValue}
-                    onChange={handleInputChange}
-                    onKeyDown={handleKeyDown}
-                    placeholder="Digite sua mensagem..."
-                    disabled={isLoading}
-                    className="w-full p-5 pr-24 resize-none border-0 bg-transparent focus:outline-none text-gray-800 placeholder-gray-500 min-h-[64px] max-h-32 text-base"
-                    style={{ scrollbarWidth: 'none' }}
-                  />
-                  
-                  {/* Botões dentro da caixa de texto */}
-                  <div className="absolute right-3 bottom-3 flex items-center space-x-2">
-                    {/* Botão X para limpar texto - só aparece quando há texto */}
-                    {inputValue.trim().length > 0 && (
-                      <button
-                        onClick={() => setInputValue('')}
-                        className="p-2.5 text-black hover:text-yellow-500 hover:bg-yellow-50 rounded-xl transition-all duration-200"
-                        title="Limpar texto"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    )}
-                    
-                    {/* Botão de Configurações */}
-                    <button
-                      onClick={() => setShowPersonaConfig(!showPersonaConfig)}
-                      className="p-2.5 text-black hover:text-yellow-500 hover:bg-yellow-50 rounded-xl transition-all duration-200"
-                      title="Configurações"
-                    >
-                      <Settings className="w-4 h-4" />
-                    </button>
-                    
-                    
-                    {/* Botão de Voz */}
-                    <button
-                      onClick={isListening ? stopListening : startListening}
-                      className={`p-2.5 rounded-xl transition-all duration-200 ${
-                        isListening
-                          ? 'text-red-600 bg-red-100 hover:bg-red-200'
-                          : 'text-black hover:text-yellow-500 hover:bg-yellow-50'
-                      }`}
-                      title={isListening ? 'Parar gravação' : 'Gravação de voz'}
-                    >
-                      {isListening ? (
-                        <MicOff className="w-4 h-4" />
-                      ) : (
-                        <Mic className="w-4 h-4" />
-                      )}
-                    </button>
-                    
-                    {/* Botão de Pesquisa Web (Globo) */}
-                    <button
-                      onClick={() => setWebSearchEnabled(!webSearchEnabled)}
-                      className={`p-2.5 rounded-xl transition-all duration-200 ${
-                        webSearchEnabled
-                          ? 'text-white bg-blue-600 hover:bg-blue-700'
-                          : 'text-black hover:text-yellow-500 hover:bg-yellow-50'
-                      }`}
-                      title={`Pesquisa na Web: ${webSearchEnabled ? 'Ativada' : 'Desativada'}`}
-                    >
-                      <Globe className="w-4 h-4" />
-                    </button>
-                    
-                    {/* Botão de Enviar */}
-                    <button
-                      onClick={handleSubmit}
-                      disabled={isLoading || !inputValue.trim()}
-                      className="p-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-md hover:shadow-lg"
-                    >
-                      {isLoading ? (
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <Send className="w-4 h-4" />
-                      )}
-                    </button>
-                  </div>
-                </div>
-              </div>
+            <div className="p-6 bg-white rounded-b-2xl">
+              <PromptInputBox
+                value={inputValue}
+                onValueChange={applyInputValue}
+                onSend={handlePromptSend}
+                isLoading={isLoading}
+                placeholder="Digite sua mensagem..."
+                onSettingsClick={() => setShowPersonaConfig(!showPersonaConfig)}
+                webSearchEnabled={webSearchEnabled}
+                onWebSearchToggle={() => setWebSearchEnabled(!webSearchEnabled)}
+                isListening={isListening}
+                onStartListening={startListening}
+                onStopListening={stopListening}
+                inputRef={chatInputRef}
+              />
             </div>
           </div>
         )}
-      </div>
 
-      {/* Painel Lateral de Histórico */}
-      {showHistoryPanel && (
-        <div className="w-80 card-standard border-l border-gray-200 flex flex-col ml-4">
-          {/* Header do painel */}
-          <div className="p-4 border-b border-gray-200">
-            <div className="flex items-center justify-between mb-3">
-              <h3 className="text-lg font-semibold text-gray-800">
-                Histórico ({chatHistories.length})
-              </h3>
-              <button
-                onClick={() => setShowHistoryPanel(false)}
-                className="p-2 text-black hover:text-yellow-500 hover:bg-yellow-50 rounded-xl transition-all duration-200"
-                title="Fechar"
-              >
-                <X className="w-4 h-4" />
+      {/* Painel Lateral de Histórico com Animação */}
+      <div className={`fixed right-0 top-16 w-80 bg-white shadow-2xl border-l border-gray-200 z-50 transform transition-transform duration-300 ease-in-out ${
+        showHistoryPanel ? 'translate-x-0' : 'translate-x-full'
+      } flex flex-col h-[calc(100vh-4rem)]`}>
+        {/* Header do painel */}
+        <div className="p-4 border-b border-gray-200">
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-lg font-semibold text-gray-800">
+              Histórico ({chatHistories.length})
+            </h3>
+            <button
+              onClick={() => setShowHistoryPanel(false)}
+              className="p-2 text-black hover:text-yellow-500 hover:bg-yellow-50 rounded-xl transition-all duration-200"
+              title="Fechar"
+            >
+              <X className="w-4 h-4" />
               </button>
             </div>
             
@@ -1153,7 +978,6 @@ const Chat: React.FC = () => {
             )}
           </div>
         </div>
-      )}
 
           {/* Token Usage Panel */}
           {professorId && (

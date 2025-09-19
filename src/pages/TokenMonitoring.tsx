@@ -253,37 +253,38 @@ const TokenMonitoring: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
           <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
-          <p className="text-gray-600">Carregando dados de monitoramento...</p>
+          <p className="text-muted-foreground">Carregando dados de monitoramento...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-background">
       {/* Header */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="bg-card border-b border-border">
+        <div className="page-center px-4 sm:px-6 lg:px-8">
+          <div className="standard-page-card w-full">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => navigate('/chat')}
-                className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-2 text-muted-foreground hover:text-foreground hover:bg-muted rounded-lg transition-colors"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
               <div className="flex items-center space-x-3">
-                <div className="p-2 bg-blue-100 rounded-lg">
-                  <BarChart3 className="w-6 h-6 text-blue-600" />
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <BarChart3 className="w-6 h-6 text-primary" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-semibold text-gray-900">
+                  <h1 className="text-xl font-semibold text-foreground">
                     Monitoramento Detalhado de Tokens
                   </h1>
-                  <p className="text-sm text-gray-500">
+                  <p className="text-sm text-muted-foreground">
                     Análise completa do uso de IA e custos
                   </p>
                 </div>
@@ -295,7 +296,7 @@ const TokenMonitoring: React.FC = () => {
               <select
                 value={selectedPeriod}
                 onChange={(e) => setSelectedPeriod(e.target.value as any)}
-                className="px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="px-3 py-2 border border-border rounded-lg text-sm bg-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
               >
                 <option value="7d">Últimos 7 dias</option>
                 <option value="30d">Últimos 30 dias</option>
@@ -313,19 +314,21 @@ const TokenMonitoring: React.FC = () => {
 
               <button
                 onClick={loadTokenData}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors flex items-center space-x-2"
+                className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors flex items-center space-x-2"
               >
                 <RefreshCw className="w-4 h-4" />
                 <span>Atualizar</span>
               </button>
             </div>
           </div>
+          </div>
         </div>
       </div>
 
       {/* Tabs */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="bg-card border-b border-border">
+        <div className="page-center px-4 sm:px-6 lg:px-8">
+          <div className="standard-page-card w-full">
           <nav className="flex space-x-8">
             {[
               { id: 'overview', label: 'Visão Geral', icon: BarChart3 },
@@ -339,8 +342,8 @@ const TokenMonitoring: React.FC = () => {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center space-x-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
                   activeTab === tab.id
-                    ? 'border-blue-500 text-blue-600'
-                    : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                    ? 'border-primary text-primary'
+                    : 'border-transparent text-muted-foreground hover:text-foreground/80 hover:border-border'
                 }`}
               >
                 <tab.icon className="w-4 h-4" />
@@ -348,20 +351,22 @@ const TokenMonitoring: React.FC = () => {
               </button>
             ))}
           </nav>
+          </div>
         </div>
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="page-center px-4 sm:px-6 lg:px-8 py-8">
+        <div className="standard-page-card w-full">
         {activeTab === 'overview' && (
           <div className="space-y-8">
             {/* Resumo Geral */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+              <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total de Conversas</p>
-                    <p className="text-2xl font-bold text-gray-900">
+                    <p className="text-sm font-medium text-muted-foreground">Total de Conversas</p>
+                    <p className="text-2xl font-bold text-foreground">
                       {totalStats.totalConversations.toLocaleString()}
                     </p>
                   </div>
@@ -369,11 +374,11 @@ const TokenMonitoring: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+              <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total de Mensagens</p>
-                    <p className="text-2xl font-bold text-gray-900">
+                    <p className="text-sm font-medium text-muted-foreground">Total de Mensagens</p>
+                    <p className="text-2xl font-bold text-foreground">
                       {totalStats.totalMessages.toLocaleString()}
                     </p>
                   </div>
@@ -381,14 +386,14 @@ const TokenMonitoring: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+              <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Total de Tokens</p>
-                    <p className="text-2xl font-bold text-gray-900">
+                    <p className="text-sm font-medium text-muted-foreground">Total de Tokens</p>
+                    <p className="text-2xl font-bold text-foreground">
                       {(totalStats.totalInputTokens + totalStats.totalOutputTokens).toLocaleString()}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                       {totalStats.totalInputTokens.toLocaleString()} entrada + {totalStats.totalOutputTokens.toLocaleString()} saída
                     </p>
                   </div>
@@ -396,14 +401,14 @@ const TokenMonitoring: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+              <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm font-medium text-gray-600">Custo Total</p>
-                    <p className="text-2xl font-bold text-gray-900">
+                    <p className="text-sm font-medium text-muted-foreground">Custo Total</p>
+                    <p className="text-2xl font-bold text-foreground">
                       {tokenService.formatCostUSD(totalStats.totalCost)}
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-muted-foreground">
                       {tokenService.formatCostBRL(totalStats.totalCost)}
                     </p>
                   </div>
@@ -414,17 +419,17 @@ const TokenMonitoring: React.FC = () => {
 
             {/* Métricas Avançadas */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Custo Médio</h3>
+              <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
+                <h3 className="text-lg font-medium text-foreground mb-4">Custo Médio</h3>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Por Mensagem</span>
+                    <span className="text-muted-foreground">Por Mensagem</span>
                     <span className="font-medium">
                       {tokenService.formatCostUSD(totalStats.averageCostPerMessage)}
                     </span>
                   </div>
                   <div className="flex justify-between items-center">
-                    <span className="text-gray-600">Por Conversa</span>
+                    <span className="text-muted-foreground">Por Conversa</span>
                     <span className="font-medium">
                       {tokenService.formatCostUSD(totalStats.averageCostPerConversation)}
                     </span>
@@ -432,8 +437,8 @@ const TokenMonitoring: React.FC = () => {
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900 mb-4">Distribuição de Tokens</h3>
+              <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
+                <h3 className="text-lg font-medium text-foreground mb-4">Distribuição de Tokens</h3>
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-blue-600">Tokens de Entrada</span>
@@ -447,7 +452,7 @@ const TokenMonitoring: React.FC = () => {
                       {totalStats.totalOutputTokens.toLocaleString()}
                     </span>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div className="w-full bg-muted rounded-full h-2">
                     <div 
                       className="bg-blue-600 h-2 rounded-l-full" 
                       style={{ 
@@ -461,8 +466,8 @@ const TokenMonitoring: React.FC = () => {
 
             {/* Gráfico de Uso Diário */}
             {dailyStats.length > 0 && (
-              <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
-                <h3 className="text-lg font-medium text-gray-900 mb-6">Uso Diário</h3>
+              <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
+                <h3 className="text-lg font-medium text-foreground mb-6">Uso Diário</h3>
                 <div className="grid grid-cols-7 gap-2">
                   {dailyStats.slice(-7).map((day, index) => {
                     const maxCost = Math.max(...dailyStats.map(d => d.cost));
@@ -477,14 +482,14 @@ const TokenMonitoring: React.FC = () => {
                             title={`${new Date(day.date).toLocaleDateString('pt-BR')}: ${tokenService.formatCostUSD(day.cost)}`}
                           />
                         </div>
-                        <p className="text-xs text-gray-600">
+                        <p className="text-xs text-muted-foreground">
                           {new Date(day.date).toLocaleDateString('pt-BR', { 
                             day: '2-digit', 
                             month: '2-digit' 
                           })}
                         </p>
-                        <p className="text-xs text-gray-500">{day.conversations} conv</p>
-                        <p className="text-xs text-gray-500">{day.messages} msg</p>
+                        <p className="text-xs text-muted-foreground">{day.conversations} conv</p>
+                        <p className="text-xs text-muted-foreground">{day.messages} msg</p>
                       </div>
                     );
                   })}
@@ -495,44 +500,44 @@ const TokenMonitoring: React.FC = () => {
         )}
 
         {activeTab === 'conversations' && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="p-6 border-b border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900">Análise por Conversa</h3>
-              <p className="text-sm text-gray-500">Detalhamento de tokens e custos por conversa</p>
+          <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+            <div className="p-6 border-b border-border">
+              <h3 className="text-lg font-medium text-foreground">Análise por Conversa</h3>
+              <p className="text-sm text-muted-foreground">Detalhamento de tokens e custos por conversa</p>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-muted">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Conversa
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Mensagens
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Tokens Entrada
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Tokens Saída
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Custo Total
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Data
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-card divide-y divide-border">
                   {conversationTokens.map((conv) => (
-                    <tr key={conv.conversation_id} className="hover:bg-gray-50">
+                    <tr key={conv.conversation_id} className="hover:bg-muted/50">
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900 max-w-xs truncate">
+                        <div className="text-sm font-medium text-foreground max-w-xs truncate">
                           {conv.title}
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                         {conv.message_count}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-medium">
@@ -544,7 +549,7 @@ const TokenMonitoring: React.FC = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-orange-600 font-medium">
                         {tokenService.formatCostUSD(conv.total_cost)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                         {conv.created_at.toLocaleDateString('pt-BR')}
                       </td>
                     </tr>
@@ -558,37 +563,37 @@ const TokenMonitoring: React.FC = () => {
         {activeTab === 'messages' && (
           <div className="space-y-6">
             {conversationTokens.map((conv) => (
-              <div key={conv.conversation_id} className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <div className="p-6 border-b border-gray-200">
-                  <h3 className="text-lg font-medium text-gray-900">{conv.title}</h3>
-                  <p className="text-sm text-gray-500">
+              <div key={conv.conversation_id} className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+                <div className="p-6 border-b border-border">
+                  <h3 className="text-lg font-medium text-foreground">{conv.title}</h3>
+                  <p className="text-sm text-muted-foreground">
                     {conv.message_count} mensagens • {tokenService.formatCostUSD(conv.total_cost)}
                   </p>
                 </div>
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50">
+                    <thead className="bg-muted">
                       <tr>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                           Tipo
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                           Conteúdo
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                           Tokens
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                           Custo
                         </th>
-                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                        <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                           Horário
                         </th>
                       </tr>
                     </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
+                    <tbody className="bg-card divide-y divide-border">
                       {conv.messages.map((msg) => (
-                        <tr key={msg.id} className="hover:bg-gray-50">
+                        <tr key={msg.id} className="hover:bg-muted/50">
                           <td className="px-6 py-4 whitespace-nowrap">
                             <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                               msg.sender === 'user' 
@@ -599,7 +604,7 @@ const TokenMonitoring: React.FC = () => {
                             </span>
                           </td>
                           <td className="px-6 py-4">
-                            <div className="text-sm text-gray-900 max-w-md truncate">
+                            <div className="text-sm text-foreground max-w-md truncate">
                               {msg.content}
                             </div>
                           </td>
@@ -617,7 +622,7 @@ const TokenMonitoring: React.FC = () => {
                           <td className="px-6 py-4 whitespace-nowrap text-sm text-orange-600 font-medium">
                             {tokenService.formatCostUSD(msg.cost)}
                           </td>
-                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                             {msg.created_at.toLocaleTimeString('pt-BR', {
                               hour: '2-digit',
                               minute: '2-digit'
@@ -634,45 +639,45 @@ const TokenMonitoring: React.FC = () => {
         )}
 
         {activeTab === 'daily' && (
-          <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-            <div className="p-6 border-b border-gray-200">
-              <h3 className="text-lg font-medium text-gray-900">Estatísticas Diárias</h3>
-              <p className="text-sm text-gray-500">Resumo de uso por dia</p>
+          <div className="bg-card rounded-xl shadow-sm border border-border overflow-hidden">
+            <div className="p-6 border-b border-border">
+              <h3 className="text-lg font-medium text-foreground">Estatísticas Diárias</h3>
+              <p className="text-sm text-muted-foreground">Resumo de uso por dia</p>
             </div>
             <div className="overflow-x-auto">
               <table className="w-full">
-                <thead className="bg-gray-50">
+                <thead className="bg-muted">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Data
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Conversas
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Mensagens
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Tokens Entrada
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Tokens Saída
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">
                       Custo Total
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-card divide-y divide-border">
                   {dailyStats.map((day) => (
-                    <tr key={day.date} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                    <tr key={day.date} className="hover:bg-muted/50">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground">
                         {new Date(day.date).toLocaleDateString('pt-BR')}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                         {day.conversations}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground">
                         {day.messages}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-blue-600 font-medium">
@@ -694,11 +699,11 @@ const TokenMonitoring: React.FC = () => {
 
         {activeTab === 'context' && (
           <div className="space-y-6">
-            <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+            <div className="bg-card p-6 rounded-xl shadow-sm border border-border">
               <div className="flex items-center justify-between mb-6">
                 <div>
-                  <h3 className="text-lg font-medium text-gray-900">Análise de Contexto</h3>
-                  <p className="text-sm text-gray-500">
+                  <h3 className="text-lg font-medium text-foreground">Análise de Contexto</h3>
+                  <p className="text-sm text-muted-foreground">
                     Detalhamento do que a IA considera além da sua mensagem
                   </p>
                 </div>
@@ -766,9 +771,10 @@ const TokenMonitoring: React.FC = () => {
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   );
 };
 
-export default TokenMonitoring; 
+export default TokenMonitoring;

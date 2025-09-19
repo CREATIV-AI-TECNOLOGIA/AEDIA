@@ -203,7 +203,8 @@ const ConfiguracoesIA: React.FC = memo(() => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 py-4">
+      <div className="page-center px-4 py-4">
+        <div className="standard-page-card w-full">
         {/* Header */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-4 mt-6">
           <div className="flex items-center justify-between mb-3">
@@ -216,7 +217,7 @@ const ConfiguracoesIA: React.FC = memo(() => {
                 Voltar
               </button>
               <div className="h-5 w-px bg-gray-300"></div>
-              <h1 className="text-xl font-bold text-gray-800">Configurações da IA</h1>
+              <h1 className="text-xl font-bold text-foreground">Configurações da IA</h1>
             </div>
             <div className="flex items-center space-x-3">
               <button
@@ -234,7 +235,7 @@ const ConfiguracoesIA: React.FC = memo(() => {
             </div>
           </div>
           
-          <p className="text-sm text-gray-600">Personalize como a IA criará seus planos de aula</p>
+          <p className="text-sm text-muted-foreground">Personalize como a IA criará seus planos de aula</p>
         </div>
 
         {/* Informação sobre persistência */}
@@ -257,15 +258,15 @@ const ConfiguracoesIA: React.FC = memo(() => {
             <div className="flex items-center space-x-2 mb-3">
               <BookOpen className="h-4 w-4 text-green-600" />
               <div>
-                <h2 className="text-base font-semibold text-gray-800">Abordagem Pedagógica</h2>
-                <p className="text-xs text-gray-600">Defina sua metodologia e estilo de ensino preferidos</p>
+                <h2 className="text-base font-semibold text-foreground">Abordagem Pedagógica</h2>
+                <p className="text-xs text-muted-foreground">Defina sua metodologia e estilo de ensino preferidos</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               {/* Metodologia */}
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-foreground/90 mb-1">
                   Metodologia Preferida
                 </label>
                 <select
@@ -284,7 +285,7 @@ const ConfiguracoesIA: React.FC = memo(() => {
 
               {/* Estilo de Ensino */}
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-foreground/90 mb-1">
                   Estilo de Ensino
                 </label>
                 <select
@@ -308,15 +309,15 @@ const ConfiguracoesIA: React.FC = memo(() => {
             <div className="flex items-center space-x-2 mb-3">
               <Palette className="h-4 w-4 text-purple-600" />
               <div>
-                <h2 className="text-base font-semibold text-gray-800">Formato e Detalhamento</h2>
-                <p className="text-xs text-gray-600">Configure como os planos devem ser estruturados</p>
+                <h2 className="text-base font-semibold text-foreground">Formato e Detalhamento</h2>
+                <p className="text-xs text-muted-foreground">Configure como os planos devem ser estruturados</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
               {/* Nível de Detalhamento */}
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-foreground/90 mb-1">
                   Nível de Detalhamento
                 </label>
                 <div className="space-y-1">
@@ -341,7 +342,7 @@ const ConfiguracoesIA: React.FC = memo(() => {
 
               {/* Formato Preferido */}
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-foreground/90 mb-1">
                   Formato Preferido
                 </label>
                 <div className="space-y-1">
@@ -366,7 +367,7 @@ const ConfiguracoesIA: React.FC = memo(() => {
 
               {/* Nível de Linguagem */}
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-foreground/90 mb-1">
                   Nível de Linguagem
                 </label>
                 <div className="space-y-1">
@@ -396,8 +397,8 @@ const ConfiguracoesIA: React.FC = memo(() => {
             <div className="flex items-center space-x-2 mb-3">
               <CheckCircle className="h-4 w-4 text-blue-600" />
               <div>
-                <h2 className="text-base font-semibold text-gray-800">Elementos a Incluir</h2>
-                <p className="text-xs text-gray-600">Escolha quais componentes devem estar presentes nos planos</p>
+                <h2 className="text-base font-semibold text-foreground">Elementos a Incluir</h2>
+                <p className="text-xs text-muted-foreground">Escolha quais componentes devem estar presentes nos planos</p>
               </div>
             </div>
 
@@ -417,8 +418,8 @@ const ConfiguracoesIA: React.FC = memo(() => {
                     className="mt-0.5 text-indigo-600 focus:ring-indigo-500"
                   />
                   <div>
-                    <div className="text-sm font-medium text-gray-800">{item.label}</div>
-                    <div className="text-xs text-gray-600">{item.description}</div>
+                    <div className="text-sm font-medium text-foreground">{item.label}</div>
+                    <div className="text-xs text-muted-foreground">{item.description}</div>
                   </div>
                 </label>
               ))}
@@ -430,8 +431,8 @@ const ConfiguracoesIA: React.FC = memo(() => {
             <div className="flex items-center space-x-2 mb-3">
               <Users className="h-4 w-4 text-orange-600" />
               <div>
-                <h2 className="text-base font-semibold text-gray-800">Considerações Especiais</h2>
-                <p className="text-xs text-gray-600">Aspectos importantes para adaptar os planos</p>
+                <h2 className="text-base font-semibold text-foreground">Considerações Especiais</h2>
+                <p className="text-xs text-muted-foreground">Aspectos importantes para adaptar os planos</p>
               </div>
             </div>
 
@@ -449,8 +450,8 @@ const ConfiguracoesIA: React.FC = memo(() => {
                     className="mt-0.5 text-indigo-600 focus:ring-indigo-500"
                   />
                   <div>
-                    <div className="text-sm font-medium text-gray-800">{item.label}</div>
-                    <div className="text-xs text-gray-600">{item.description}</div>
+                    <div className="text-sm font-medium text-foreground">{item.label}</div>
+                    <div className="text-xs text-muted-foreground">{item.description}</div>
                   </div>
                 </label>
               ))}
@@ -462,14 +463,14 @@ const ConfiguracoesIA: React.FC = memo(() => {
             <div className="flex items-center space-x-2 mb-3">
               <Settings className="h-4 w-4 text-indigo-600" />
               <div>
-                <h2 className="text-base font-semibold text-gray-800">Configurações Específicas</h2>
-                <p className="text-xs text-gray-600">Informações importantes para personalizar os planos</p>
+                <h2 className="text-base font-semibold text-foreground">Configurações Específicas</h2>
+                <p className="text-xs text-muted-foreground">Informações importantes para personalizar os planos</p>
               </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-foreground/90 mb-1">
                   Preferências de Avaliação
                 </label>
                 <input
@@ -482,7 +483,7 @@ const ConfiguracoesIA: React.FC = memo(() => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-foreground/90 mb-1">
                   Recursos Disponíveis
                 </label>
                 <input
@@ -495,7 +496,7 @@ const ConfiguracoesIA: React.FC = memo(() => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-foreground/90 mb-1">
                   Efemérides do Período
                 </label>
                 <input
@@ -508,7 +509,7 @@ const ConfiguracoesIA: React.FC = memo(() => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-foreground/90 mb-1">
                   Eventos Escolares
                 </label>
                 <input
@@ -527,14 +528,14 @@ const ConfiguracoesIA: React.FC = memo(() => {
             <div className="flex items-center space-x-2 mb-3">
               <MessageSquare className="h-4 w-4 text-teal-600" />
               <div>
-                <h2 className="text-base font-semibold text-gray-800">Observações Personalizadas</h2>
-                <p className="text-xs text-gray-600">Informações específicas sobre seu contexto de ensino</p>
+                <h2 className="text-base font-semibold text-foreground">Observações Personalizadas</h2>
+                <p className="text-xs text-muted-foreground">Informações específicas sobre seu contexto de ensino</p>
               </div>
             </div>
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-foreground/90 mb-1">
                   Contexto da Escola
                 </label>
                 <textarea
@@ -547,7 +548,7 @@ const ConfiguracoesIA: React.FC = memo(() => {
               </div>
 
               <div>
-                <label className="block text-xs font-medium text-gray-700 mb-1">
+                <label className="block text-xs font-medium text-foreground/90 mb-1">
                   Observações Especiais
                 </label>
                 <textarea
@@ -565,7 +566,7 @@ const ConfiguracoesIA: React.FC = memo(() => {
         {/* Footer com informação e botão salvar */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 mt-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-2 text-xs text-gray-600">
+            <div className="flex items-center space-x-2 text-xs text-muted-foreground">
               <Sparkles className="h-3 w-3" />
               <span>Suas configurações serão aplicadas automaticamente aos próximos planos</span>
             </div>
@@ -584,6 +585,7 @@ const ConfiguracoesIA: React.FC = memo(() => {
             </button>
           </div>
         </div>
+        </div>
       </div>
     </div>
   );
@@ -591,4 +593,4 @@ const ConfiguracoesIA: React.FC = memo(() => {
 
 ConfiguracoesIA.displayName = 'ConfiguracoesIA';
 
-export default ConfiguracoesIA; 
+export default ConfiguracoesIA;

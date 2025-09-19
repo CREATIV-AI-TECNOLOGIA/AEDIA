@@ -87,12 +87,12 @@ const AvaliacaoCard = memo(({
   }, [onExcluir, avaliacao.id]);
 
   return (
-    <Card className="flex flex-col justify-between hover:shadow-xl transition-shadow duration-300">
+    <Card className="group flex flex-col justify-between transition-all duration-300 transform hover:-translate-y-2 hover:shadow-2xl">
       <div>
         <div className="flex justify-between items-start mb-3">
           <div className="flex items-center space-x-2">
             {getTipoIcon(avaliacao.tipo)}
-            <span className="text-xs font-medium text-gray-500 uppercase tracking-wide">
+            <span className="text-xs font-medium text-foreground/60 uppercase tracking-wide">
               {getTipoLabel(avaliacao.tipo)}
             </span>
           </div>
@@ -108,17 +108,17 @@ const AvaliacaoCard = memo(({
             <div className="relative">
               <button
                 onClick={() => setShowMenu(!showMenu)}
-                className="p-1 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+                className="p-1 text-foreground/60 hover:text-primary hover:bg-primary/10 rounded-full transition-colors"
               >
                 <MoreVertical className="h-4 w-4" />
               </button>
               
               {showMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg z-50 border border-gray-200">
+                <div className="absolute right-0 mt-2 w-48 bg-card rounded-md shadow-lg z-50 border border-border/70">
                   <div className="py-1">
                     <button
                       onClick={handleVisualizar}
-                      className="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="flex items-center w-full px-4 py-2 text-sm text-foreground/80 hover:bg-muted"
                     >
                       <Eye className="h-4 w-4 mr-2" />
                       Ver Detalhes
@@ -126,7 +126,7 @@ const AvaliacaoCard = memo(({
 
                     <button
                       onClick={handleExcluir}
-                      className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50"
+                      className="flex items-center w-full px-4 py-2 text-sm text-red-600 hover:bg-red-500/10"
                     >
                       <Trash2 className="h-4 w-4 mr-2" />
                       Excluir
@@ -138,36 +138,36 @@ const AvaliacaoCard = memo(({
           </div>
         </div>
         
-        <h3 className="text-lg font-semibold text-gray-800 group-hover:text-indigo-600 transition-colors duration-200 mb-2">
+        <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors duration-200 mb-2">
           {avaliacao.titulo}
         </h3>
-        
-        <p className="text-sm text-gray-600 mb-4 line-clamp-3">{avaliacao.descricao}</p>
-        
-        <div className="grid grid-cols-2 gap-3 text-sm text-gray-600">
+
+        <p className="text-sm text-foreground/70 mb-4 line-clamp-3">{avaliacao.descricao}</p>
+
+        <div className="grid grid-cols-2 gap-3 text-sm text-foreground/70">
           <div className="flex items-center">
-            <BookOpen className="w-4 h-4 mr-2 text-gray-400" />
+            <BookOpen className="w-4 h-4 mr-2 text-foreground/50" />
             <span>{avaliacao.disciplinas?.nome || 'Disciplina não informada'}</span>
           </div>
           <div className="flex items-center">
-            <Users className="w-4 h-4 mr-2 text-gray-400" />
+            <Users className="w-4 h-4 mr-2 text-foreground/50" />
             <span>{avaliacao.turmas?.nome ? `${avaliacao.turmas.nome} - ${avaliacao.turmas.ano || ''}` : 'Turma não informada'}</span>
           </div>
           <div className="flex items-center">
-            <Star className="w-4 h-4 mr-2 text-gray-400" />
+            <Star className="w-4 h-4 mr-2 text-foreground/50" />
             <span>Nota: {avaliacao.nota_maxima}</span>
           </div>
           <div className="flex items-center">
-            <Award className="w-4 h-4 mr-2 text-gray-400" />
+            <Award className="w-4 h-4 mr-2 text-foreground/50" />
             <span>Peso: {avaliacao.peso}</span>
           </div>
         </div>
         
         {/* Código de Identificação */}
         {avaliacao.codigo_identificacao && (
-          <div className="mt-3 pt-3 border-t border-gray-100">
+          <div className="mt-3 pt-3 border-t border-border/60">
             <div className="flex items-center justify-between">
-              <div className="flex items-center text-xs text-gray-500">
+              <div className="flex items-center text-xs text-foreground/60">
                 <ClipboardCheck className="w-3 h-3 mr-1" />
                 <span>Código ID:</span>
               </div>
@@ -367,12 +367,12 @@ const Avaliacoes: React.FC<AvaliacoesProps> = ({
   const getTipoIcon = useCallback((tipo: string) => {
     const icons = {
       prova: <FileText className="w-4 h-4 text-red-500" />,
-      trabalho: <BookOpen className="w-4 h-4 text-blue-500" />,
+      trabalho: <BookOpen className="w-4 h-4 text-primary" />,
       projeto: <Star className="w-4 h-4 text-purple-500" />,
       atividade: <CheckCircle className="w-4 h-4 text-green-500" />,
       apresentacao: <Users className="w-4 h-4 text-orange-500" />
     };
-    return icons[tipo as keyof typeof icons] || <FileText className="w-4 h-4 text-gray-500" />;
+    return icons[tipo as keyof typeof icons] || <FileText className="w-4 h-4 text-foreground/50" />;
   }, []);
 
   const visualizarAvaliacao = useCallback((avaliacaoId: string) => {
@@ -443,13 +443,13 @@ const Avaliacoes: React.FC<AvaliacoesProps> = ({
         <div className="flex items-center gap-4">
           <button
             onClick={toggleFiltros}
-            className="inline-flex items-center px-3 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            className="inline-flex items-center px-3 py-2 border border-border/70 rounded-lg shadow-sm text-sm font-medium text-foreground bg-card hover:bg-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50"
           >
             <Filter className="h-4 w-4 mr-2" />
             Filtros
             <ChevronDown className={`ml-2 h-4 w-4 transition-transform ${showFiltros ? 'rotate-180' : ''}`} />
           </button>
-          
+
           {showFiltros && (
             <div className="flex items-center gap-3">
               <StatusSelect
@@ -498,7 +498,7 @@ const Avaliacoes: React.FC<AvaliacoesProps> = ({
               {filtrosAtivos && (
                 <button 
                   onClick={limparFiltros}
-                  className="text-sm px-3 py-1.5 bg-gray-100 text-gray-600 rounded-md hover:bg-gray-200 transition-colors"
+                  className="text-sm px-3 py-1.5 bg-muted text-foreground/70 rounded-md hover:bg-muted/70 transition-colors"
                 >
                   <X className="h-4 w-4" />
                 </button>
@@ -508,14 +508,14 @@ const Avaliacoes: React.FC<AvaliacoesProps> = ({
         </div>
         
         <div className="flex items-center gap-4">
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-foreground/70">
             {loading ? 'Carregando...' : `${getAvaliacoesFiltradas.length} ${getAvaliacoesFiltradas.length === 1 ? 'avaliação encontrada' : 'avaliações encontradas'}`}
           </span>
           <div className="flex gap-2">
             {isMobile && (
               <button
                 onClick={() => navigate('/correcao-mobile/escanear')}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
               >
                 <Camera className="h-5 w-5" />
                 Scanner
@@ -530,7 +530,7 @@ const Avaliacoes: React.FC<AvaliacoesProps> = ({
             </button>
             <button
               onClick={navegarParaNovaAvaliacao}
-              className="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 transition-colors"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-4 py-2 rounded-lg flex items-center gap-2 transition-colors shadow-md"
             >
               <PlusIcon className="h-5 w-5" />
               Nova Avaliação

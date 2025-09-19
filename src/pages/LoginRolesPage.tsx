@@ -189,10 +189,10 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
-      <div className="w-full max-w-5xl flex flex-col md:flex-row bg-white rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[90vh]">
+    <div className="min-h-screen bg-background flex flex-col items-center justify-center p-4 sm:p-6 lg:p-8">
+      <div className="w-full max-w-5xl flex flex-col md:flex-row bg-card rounded-3xl shadow-2xl overflow-hidden my-auto max-h-[90vh]">
         {/* Lado esquerdo - Usando link direto da imagem */}
-        <div className="w-full md:w-3/5 hidden md:flex items-center justify-center relative overflow-hidden bg-white">
+        <div className="w-full md:w-3/5 hidden md:flex items-center justify-center relative overflow-hidden bg-card">
           <img 
             src="https://i.imgur.com/qLA4tPr.png" // Usando o link direto para o arquivo .png do Imgur
             alt="Ilustração Login Esquerda" 
@@ -203,7 +203,7 @@ const LoginPage: React.FC = () => {
         </div>
         
         {/* Lado direito - Formulário de login com ilustração NO TOPO */}
-        <div className="w-full md:w-2/5 bg-white p-2 md:p-4 flex flex-col">
+        <div className="w-full md:w-2/5 bg-card p-2 md:p-4 flex flex-col">
           {/* Ilustração no topo da coluna direita */}
           <div className="mb-3 p-2 rounded-xl">
             <img 
@@ -215,16 +215,16 @@ const LoginPage: React.FC = () => {
           
           {/* Bloco de saudação */}
           <div className="mb-3 text-center mt-0 relative">
-            <h1 className="text-xl md:text-2xl font-bold text-blue-800 tracking-tight">
+            <h1 className="text-xl md:text-2xl font-bold text-primary tracking-tight">
               Olá Novamente!
             </h1>
-            <p className="mt-1 text-xs text-gray-600">
+            <p className="mt-1 text-xs text-muted-foreground">
               Bem-vindo(a) de volta! Sentimos sua falta!
             </p>
           </div>
 
           {error && (
-            <div className="mb-2 p-3 bg-red-100 border border-red-300 text-red-700 rounded-lg text-sm">
+            <div className="mb-2 p-3 bg-destructive/10 border border-destructive/30 text-destructive rounded-lg text-sm">
               {error}
             </div>
           )}
@@ -239,7 +239,7 @@ const LoginPage: React.FC = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="block w-full px-4 py-3 border border-gray-300 rounded-lg leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out text-sm"
+                className="block w-full px-4 py-3 border border-border rounded-lg leading-5 bg-input placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition duration-150 ease-in-out text-sm"
                 placeholder="Email"
               />
             </div>
@@ -254,18 +254,18 @@ const LoginPage: React.FC = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="block w-full px-4 py-3 border border-gray-300 rounded-lg leading-5 bg-gray-50 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-150 ease-in-out text-sm pr-10"
+                  className="block w-full px-4 py-3 border border-border rounded-lg leading-5 bg-input placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-ring transition duration-150 ease-in-out text-sm pr-10"
                   placeholder="Senha"
                 />
                 <div 
-                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-gray-400 hover:text-orange-500 transition-colors"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer text-muted-foreground hover:text-primary transition-colors"
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </div>
               </div>
               <div className="text-right mt-2">
-                <a href="#" className="text-xs font-medium text-orange-600 hover:text-orange-500 transition-colors">
+                <a href="#" className="text-xs font-medium text-primary hover:text-primary/90 transition-colors">
                   Recuperar Senha
                 </a>
               </div>
@@ -275,15 +275,15 @@ const LoginPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className={`w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] ${
+                className={`w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-primary-foreground transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] ${
                   loading 
-                    ? 'bg-blue-600 cursor-not-allowed' 
-                    : 'bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500'
+                    ? 'bg-primary cursor-not-allowed' 
+                    : 'bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary/50'
                 }`}
               >
                 {loading ? (
                   <div className="flex items-center">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-primary-foreground mr-2"></div>
                     Entrando...
                   </div>
                 ) : (
@@ -298,4 +298,4 @@ const LoginPage: React.FC = () => {
   );
 };
 
-export default LoginPage; 
+export default LoginPage;

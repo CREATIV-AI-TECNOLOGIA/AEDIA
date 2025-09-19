@@ -85,7 +85,7 @@ const VisualizarAvaliacao: React.FC = () => {
     return (
       <Layout>
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
         </div>
       </Layout>
     );
@@ -98,7 +98,7 @@ const VisualizarAvaliacao: React.FC = () => {
           <div className="text-red-600 text-lg mb-4">{erro}</div>
           <button
             onClick={handleVoltar}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
           >
             Voltar para Avaliações
           </button>
@@ -111,10 +111,10 @@ const VisualizarAvaliacao: React.FC = () => {
     return (
       <Layout>
         <div className="text-center py-12">
-          <div className="text-gray-600 text-lg mb-4">Avaliação não encontrada</div>
+          <div className="text-muted-foreground text-lg mb-4">Avaliação não encontrada</div>
           <button
             onClick={handleVoltar}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+            className="bg-primary text-primary-foreground px-4 py-2 rounded-lg hover:bg-primary/90"
           >
             Voltar para Avaliações
           </button>
@@ -151,9 +151,9 @@ const VisualizarAvaliacao: React.FC = () => {
           </div>
 
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="p-6 border-b border-gray-200">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">
+            <div className="bg-card rounded-lg shadow-sm border border-border">
+              <div className="p-6 border-b border-border">
+                <h3 className="text-lg font-semibold text-foreground mb-4">
                   Conteúdo da Avaliação
                 </h3>
                 

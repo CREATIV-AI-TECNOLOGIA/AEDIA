@@ -17,6 +17,7 @@ import {
   Zap
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+// Removido StandardPageCard para experiência de tela cheia
 
 
 
@@ -460,9 +461,32 @@ const Dashboard: React.FC = () => {
 
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-16">
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-200 space-y-6">
+    <div className="w-full h-full min-h-screen bg-slate-50">
+      <div className="w-full px-4 sm:px-6 lg:px-8 py-6 max-w-none">
+          {/* Header com informações do usuário */}
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                  Olá, {user?.user_metadata?.nome || user?.email?.split('@')[0] || 'Professor'}! 👋
+                </h1>
+                <p className="text-gray-600">
+                  {escolaAtiva ? `${escolaAtiva.nome}` : 'Carregando escola...'}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-gray-500">Hoje</p>
+                <p className="text-lg font-semibold text-gray-800">
+                  {new Date().toLocaleDateString('pt-BR', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </p>
+              </div>
+            </div>
+          </div>
 
         {/* Cards de Métricas - Layout mais compacto */}
         <div className="cards-grid cards-equal-height">
@@ -515,46 +539,7 @@ const Dashboard: React.FC = () => {
           />
         </div>
 
-        {/* Ações Rápidas */}
-        <div className="bg-white/85 backdrop-blur-sm rounded-3xl p-6 shadow-xl border border-slate-200/60 ring-1 ring-white/60 hover:shadow-2xl transition-all duration-300">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-lg font-bold text-gray-800 flex items-center">
-              <Zap className="w-5 h-5 mr-2 text-indigo-600" />
-              Ações Rápidas
-            </h3>
-            <span className="text-sm text-gray-500">Acesso direto</span>
-          </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <QuickActionButton
-              icon={Plus}
-              label="Nova Turma"
-              color="bg-gradient-to-r from-blue-500 to-indigo-600"
-              onClick={() => navigate('/turmas/criar')}
-            />
-            
-            <QuickActionButton
-              icon={BookOpen}
-              label="Plano de Aula"
-              color="bg-gradient-to-r from-green-500 to-emerald-600"
-              onClick={() => navigate('/planos-aula/criar')}
-            />
-            
-            <QuickActionButton
-              icon={Camera}
-              label="Correção Mobile"
-              color="bg-gradient-to-r from-purple-500 to-pink-600"
-              onClick={() => navigate('/correcao-mobile')}
-            />
-            
-            <QuickActionButton
-              icon={ClipboardList}
-              label="Avaliações"
-              color="bg-gradient-to-r from-orange-500 to-red-600"
-              onClick={() => navigate('/avaliacoes')}
-            />
-          </div>
-        </div>
+
 
         {/* Grid principal com duas colunas */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -657,7 +642,6 @@ const Dashboard: React.FC = () => {
               )}
             </div>
           </div>
-        </div>
         </div>
       </div>
     </div>

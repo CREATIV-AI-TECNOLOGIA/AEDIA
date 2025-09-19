@@ -63,13 +63,13 @@ export default function DefinirSenha() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-background py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-card p-8 rounded-lg shadow-lg">
         <div>
-          <h1 className="text-center text-3xl font-bold text-gray-900">
+          <h1 className="text-center text-3xl font-bold text-foreground">
             Definir Senha
           </h1>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center text-sm text-muted-foreground">
             Por favor, defina uma senha para sua conta
           </p>
         </div>
@@ -77,7 +77,7 @@ export default function DefinirSenha() {
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-foreground/90">
                 Nova Senha
               </label>
               <input
@@ -86,13 +86,13 @@ export default function DefinirSenha() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
-                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
+                className="mt-1 block w-full px-3 py-2 border border-border rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary"
                 placeholder="Digite sua nova senha"
               />
             </div>
 
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="confirmPassword" className="block text-sm font-medium text-foreground/90">
                 Confirmar Senha
               </label>
               <input
@@ -119,7 +119,7 @@ export default function DefinirSenha() {
             className={`
               w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white
               ${loading 
-                ? 'bg-gray-400 cursor-not-allowed' 
+                ? 'bg-muted cursor-not-allowed' 
                 : 'bg-primary hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary'
               }
             `}
@@ -130,4 +130,4 @@ export default function DefinirSenha() {
       </div>
     </div>
   )
-} 
+}

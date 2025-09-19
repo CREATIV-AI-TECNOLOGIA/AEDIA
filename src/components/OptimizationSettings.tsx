@@ -109,7 +109,7 @@ const OptimizationSettings: React.FC<OptimizationSettingsProps> = ({
       case 'green': return 'text-green-600';
       case 'blue': return 'text-blue-600';
       case 'purple': return 'text-purple-600';
-      default: return 'text-gray-600';
+      default: return 'text-muted-foreground';
     }
   };
 
@@ -121,7 +121,7 @@ const OptimizationSettings: React.FC<OptimizationSettingsProps> = ({
             <Settings className="w-5 h-5 text-orange-600" />
           </div>
           <div>
-            <h3 className="font-medium text-gray-800">Otimização de Contexto</h3>
+            <h3 className="font-medium text-foreground">Otimização de Contexto</h3>
             <p className="text-sm text-gray-600">Configure para reduzir custos automaticamente</p>
           </div>
         </div>
@@ -187,7 +187,7 @@ const OptimizationSettings: React.FC<OptimizationSettingsProps> = ({
                     
                     <p className="text-sm text-gray-600 mb-2">{mode.description}</p>
                     
-                    <div className="flex items-center space-x-4 text-xs text-gray-500">
+                    <div className="flex items-center space-x-4 text-xs text-muted-foreground">
                       <span>Máx. {mode.maxMessages} mensagens</span>
                       <span>Máx. {mode.maxTokensPerMessage} tokens/msg</span>
                     </div>
@@ -222,4 +222,4 @@ const OptimizationSettings: React.FC<OptimizationSettingsProps> = ({
   );
 };
 
-export default OptimizationSettings; 
+export default OptimizationSettings;

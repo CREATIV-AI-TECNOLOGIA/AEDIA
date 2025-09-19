@@ -56,10 +56,10 @@ const CriarTurma: React.FC = () => {
     <div className="p-6 bg-gradient-to-br from-slate-50 via-gray-50 to-blue-100">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Criar Nova Turma</h1>
+          <h1 className="text-2xl font-bold text-foreground">Criar Nova Turma</h1>
         </div>
         
-        <div className="bg-white rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] border border-gray-100 p-6 hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] transition-shadow duration-300">
+        <div className="bg-card rounded-xl shadow-[0_4px_20px_-2px_rgba(0,0,0,0.1)] border border-gray-100 p-6 hover:shadow-[0_8px_30px_-4px_rgba(0,0,0,0.1)] transition-shadow duration-300">
           {error && (
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
               {error}
@@ -68,7 +68,7 @@ const CriarTurma: React.FC = () => {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
-              <label htmlFor="nome" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="nome" className="block text-sm font-medium text-muted-foreground mb-1">
                 Nome da Turma
               </label>
               <input
@@ -85,7 +85,7 @@ const CriarTurma: React.FC = () => {
             </div>
 
             <div className="mb-6">
-              <label htmlFor="ano" className="block text-sm font-medium text-gray-700 mb-1">
+              <label htmlFor="ano" className="block text-sm font-medium text-muted-foreground mb-1">
                 Ano
               </label>
               <input

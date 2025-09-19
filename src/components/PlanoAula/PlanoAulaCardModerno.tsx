@@ -59,13 +59,14 @@ const PlanoAulaCardModerno: React.FC<PlanoAulaCardModernoProps> = ({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -20 }}
-      className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg border-2 border-slate-200/60 hover:border-indigo-300/70 hover:shadow-xl ring-1 ring-slate-200/40 hover:ring-indigo-200/50 transition-all duration-300 overflow-hidden"
+      whileHover={{ y: -8 }}
+      className="group relative bg-white backdrop-blur-sm rounded-xl shadow-lg border-2 border-slate-200/60 hover:border-indigo-300/70 hover:shadow-xl ring-1 ring-slate-200/40 hover:ring-indigo-200/50 transition-all duration-300 overflow-hidden"
     >
       {/* Header do Card */}
       <div className="p-6 pb-4">
         <div className="flex justify-between items-start mb-4">
           <div className="flex-1">
-            <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+            <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2 transition-colors duration-300 group-hover:text-blue-600">
               {plano.titulo}
             </h3>
             
@@ -79,7 +80,7 @@ const PlanoAulaCardModerno: React.FC<PlanoAulaCardModernoProps> = ({
           <div className="relative">
             <button
               onClick={() => setShowMenu(!showMenu)}
-              className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+              className="p-2 text-foreground/60 hover:text-primary hover:bg-primary/10 rounded-full transition-colors"
             >
               <MoreVertical className="h-4 w-4" />
             </button>

@@ -18,7 +18,7 @@ const StatCard: React.FC<{
   change?: number;
   timeframe?: string;
 }> = ({ title, value, icon: Icon, color, change, timeframe }) => (
-  <div className="bg-white shadow-sm rounded-xl p-6 transition-all hover:shadow-md">
+  <div className="bg-card shadow-sm rounded-xl p-6 transition-all hover:shadow-md">
     <div className="flex justify-between items-start">
       <div className={`p-3 rounded-lg ${color.replace('text-', 'bg-').replace('-500', '-100')}`}>
         <Icon className={`w-6 h-6 ${color}`} />
@@ -32,10 +32,10 @@ const StatCard: React.FC<{
       )}
     </div>
     <div className="mt-4">
-      <p className="text-3xl font-bold text-gray-800">{value}</p>
-      <p className="text-sm text-gray-500 mt-1 flex items-center">
+      <p className="text-3xl font-bold text-foreground">{value}</p>
+    <p className="text-sm text-muted-foreground mt-1 flex items-center">
         {title}
-        {timeframe && <span className="text-xs text-gray-400 ml-1">· {timeframe}</span>}
+        {timeframe && <span className="text-xs text-muted-foreground/60 ml-1">· {timeframe}</span>}
       </p>
     </div>
   </div>
@@ -50,15 +50,15 @@ const ActivityItem: React.FC<{
   link?: string;
 }> = ({ title, date, icon: Icon = FileText, color = "text-blue-500", link = "#" }) => (
   <a href={link} className="block">
-    <div className="flex items-center p-3 rounded-lg hover:bg-gray-50 transition-colors">
+    <div className="flex items-center p-3 rounded-lg hover:bg-muted/50 transition-colors">
       <div className={`p-2 rounded-lg mr-3 ${color.replace('text-', 'bg-').replace('-500', '-100')}`}>
         <Icon className={`w-5 h-5 ${color}`} />
       </div>
       <div className="flex-1">
-        <h4 className="text-sm font-medium text-gray-800">{title}</h4>
-        <p className="text-xs text-gray-500">{date}</p>
+        <h4 className="text-sm font-medium text-foreground">{title}</h4>
+      <p className="text-xs text-muted-foreground">{date}</p>
       </div>
-      <ChevronRight className="w-4 h-4 text-gray-400" />
+      <ChevronRight className="w-4 h-4 text-muted-foreground/60" />
     </div>
   </a>
 );
@@ -70,22 +70,22 @@ const PersonCard: React.FC<{
   avatar: string;
   stats?: { label: string; value: string | number }[];
 }> = ({ name, role, avatar, stats }) => (
-  <div className="flex items-center p-4 rounded-lg hover:bg-gray-50 transition-colors border border-gray-100">
+  <div className="flex items-center p-4 rounded-lg hover:bg-muted/50 transition-colors border border-border/50">
     <img 
       src={avatar} 
       alt={name} 
       className="w-10 h-10 rounded-full object-cover mr-3" 
     />
     <div className="flex-1">
-      <h4 className="text-sm font-medium text-gray-800">{name}</h4>
-      <p className="text-xs text-gray-500">{role}</p>
+      <h4 className="text-sm font-medium text-foreground">{name}</h4>
+      <p className="text-xs text-muted-foreground">{role}</p>
     </div>
     {stats && (
       <div className="flex space-x-4">
         {stats.map((stat, index) => (
           <div key={index} className="text-center">
-            <p className="text-sm font-semibold text-gray-800">{stat.value}</p>
-            <p className="text-xs text-gray-500">{stat.label}</p>
+            <p className="text-sm font-semibold text-foreground">{stat.value}</p>
+            <p className="text-xs text-muted-foreground">{stat.label}</p>
           </div>
         ))}
       </div>
@@ -102,15 +102,15 @@ const SimpleBarChart: React.FC<{
   
   return (
     <div className="p-4">
-      <h3 className="text-sm font-medium text-gray-700 mb-4">{title}</h3>
+      <h3 className="text-sm font-medium text-foreground/90 mb-4">{title}</h3>
       <div className="space-y-3">
         {data.map((item, index) => (
           <div key={index}>
-            <div className="flex justify-between text-xs text-gray-600 mb-1">
+            <div className="flex justify-between text-xs text-muted-foreground mb-1">
               <span>{item.label}</span>
               <span>{item.value}</span>
             </div>
-            <div className="w-full bg-gray-100 rounded-full h-2.5">
+            <div className="w-full bg-muted rounded-full h-2.5">
               <div 
                 className={`h-2.5 rounded-full ${item.color}`} 
                 style={{ width: `${(item.value / maxValue) * 100}%` }}
@@ -127,7 +127,7 @@ const SimpleBarChart: React.FC<{
 const StatusList: React.FC<{
   items: { title: string; status: string; date: string }[];
 }> = ({ items }) => (
-  <div className="divide-y divide-gray-100">
+  <div className="divide-y divide-border">
     {items.map((item, index) => (
       <div key={index} className="py-3 flex items-center justify-between">
         <div className="flex items-center">
@@ -139,8 +139,8 @@ const StatusList: React.FC<{
             <Activity className="w-5 h-5 text-blue-500 mr-3" />
           )}
           <div>
-            <p className="text-sm font-medium text-gray-800">{item.title}</p>
-            <p className="text-xs text-gray-500">{item.date}</p>
+            <p className="text-sm font-medium text-foreground">{item.title}</p>
+            <p className="text-xs text-muted-foreground">{item.date}</p>
           </div>
         </div>
         <span className={`text-xs px-2 py-1 rounded-full font-medium
@@ -205,20 +205,21 @@ const DashboardGestaoPage: React.FC = () => {
       headerTitle="Início"
       headerSubtitle="Visão geral das suas atividades"
     >
-      <div className="py-6">
+      <div className="page-center px-4 sm:px-6 lg:px-8 pt-8 pb-16">
+        <div className="standard-page-card space-y-6">
         {/* Cabeçalho */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-1">
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-1">
               Dashboard de Gestão
             </h1>
-            <p className="text-gray-600">
+            <p className="text-muted-foreground">
               Bem-vinda, {user?.user_metadata?.name || 'Diretora Gisele'}! Confira os principais indicadores da sua escola.
             </p>
           </div>
 
           {/* Seletor de mês/ano */}
-          <div className="mt-4 md:mt-0 bg-white shadow-sm rounded-lg p-2 flex items-center">
+          <div className="mt-4 md:mt-0 bg-card shadow-sm rounded-lg p-2 flex items-center">
             <button 
               onClick={() => {
                 if (currentMonth === 0) {
@@ -228,9 +229,9 @@ const DashboardGestaoPage: React.FC = () => {
                   setCurrentMonth(prev => prev - 1);
                 }
               }}
-              className="p-1 rounded-md hover:bg-gray-100"
+              className="p-1 rounded-md hover:bg-muted"
             >
-              <ChevronLeft className="w-5 h-5 text-gray-500" />
+              <ChevronLeft className="w-5 h-5 text-muted-foreground" />
             </button>
             <span className="px-2 text-sm font-medium">
               {monthNames[currentMonth]} {currentYear}
@@ -244,9 +245,9 @@ const DashboardGestaoPage: React.FC = () => {
                   setCurrentMonth(prev => prev + 1);
                 }
               }}
-              className="p-1 rounded-md hover:bg-gray-100"
+              className="p-1 rounded-md hover:bg-muted"
             >
-              <ChevronRight className="w-5 h-5 text-gray-500" />
+              <ChevronRight className="w-5 h-5 text-muted-foreground" />
             </button>
           </div>
         </div>
@@ -291,10 +292,10 @@ const DashboardGestaoPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Primeira coluna - Atividades e gráficos */}
           <div className="lg:col-span-1 space-y-6">
-            <div className="bg-white shadow-sm rounded-xl p-5">
+            <div className="bg-card shadow-sm rounded-xl p-5">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-lg font-semibold text-gray-800">Próximas Atividades</h2>
-                <BellRing className="w-5 h-5 text-gray-400" />
+                <h2 className="text-lg font-semibold text-foreground">Próximas Atividades</h2>
+                <BellRing className="w-5 h-5 text-muted-foreground/60" />
               </div>
               <div className="space-y-1">
                 {dashboardData.proximasAtividades.map((atividade, index) => (
@@ -313,10 +314,10 @@ const DashboardGestaoPage: React.FC = () => {
               </button>
             </div>
 
-            <div className="bg-white shadow-sm rounded-xl overflow-hidden">
-              <div className="p-5 border-b border-gray-100">
-                <h2 className="text-lg font-semibold text-gray-800">Distribuição de Alunos</h2>
-                <p className="text-xs text-gray-500">por modalidade de ensino</p>
+            <div className="bg-card shadow-sm rounded-xl overflow-hidden">
+              <div className="p-5 border-b border-border">
+                <h2 className="text-lg font-semibold text-foreground">Distribuição de Alunos</h2>
+                <p className="text-xs text-muted-foreground">por modalidade de ensino</p>
               </div>
               <SimpleBarChart 
                 data={dashboardData.graficoModalidades} 
@@ -329,17 +330,17 @@ const DashboardGestaoPage: React.FC = () => {
           </div>
 
           {/* Segunda coluna - Professores */}
-          <div className="bg-white shadow-sm rounded-xl overflow-hidden">
-            <div className="p-5 border-b border-gray-100">
+          <div className="bg-card shadow-sm rounded-xl overflow-hidden">
+            <div className="p-5 border-b border-border/50">
               <div className="flex justify-between items-center">
                 <div>
-                  <h2 className="text-lg font-semibold text-gray-800">Principais Professores</h2>
-                  <p className="text-xs text-gray-500">por número de alunos</p>
+                  <h2 className="text-lg font-semibold text-foreground">Principais Professores</h2>
+                  <p className="text-xs text-muted-foreground">por número de alunos</p>
                 </div>
                 <button className="text-sm text-blue-600 hover:text-blue-700">Ver todos</button>
               </div>
             </div>
-            <div className="p-4 divide-y divide-gray-50">
+            <div className="p-4 divide-y divide-border/50">
               {dashboardData.professores.map((professor, index) => (
                 <PersonCard 
                   key={index}
@@ -354,41 +355,41 @@ const DashboardGestaoPage: React.FC = () => {
 
           {/* Terceira coluna - Turmas e Diagnósticos */}
           <div className="space-y-6">
-            <div className="bg-white shadow-sm rounded-xl overflow-hidden">
-              <div className="p-5 border-b border-gray-100">
+            <div className="bg-card shadow-sm rounded-xl overflow-hidden">
+              <div className="p-5 border-b border-border/50">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-lg font-semibold text-gray-800">Turmas Ativas</h2>
+                  <h2 className="text-lg font-semibold text-foreground">Turmas Ativas</h2>
                   <button className="text-sm text-blue-600 hover:text-blue-700">Ver todas</button>
                 </div>
               </div>
               <div className="p-4">
-                <table className="min-w-full divide-y divide-gray-100">
+                <table className="min-w-full divide-y divide-border">
                   <thead>
                     <tr>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turma</th>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Alunos</th>
-                      <th className="px-3 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Professor</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Turma</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Alunos</th>
+                      <th className="px-3 py-2 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Professor</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-50">
+                  <tbody className="divide-y divide-border/50">
                     {dashboardData.turmas.map((turma, index) => (
-                      <tr key={index} className="hover:bg-gray-50">
+                      <tr key={index} className="hover:bg-muted/50">
                         <td className="px-3 py-3 whitespace-nowrap">
                           <div className="flex items-center">
                             <div className="w-8 h-8 rounded-md bg-gradient-to-br from-blue-400 to-blue-500 flex items-center justify-center text-white font-medium text-sm mr-2">
                               {turma.nome.substring(0, 2)}
                             </div>
                             <div>
-                              <p className="text-sm font-medium text-gray-800">{turma.nome}</p>
-                              <p className="text-xs text-gray-500">{turma.modalidade}</p>
+                              <p className="text-sm font-medium text-foreground">{turma.nome}</p>
+                              <p className="text-xs text-muted-foreground">{turma.modalidade}</p>
                             </div>
                           </div>
                         </td>
                         <td className="px-3 py-3 whitespace-nowrap">
-                          <span className="text-sm text-gray-800">{turma.alunos}</span>
+                          <span className="text-sm text-foreground">{turma.alunos}</span>
                         </td>
                         <td className="px-3 py-3 whitespace-nowrap">
-                          <span className="text-sm text-gray-800">{turma.professor}</span>
+                          <span className="text-sm text-foreground">{turma.professor}</span>
                         </td>
                       </tr>
                     ))}
@@ -397,10 +398,10 @@ const DashboardGestaoPage: React.FC = () => {
               </div>
             </div>
 
-            <div className="bg-white shadow-sm rounded-xl overflow-hidden">
-              <div className="p-5 border-b border-gray-100">
+            <div className="bg-card shadow-sm rounded-xl overflow-hidden">
+              <div className="p-5 border-b border-border/50">
                 <div className="flex justify-between items-center">
-                  <h2 className="text-lg font-semibold text-gray-800">Diagnósticos Recentes</h2>
+                  <h2 className="text-lg font-semibold text-foreground">Diagnósticos Recentes</h2>
                   <button className="text-sm text-blue-600 hover:text-blue-700">Ver todos</button>
                 </div>
               </div>
@@ -410,6 +411,7 @@ const DashboardGestaoPage: React.FC = () => {
             </div>
           </div>
 
+        </div>
         </div>
       </div>
     </Layout>
