@@ -88,21 +88,25 @@ export default function NewSidebar() {
       </header>
 
       {/* Sidebar */}
-      <aside 
+      <aside
         className={`
-          ${isCollapsed ? 'w-20' : 'w-64'} 
-          bg-white border-r border-gray-200 h-screen fixed transition-all duration-200 z-50 top-0 left-0
+          ${isCollapsed ? 'w-20' : 'w-64'}
+          bg-white border-r border-gray-200 h-screen fixed transition-[width] duration-200 z-50 top-0 left-0
           ${isCollapsed ? 'sidebar-mobile' : 'sidebar-mobile-open'} md:sidebar-mobile-open
         `}
       >
         <div className="p-4 h-full flex flex-col overflow-hidden">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className={`flex items-center gap-3 ${isCollapsed ? 'hidden' : ''}`}>
-              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+          <div className="flex items-center justify-between mb-8 h-14">
+            <div className="flex items-center gap-3 overflow-hidden">
+              <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
                 <Book className="h-5 w-5 text-white" />
               </div>
-              <div>
+              <div
+                className={`flex flex-col overflow-hidden transition-all duration-200 ease-out origin-left ${
+                  isCollapsed ? 'max-w-0 opacity-0 -translate-x-2' : 'max-w-[180px] opacity-100 translate-x-0'
+                }`}
+              >
                 <h2 className="text-lg font-semibold text-gray-900">Escola Digital</h2>
                 <p className="text-sm text-gray-500">Sistema de Gestão</p>
               </div>
@@ -118,46 +122,43 @@ export default function NewSidebar() {
               {sidebarItems.map((item) => {
                 const Icon = item.icon;
                 const active = isActive(item.href);
-                
+
                 return (
                   <li key={item.href}>
-                    {isCollapsed ? (
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Link
-                            to={item.href}
-                            className={`
-                              flex items-center gap-3 h-12 rounded-xl transition-all duration-200
-                              justify-center
-                              ${active 
-                                ? 'bg-black text-white' 
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Link
+                          to={item.href}
+                          className={`
+                            group flex items-center h-12 rounded-xl transition-colors duration-200 w-full
+                            ${isCollapsed ? 'justify-center px-0' : 'px-4'}
+                            ${
+                              active
+                                ? 'bg-black text-white'
                                 : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700'
-                              }
+                            }
+                          `}
+                        >
+                          <Icon className="h-5 w-5 flex-shrink-0" />
+                          <span
+                            className={`
+                              font-medium whitespace-nowrap overflow-hidden transition-all duration-200 ease-out
+                              ${isCollapsed
+                                ? 'max-w-0 opacity-0 -translate-x-2 ml-0'
+                                : 'max-w-[160px] opacity-100 translate-x-0 ml-3'}
                             `}
                           >
-                            <Icon className="h-5 w-5 flex-shrink-0" />
-                          </Link>
-                        </TooltipTrigger>
-                        <TooltipContent side="right">
-                          <p>{item.label}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    ) : (
-                      <Link
-                        to={item.href}
-                        className={`
-                          flex items-center gap-3 h-12 rounded-xl transition-all duration-200
-                          px-4
-                          ${active 
-                            ? 'bg-black text-white' 
-                            : 'text-gray-600 hover:bg-blue-50 hover:text-blue-700'
-                          }
-                        `}
+                            {item.label}
+                          </span>
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="right"
+                        className={isCollapsed ? 'block' : 'hidden'}
                       >
-                        <Icon className="h-5 w-5 flex-shrink-0" />
-                        <span className="font-medium">{item.label}</span>
-                      </Link>
-                    )}
+                        <p>{item.label}</p>
+                      </TooltipContent>
+                    </Tooltip>
                   </li>
                 );
               })}
@@ -166,29 +167,36 @@ export default function NewSidebar() {
 
           {/* Bottom Section */}
           <div className="pt-4">
-            {isCollapsed ? (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => setShowLogoutModal(true)}
-                    className="flex items-center gap-3 h-12 rounded-xl transition-all duration-200 text-red-500 hover:bg-red-50 hover:text-red-600 w-full justify-center focus:outline-none focus:ring-0 focus:border-transparent"
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setShowLogoutModal(true)}
+                  className={`
+                    group flex items-center h-12 rounded-xl transition-colors duration-200 text-red-500 hover:bg-red-50 hover:text-red-600 w-full
+                    ${isCollapsed ? 'justify-center px-0' : 'px-4'}
+                    focus:outline-none focus:ring-0 focus:border-transparent
+                  `}
+                >
+                  <LogOut className="h-5 w-5 flex-shrink-0" />
+                  <span
+                    className={`
+                      font-medium whitespace-nowrap overflow-hidden transition-all duration-200 ease-out
+                      ${isCollapsed
+                        ? 'max-w-0 opacity-0 -translate-x-2 ml-0'
+                        : 'max-w-[160px] opacity-100 translate-x-0 ml-3'}
+                    `}
                   >
-                    <LogOut className="h-5 w-5 flex-shrink-0" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="right">
-                  <p>Sair</p>
-                </TooltipContent>
-              </Tooltip>
-            ) : (
-              <button
-                onClick={() => setShowLogoutModal(true)}
-                className="flex items-center gap-3 h-12 rounded-xl transition-all duration-200 text-red-500 hover:bg-red-50 hover:text-red-600 w-full px-4 focus:outline-none focus:ring-0 focus:border-transparent"
+                    Sair
+                  </span>
+                </button>
+              </TooltipTrigger>
+              <TooltipContent
+                side="right"
+                className={isCollapsed ? 'block' : 'hidden'}
               >
-                <LogOut className="h-5 w-5 flex-shrink-0" />
-                <span className="font-medium">Sair</span>
-              </button>
-            )}
+                <p>Sair</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </aside>
