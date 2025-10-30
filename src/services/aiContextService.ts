@@ -102,6 +102,7 @@ export class AIContextService {
   private static instance: AIContextService;
   private contextCache: Map<string, any> = new Map();
   private cacheExpiry: Map<string, number> = new Map();
+  private professorInfoCache: Map<number, Professor> = new Map();
   private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
 
   public static getInstance(): AIContextService {
@@ -130,13 +131,70 @@ export class AIContextService {
     return null;
   }
 
+  private async getProfessorInfo(professorId: number): Promise<Professor | null> {
+    if (!Number.isFinite(professorId)) {
+      console.warn('⚠️ ID de professor inválido ao tentar carregar dados básicos:', professorId);
+      return null;
+    }
+
+    if (this.professorInfoCache.has(professorId)) {
+      return this.professorInfoCache.get(professorId)!;
+    }
+
+    const { data, error } = await supabase
+      .from('professores')
+      .select('id, user_id, nome, email, telefone, avatar_url, escola_id, created_at, updated_at')
+      .eq('id', professorId)
+      .maybeSingle();
+
+    if (error) {
+      console.error('❌ Erro ao buscar dados básicos do professor:', error);
+      return null;
+    }
+
+    if (!data) {
+      console.warn('⚠️ Nenhum registro encontrado na tabela professores para o ID:', professorId);
+      return null;
+    }
+
+    const professor: Professor = {
+      id: data.id,
+      user_id: data.user_id,
+      nome: data.nome,
+      email: data.email,
+      telefone: data.telefone,
+      avatar_url: data.avatar_url,
+      escola_id: data.escola_id,
+      created_at: data.created_at,
+      updated_at: data.updated_at
+    };
+
+    this.professorInfoCache.set(professorId, professor);
+    return professor;
+  }
+
   async buildCompleteContext(professorData: Professor): Promise<AIContext> {
     const cacheKey = `context_${professorData.id}`;
     const cached = this.getCache(cacheKey);
     if (cached) return cached;
 
+    if (!professorData || typeof professorData.id !== 'number' || Number.isNaN(professorData.id)) {
+      throw new Error(`Professor ID inválido para construção de contexto: ${professorData?.id}`);
+    }
+
+    let professorInfo: Professor = professorData;
+    if (!professorInfo.nome || !professorInfo.email) {
+      const fetchedInfo = await this.getProfessorInfo(professorData.id);
+      if (fetchedInfo) {
+        professorInfo = {
+          ...fetchedInfo,
+          ...professorInfo,
+        };
+      }
+    }
+
     try {
-      console.log('🔍 Iniciando coleta de contexto real para professor:', professorData.nome);
+      console.log('🔍 Iniciando coleta de contexto real para professor:', professorInfo.nome);
       
       const [
         turmasData,
@@ -162,9 +220,9 @@ export class AIContextService {
 
       const context: AIContext = {
         professor: {
-          nome: professorData.nome,
-          email: professorData.email || '',
-          telefone: professorData.telefone || undefined,
+          nome: professorInfo.nome,
+          email: professorInfo.email || '',
+          telefone: professorInfo.telefone || undefined,
           especialidades: await this.getDisciplinasLecionadas(professorData.id),
           experiencia_anos: await this.calcularExperiencia(professorData.id),
           formacao: await this.getFormacao(professorData.id)

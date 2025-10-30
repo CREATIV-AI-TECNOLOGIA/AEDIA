@@ -1,11 +1,75 @@
 import { supabase } from '../lib/supabase';
 import { AIPersonaConfig, AIMemory, AIInsight, PersonaTemplate } from '../types/aiPersona';
+import { Professor } from '../types';
 import { aiContextService } from './aiContextService';
 
 export class AIPersonaService {
   private static instance: AIPersonaService;
   private memoryCache = new Map<string, AIMemory[]>();
   private insightCache = new Map<string, AIInsight[]>();
+  private professorCache = new Map<string, Professor>();
+
+  private async resolveProfessor(professorIdentifier: string): Promise<Professor | null> {
+    if (!professorIdentifier) {
+      console.warn('🟠 Professor identifier vazio recebido para resolução.');
+      return null;
+    }
+
+    if (this.professorCache.has(professorIdentifier)) {
+      return this.professorCache.get(professorIdentifier)!;
+    }
+
+    const numericId = Number(professorIdentifier);
+    const selectColumns = 'id, user_id, nome, email, telefone, avatar_url, escola_id, created_at, updated_at';
+
+    let query;
+    if (!Number.isNaN(numericId)) {
+      query = supabase
+        .from('professores')
+        .select(selectColumns)
+        .eq('id', numericId)
+        .maybeSingle();
+    } else {
+      query = supabase
+        .from('professores')
+        .select(selectColumns)
+        .eq('user_id', professorIdentifier)
+        .maybeSingle();
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+      console.error('❌ Erro ao resolver professor pelo identificador:', professorIdentifier, error);
+      return null;
+    }
+
+    if (!data) {
+      console.warn('⚠️ Nenhum professor encontrado para o identificador:', professorIdentifier);
+      return null;
+    }
+
+    const professor: Professor = {
+      id: data.id,
+      user_id: data.user_id,
+      nome: data.nome,
+      email: data.email,
+      telefone: data.telefone,
+      avatar_url: data.avatar_url,
+      escola_id: data.escola_id,
+      created_at: data.created_at,
+      updated_at: data.updated_at
+    };
+
+    // Cachear pelo identificador original, pelo id numérico e pelo user_id (quando disponível)
+    this.professorCache.set(professorIdentifier, professor);
+    this.professorCache.set(String(professor.id), professor);
+    if (professor.user_id) {
+      this.professorCache.set(professor.user_id, professor);
+    }
+
+    return professor;
+  }
 
   public static getInstance(): AIPersonaService {
     if (!AIPersonaService.instance) {
@@ -387,8 +451,24 @@ export class AIPersonaService {
   async generateInsight(professorId: string, personaId: string, context: any): Promise<AIInsight | null> {
     // Análise de padrões baseada no contexto e memórias
     const memories = await this.getMemories(professorId, personaId, 20);
-    const professorData = { id: parseInt(professorId) } as any; // Simplificado para o exemplo
-    const aiContext = await aiContextService.buildCompleteContext(professorData);
+    const resolvedProfessor = await this.resolveProfessor(professorId);
+    const numericProfessorId = resolvedProfessor?.id ?? Number(professorId);
+
+    let aiContext: any = null;
+    if (resolvedProfessor || Number.isFinite(numericProfessorId)) {
+      const professorForContext: Professor = resolvedProfessor ?? {
+        id: numericProfessorId as number,
+        user_id: Number.isNaN(Number(professorId)) ? professorId : null,
+        nome: 'Professor',
+        email: '',
+        telefone: null,
+        avatar_url: null,
+        escola_id: null,
+      };
+      aiContext = await aiContextService.buildCompleteContext(professorForContext);
+    } else {
+      console.warn('⚠️ Não foi possível construir contexto ao gerar insights: identificador de professor inválido.', { professorId });
+    }
 
     // Lógica de análise de padrões (simplificada)
     const patterns = this.analyzePatterns(memories, aiContext, context);
@@ -561,8 +641,41 @@ export class AIPersonaService {
 
     const persona = await this.getActivePersona(professorId);
     console.log('🎭 Persona encontrada:', persona ? persona.name : 'NENHUMA PERSONA ENCONTRADA');
-    const professorData = { id: parseInt(professorId) } as any; // Simplificado para o exemplo
-    const aiContext = await aiContextService.buildCompleteContext(professorData);
+
+    const resolvedProfessor = await this.resolveProfessor(professorId);
+    const numericProfessorId = resolvedProfessor?.id ?? Number(professorId);
+    const hasValidProfessorId = Number.isFinite(numericProfessorId);
+
+    if (!resolvedProfessor) {
+      console.warn('⚠️ Contexto do professor não encontrado no cache/banco para o identificador informado.', {
+        professorId,
+        numericProfessorId,
+        hasValidProfessorId,
+      });
+    }
+
+    let professorForContext: Professor | null = null;
+    if (resolvedProfessor) {
+      professorForContext = resolvedProfessor;
+    } else if (hasValidProfessorId) {
+      professorForContext = {
+        id: numericProfessorId as number,
+        user_id: Number.isNaN(Number(professorId)) ? professorId : null,
+        nome: 'Professor',
+        email: '',
+        telefone: null,
+        avatar_url: null,
+        escola_id: null,
+      };
+    }
+
+    let aiContext: any = null;
+    if (professorForContext) {
+      aiContext = await aiContextService.buildCompleteContext(professorForContext);
+    } else {
+      console.warn('⚠️ Não foi possível construir o contexto completo da IA porque o professor não pôde ser resolvido.');
+    }
+
     const memories = persona ? await this.getMemories(professorId, persona.id, 10) : [];
 
     // Construir prompt do sistema baseado na persona
@@ -580,7 +693,11 @@ export class AIPersonaService {
         content: userMessage,
         importance: 'medium',
         tags: this.extractTags(userMessage),
-        context: { aiContext: aiContext ? `Professor: ${aiContext.professor.nome}, Turmas: ${aiContext.educacional.turmas.length}` : 'Sem contexto' }
+        context: {
+          aiContext: aiContext
+            ? `Professor: ${aiContext.professor?.nome ?? 'Professor'}, Turmas: ${aiContext.educacional?.turmas?.length ?? 0}`
+            : 'Sem contexto'
+        }
       });
     }
 
@@ -677,6 +794,17 @@ DADOS RECENTES:
 - Avaliações: ${aiContext.educacional?.avaliacoes_recentes?.length || 0} recentes
 
 VOCÊ DEVE SE DIRIGIR AO PROFESSOR PELO NOME (${aiContext.professor?.nome || 'Professor'}) E USAR ESSAS INFORMAÇÕES EM SUAS RESPOSTAS.`;
+      const turmasDetalhadas = aiContext.educacional?.turmas || [];
+      if (turmasDetalhadas.length > 0) {
+        prompt += `\n\n### TURMAS DO PROFESSOR (JÁ CONHECIDAS)
+${turmasDetalhadas.map((turma: any) => `- ${turma.nome} (${turma.ano_letivo}) • Disciplina: ${turma.disciplina} • Turno: ${turma.periodo} • ${turma.total_alunos} alunos ativos`).join('\n')}
+
+### REGRAS IMPORTANTES SOBRE ESTES DADOS
+- NUNCA peça novamente o nome da turma, o ano ou a disciplina quando essas informações já aparecem acima.
+- Se precisar confirmar qual turma utilizar, apresente a lista acima como opções e solicite apenas a escolha.
+- Use automaticamente essas informações ao gerar planejamentos, planos de aula ou roteiros para evitar perguntas redundantes.
+- Em interações por voz, confirme rapidamente somente decisões importantes e mantenha o fluxo sem repetir perguntas sobre dados já conhecidos.`;
+      }
     } else {
       console.warn('⚠️ Contexto do professor não encontrado!');
       prompt += `\n\n## IMPORTANTE
